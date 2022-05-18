@@ -4,19 +4,20 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+    <title>Loading...</title>
+    <script src="assets/js/server.js" defer></script>
+    <script src="assets/js/default.js" defer></script>
 </head>
 <body>
-    <form id="form1" runat="server">
-        <div>
-            <!--
-            -receive UH username here<br />
-            -do a test here to see if account exists in AD<br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yes? redir to /services/resetPassword.aspx<br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no? redir to /services/createAccount.aspx
-            -->
-
-        </div>
+    <!--
+        -receive UH username here<br />
+        -do a test here to see if account exists in AD<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yes? redir to /services/resetPassword.aspx<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no? redir to /services/createAccount.aspx
+    -->
+    <div id="js-assets" hidden></div>
+    <form id="form-main" runat="server">
+        
     </form>
 </body>
 </html>

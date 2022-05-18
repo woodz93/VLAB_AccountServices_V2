@@ -72,7 +72,9 @@
   <ItemGroup>
     <Content Include="Default.aspx" />
     <Content Include="services\assets\css\main.css" />
+    <Content Include="services\assets\js\default.js" />
     <Content Include="services\assets\js\main.js" />
+    <Content Include="services\assets\js\server.js" />
     <Content Include="services\createAccount.aspx" />
     <Content Include="services\resetPassword.aspx" />
     <Content Include="Web.config" />
