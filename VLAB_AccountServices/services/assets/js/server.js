@@ -108,7 +108,7 @@ class Server {
 			]
 		}
 	};
-	
+	// Sends a POST request to the target server.
 	static send(args=false,cbf=false,func=false) {
 		let res=false;
 		if (this.checkArgs(args)) {
