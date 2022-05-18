@@ -56,7 +56,7 @@ function submitPasswordResetApplication() {
 			if (pass.value.match(/[A-Z]{1,}[a-z]{1,}[0-9]{1,}([_!@#\$%\^&\*\(\)\-\{\}\[\]\.\,\`\~`\n\t:"'\?\<\>\|\/\\]{1,}|[\u200b]{1,})/g)) {
 				if (pass.value === passc.value) {
 					let a = {
-						"src": "services/assets/svr/passwordReset.aspx",
+						"src": "assets/svr/passwordReset.aspx",
 						"args": {
 							"cmd": "0",
 							"username": user,
