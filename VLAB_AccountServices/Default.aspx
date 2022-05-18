@@ -16,8 +16,6 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no? redir to /services/createAccount.aspx
     -->
     <div id="js-assets" hidden></div>
-    <form id="form-main" runat="server">
-        
-    </form>
+    <form id="form-main" runat="server"></form>
 </body>
 </html>
