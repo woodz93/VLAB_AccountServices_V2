@@ -88,7 +88,7 @@
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="services\assets\svr\checkAccount.aspx" />
+    <Compile Include="services\assets\svr\checkAccount.cs" />
     <Compile Include="services\assets\svr\getPRF.cs" />
     <Compile Include="services\createAccount.aspx.cs">
       <DependentUpon>createAccount.aspx</DependentUpon>
