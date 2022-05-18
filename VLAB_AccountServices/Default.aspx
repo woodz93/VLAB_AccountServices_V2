@@ -5,8 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Loading...</title>
-    <script src="assets/js/server.js" defer></script>
-    <script src="assets/js/default.js" defer></script>
+    <script src="services/assets/js/server.js" defer></script>
+    <script src="services/assets/js/default.js" defer></script>
 </head>
 <body>
     <!--
@@ -16,6 +16,6 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no? redir to /services/createAccount.aspx
     -->
     <div id="js-assets" hidden></div>
-    <form id="form-main" runat="server"></form>
+    <form id="form_main" runat="server"></form>
 </body>
 </html>

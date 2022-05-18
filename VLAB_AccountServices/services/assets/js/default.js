@@ -6,7 +6,7 @@ function ini() {
 	if (t !== "undefined") {
 		let username = "";
 		let a = {
-			"src": "assets/svr/checkAccount.aspx",
+			"src": "services/assets/svr/checkAccount.aspx",
 			"args": {
 				"cmd": "check-user",
 				"username": username
@@ -44,7 +44,7 @@ function svrResponse(q = false) {
 // Gets a password reset form from the server.
 function getPasswordResetForm() {
 	let a = {
-		"src": "assets/svr/getPRF.aspx",
+		"src": "services/assets/svr/getPRF.cs",
 		"args": {
 			"cmd":"0"
 		}
@@ -54,7 +54,7 @@ function getPasswordResetForm() {
 // Gets a new user form from the server.
 function getNewUserForm() {
 	let a = {
-		"src": "assets/svr/getNUF.aspx",
+		"src": "services/assets/svr/getNUF.aspx",
 		"args": {
 			"cmd": "0"
 		}
