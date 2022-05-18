@@ -9,7 +9,7 @@
     <script src="assets/js/main.js" defer></script>
 </head>
 <body>
-    <form id="form_main" runat="server" method="post" action="assets/css/main.css">
+    <div id="form_main" runat="server" method="post" action="assets/css/main.css">
         <div>
             <label for="username">Username: </label><input id="username" name="username" type="text" value="" placeholder="UH Username..." />
             <br />
@@ -17,8 +17,9 @@
             <br />
             <label for="password-confirm">Confirm Password: </label><input id="password-confirm" name="password-confirm" type="password" value="" placeholder="Confirm password..." />
             <br />
-            <button id="submit" type="submit">Reset Password</button>
+            <button id="submit" type="submit" onclick="submitPasswordResetApplication()">Reset Password</button>
         </div>
-    </form>
+        <div id="status" class="status"></div>
+    </div>
 </body>
 </html>

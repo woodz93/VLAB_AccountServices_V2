@@ -23,9 +23,6 @@ function checkPassword() {
 			if (!document.getElementById("submit").disabled) {
 				document.getElementById("submit").disabled = true;
 			}
-			if (!document.getElementById("form_main").disabled) {
-				document.getElementById("form_main").disabled = true;
-			}
 			if (!fp.classList.contains("invalid")) {
 				fp.classList.add("invalid");
 			}
@@ -36,9 +33,6 @@ function checkPassword() {
 			if (document.getElementById("submit").disabled) {
 				document.getElementById("submit").disabled = false;
 			}
-			if (document.getElementById("form_main").disabled) {
-				document.getElementById("form_main").disabled = false;
-			}
 			if (fp.classList.contains("invalid")) {
 				fp.classList.remove("invalid");
 			}
@@ -48,3 +42,45 @@ function checkPassword() {
 		}
 	}
 }
+
+
+function submitPasswordResetApplication() {
+	let user = document.getElementById("username");
+	let pass = document.getElementById("password");
+	let passc = document.getElementById("password-confirm");
+	let btn = document.getElementById("submit");
+	if (user.value.length > 0) {
+		if (pass.value.length > 4) {
+
+		} else {
+			output("Password must be longer than 4 characters long.");
+		}
+	}
+}
+
+
+function dismiss() {
+	if (document.getElementById("status")) {
+		let s = document.getElementById("status");
+		if (s.classList.contains("error")) {
+			s.classList.remove("error");
+		}
+	}
+}
+
+function output(q = false) {
+	if (q !== false) {
+		if ((typeof q) === "string") {
+			if (document.getElementById("status")) {
+				let s = document.getElementById("status");
+				s.innerHTML = q;
+				if (!s.classList.contains("error")) {
+					s.classList.add("error");
+				}
+			}
+		}
+	}
+}
+
+
+
