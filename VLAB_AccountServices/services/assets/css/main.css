@@ -1,0 +1,61 @@
+
+
+:root {
+	--idur:0.25s;
+	--idurh:1.0s;
+}
+
+input {
+	position: relative;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 75%;
+	height: 2.0em;
+	outline: none;
+	border: none;
+	border-bottom: 1px solid #FFF;
+	cursor: text;
+	background-color: rgba(0,0,0,0.0);
+	color: #FFF;
+	-webkit-transition-duration: var(--idur);
+	-moz-transition-duration: var(--idur);
+	-ms-transition-duration: var(--idur);
+	-o-transition-duration: var(--idur);
+	transition-duration: var(--idur);
+}
+button, input[type="button"] {
+	position: relative;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	cursor: pointer;
+	padding: 4px;
+	border: 1px solid #FFF;
+	outline: none;
+	display: block;
+	-webkit-transition-duration: var(--idur);
+	-moz-transition-duration: var(--idur);
+	-ms-transition-duration: var(--idur);
+	-o-transition-duration: var(--idur);
+	transition-duration: var(--idur);
+}
+input:before {
+	clear:both;
+	content:"";
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:0%;
+	height:1px;
+	background-color:#FFF;
+	-webkit-transition-duration: var(--idurh);
+	-moz-transition-duration: var(--idurh);
+	-ms-transition-duration: var(--idurh);
+	-o-transition-duration: var(--idurh);
+	transition-duration: var(--idurh);
+}
+input:hover:before {
+	width:100%;
+}
+
