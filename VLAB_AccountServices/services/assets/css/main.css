@@ -95,7 +95,7 @@ input.invalid:before {
 	background-color:rgba(0,0,0,0.0);
 	padding:10px;
 	outline:none;
-	cursor:default;
+	cursor:pointer;
 	text-align:center;
 	border-radius:20px;
 	border:2px solid #000;
