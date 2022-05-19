@@ -4,25 +4,28 @@ setTimeout(function () { ini(); }, 0);
 
 function ini() {
 	if (document.getElementById("password-confirm")) {
-		document.getElementById("password-confirm").addEventListener("keypress", function (e) {
-			checkPassword(document.getElementById("password-confirm"));
+		document.getElementById("password").addEventListener("keyup", function (e) {
+			checkPassword();
+		});
+		document.getElementById("password-confirm").addEventListener("keyup", function (e) {
+			checkPassword();
 		});
 		document.getElementById("status").addEventListener("click", function (e) {
 			setTimeout(function () { dismiss(); }, 0);
 		});
+		console.log("All elements have successfully been setup!");
 	} else {
 		setTimeout(function () { ini(); }, 100);
 	}
 }
 
 function checkPassword() {
-	if (document.getElementById("password") && document.getElementById("confirm-password") && document.getElementById("form_main") && document.getElementById("submit")) {
+	if (document.getElementById("password") && document.getElementById("password-confirm") && document.getElementById("form_main") && document.getElementById("submit")) {
 		let fp = document.getElementById("password");
-		let lp = document.getElementById("confirm-password");
+		let lp = document.getElementById("password-confirm");
 		if (fp.value !== lp.value) {
-			if (document.getElementById("status")) {
-				document.getElementById("status").innerHTML = "Passwords do not match.";
-			}
+			checkPasswordValue();
+			//output("Passwords do not match!");
 			if (!document.getElementById("submit").disabled) {
 				document.getElementById("submit").disabled = true;
 			}
@@ -33,6 +36,7 @@ function checkPassword() {
 				lp.classList.add("invalid");
 			}
 		} else {
+			checkPasswordValue();
 			if (document.getElementById("submit").disabled) {
 				document.getElementById("submit").disabled = false;
 			}
@@ -45,6 +49,34 @@ function checkPassword() {
 		}
 	}
 }
+
+
+function checkPasswordValue() {
+	let user = document.getElementById("username");
+	let pass = document.getElementById("password");
+	let passc = document.getElementById("password-confirm");
+	let btn = document.getElementById("submit");
+	let res = false;
+	if (user.value.length > 0) {
+		if (pass.value.length > 4) {
+			//if (pass.value.match(/[A-Z]{1,}[a-z]{1,}[0-9]{1,}([_!@#\$%\^&\*\(\)\-\{\}\[\]\.\,\`\~`\n\t:"'\?\<\>\|\/\\]{1,}|[\u200b]{1,})/g)) {
+			if (pass.value.match(/[A-Z]{1,}/g) && pass.value.match(/[a-z]{1,}/g) && pass.value.match(/[0-9]{1,}/g) && pass.value.match(/([_!@#\$%\^&\*\(\)\-\{\}\[\]\.\,\`\~`\n\t:"'\?\<\>\|\/\\]{1,}|[\u200b]{1,})/g)) {
+				if (pass.value === passc.value) {
+					dismiss();
+					res = true;
+				} else {
+					output("Passwords do not match.");
+				}
+			} else {
+				output("Password must contain at least one capital letter, one lowercase letter, one number, and one special character (Keyboard-based and some whitespace characters are valid... As well as the zero-width character).");
+			}
+		} else {
+			output("Password must be longer than 4 characters long.");
+		}
+	}
+	return res;
+}
+
 
 function submitPasswordResetApplication() {
 	let user = document.getElementById("username");
@@ -63,6 +95,7 @@ function submitPasswordResetApplication() {
 							"password": pass
 						}
 					};
+					disableAllFields();
 					Server.send(a, "passwordResetSvrResponse");
 				} else {
 					output("Passwords do not match.");
@@ -74,6 +107,27 @@ function submitPasswordResetApplication() {
 			output("Password must be longer than 4 characters long.");
 		}
 	}
+}
+
+function disableAllFields() {
+	let user = document.getElementById("username");
+	let pass = document.getElementById("password");
+	let passc = document.getElementById("password-confirm");
+	let btn = document.getElementById("submit");
+	user.disable = true;
+	pass.disable = true;
+	passc.disable = true;
+	btn.disable = true;
+}
+function enableAllFields() {
+	let user = document.getElementById("username");
+	let pass = document.getElementById("password");
+	let passc = document.getElementById("password-confirm");
+	let btn = document.getElementById("submit");
+	user.disable = false;
+	pass.disable = false;
+	passc.disable = false;
+	btn.disable = false;
 }
 
 
@@ -118,10 +172,15 @@ function passwordResetSvrResponse(q = false) {
 				if (q["status"] === true) {
 					if (q["msg"]) {
 						output(q["msg"]);
+					} else {
+						output("Server didn't return a response message...<br>But it would appear that the process was succcessful.<br><br>If you encounter any issues, contact <a href='https://maui.hawaii.edu/helpdesk/#gform_7' target='_blank'>IT Help Desk</a> for further assistance.");
 					}
 				} else {
+					enableAllFields();
 					if (q["msg"]) {
 						output(q["msg"]);
+					} else {
+						output("ERROR (500): An unknown server-side error has occurred.");
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 
-
+@import url("vars.css");
 
 html {
 	position:fixed;
@@ -22,10 +22,7 @@ body {
 }
 
 
-:root {
-	--idur:0.25s;
-	--idurh:1.0s;
-}
+
 
 input {
 	position: relative;
@@ -43,11 +40,21 @@ input {
 	display:block;
 	padding:4px;
 	font-size:1.5em;
+	text-align:center;
 	-webkit-transition-duration: var(--idur);
 	-moz-transition-duration: var(--idur);
-	-ms-transition-duration: var(--idur);
 	-o-transition-duration: var(--idur);
 	transition-duration: var(--idur);
+}
+label {
+	position:relative;
+	top:0;
+	left:50%;
+	transform:translateX(-50%);
+	display:block;
+	text-align:center;
+	font-family:arial;
+	font-size:1.5em;
 }
 button, input[type="button"] {
 	position: relative;
@@ -55,16 +62,49 @@ button, input[type="button"] {
 	left: 50%;
 	transform: translateX(-50%);
 	cursor: pointer;
-	padding: 4px;
-	border: 1px solid #FFF;
+	padding: 10px;
+	font-size:1.5em;
+	border: 2px solid rgba(0,0,0,0.5);
 	outline: none;
 	display: block;
+	background-color:rgba(0,0,0,0.0);
+	border-radius:10px;
+	color:#FFF;
+	overflow:hidden;
 	-webkit-transition-duration: var(--idur);
 	-moz-transition-duration: var(--idur);
-	-ms-transition-duration: var(--idur);
 	-o-transition-duration: var(--idur);
 	transition-duration: var(--idur);
 }
+button:before {
+	clear: both;
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 200%;
+	height: 200%;
+	z-index: -100;
+	background: linear-gradient(to bottom right,rgba(0,0,0,0.5) 25%,rgba(0,155,173,1));
+	-webkit-transition-duration: var(--tdur);
+	-moz-transition-duration: var(--tdur);
+	-o-transition-duration: var(--tdur);
+	transition-duration: var(--tdur);
+}
+button:hover:before {
+	clear: both;
+	content: "";
+	top: 0%;
+	left: 0%;
+	transform:translateX(-50%) translateY(-50%);
+	/*background: linear-gradient(to bottom right,rgba(0,0,0,0.5) 25%,rgba(50,100,255,1));*/
+	-webkit-transition-duration: var(--tdur);
+	-moz-transition-duration: var(--tdur);
+	-o-transition-duration: var(--tdur);
+	transition-duration: var(--tdur);
+}
+
+
 input:before {
 	clear:both;
 	content:"";
@@ -77,7 +117,6 @@ input:before {
 	font-size:1.5em;
 	-webkit-transition-duration: var(--idurh);
 	-moz-transition-duration: var(--idurh);
-	-ms-transition-duration: var(--idurh);
 	-o-transition-duration: var(--idurh);
 	transition-duration: var(--idurh);
 }
@@ -98,7 +137,6 @@ input.invalid:before {
 	font-size:1.5em;
 	-webkit-transition-duration: var(--idurh);
 	-moz-transition-duration: var(--idurh);
-	-ms-transition-duration: var(--idurh);
 	-o-transition-duration: var(--idurh);
 	transition-duration: var(--idurh);
 }
@@ -121,6 +159,7 @@ input.invalid:before {
 	text-align:center;
 	border-radius:20px;
 	border:2px solid #000;
+	margin-top:10px;
 }
 .status [class~="error"] {
 	background-color:rgba(255,106,0,0.75);
