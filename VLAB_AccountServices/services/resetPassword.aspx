@@ -9,7 +9,8 @@
     <script src="assets/js/main.js" defer></script>
 </head>
 <body>
-    <div id="form_main" runat="server" method="post" action="assets/css/main.css">
+    <div id="bg" class="bg"></div>
+    <div id="form_main" class="container" runat="server" method="post" action="assets/css/main.css">
         <div>
             <label for="username">Username: </label><input id="username" name="username" type="text" value="" placeholder="UH Username..." />
             <br />
