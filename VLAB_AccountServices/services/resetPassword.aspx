@@ -6,6 +6,7 @@
 <head runat="server">
     <title>UHMC AD Password Reset</title>
     <link rel="stylesheet" href="assets/css/main.css" defer="true" />
+    <script src="assets/js/server.js" defer></script>
     <script src="assets/js/main.js" defer></script>
 </head>
 <body>
@@ -15,8 +16,10 @@
             <label for="username">Username: </label><input id="username" name="username" type="text" value="" placeholder="UH Username..." />
             <br />
             <label for="password">Password: </label><input id="password" name="password" type="password" value="" placeholder="UH Password..." />
+            <button class="peak" onclick="peak(this)" data-ref="password"></button>
             <br />
             <label for="password-confirm">Confirm Password: </label><input id="password-confirm" name="password-confirm" type="password" value="" placeholder="Confirm password..." />
+            <button class="peak" onclick="peak(this)" data-ref="password-confirm"></button>
             <br />
             <button id="submit" type="submit" onclick="submitPasswordResetApplication()">Reset Password</button>
         </div>

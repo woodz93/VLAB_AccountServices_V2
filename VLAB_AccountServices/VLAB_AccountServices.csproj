@@ -73,6 +73,7 @@
     <Content Include="Default.aspx" />
     <Content Include="services\assets\css\main.css" />
     <Content Include="services\assets\css\vars.css" />
+    <Content Include="services\assets\eye.png" />
     <Content Include="services\assets\js\default.js" />
     <Content Include="services\assets\js\main.js" />
     <Content Include="services\assets\js\server.js" />
@@ -91,6 +92,12 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="services\assets\svr\checkAccount.cs" />
+    <Content Include="services\assets\svr\passwordReset.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
+    <Compile Include="services\assets\svr\passwordReset.aspx.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="services\assets\svr\getPRF.cs" />
     <Compile Include="services\createAccount.aspx.cs">
       <DependentUpon>createAccount.aspx</DependentUpon>

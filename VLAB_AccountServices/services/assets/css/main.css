@@ -162,7 +162,7 @@ input {
 	cursor: text;
 	background-color: rgba(0,0,0,0.0);
 	color: #FFF;
-	display:block;
+	display:inline;
 	padding:4px;
 	font-size:1.5em;
 	text-align:center;
@@ -319,6 +319,34 @@ input.invalid:before {
 }
 .status [class~="error"] {
 	background-color:rgba(255,106,0,0.75);
-	color:#FFF;
+	color:rgb(255,0,0);
 	border:2px double rgb(255,0,0);
+}
+.error {
+	color:rgb(255,0,0);
+}
+
+.peak {
+	position:relative;
+	top:0;
+	left:10%;
+	width:25px;
+	height:25px;
+	display:inline;
+	padding:20px;
+}
+.peak:after {
+	clear:both;
+	content:"";
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background-color:rgba(0,0,0,0.0) !important;
+	background-image:url("../eye.png");
+	background-size:100% 100%;
+	background-repeat:no-repeat;
+	background-position:0 0;
+	background-color:rgba(255,255,255,0.85);
 }
