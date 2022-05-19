@@ -1,5 +1,27 @@
 
 
+
+html {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100vw;
+	height:100vh;
+	background-color:rgb(30,30,30);
+	color:#FFF;
+	display:block;
+	padding:0px;
+}
+body {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color:rgba(0,0,0,0.0);
+}
+
+
 :root {
 	--idur:0.25s;
 	--idurh:1.0s;
