@@ -22,8 +22,12 @@ namespace VLAB_AccountServices.services {
 		private static bool user_exists(string username) {
 			bool res=false;
 			using (var ctx=new PrincipalContext(ContextType.Domain,"maui.hawaii.local")) {
-				using(var fu=UserPrincipal.FindByIdentity(ctx,IdentityType.SamAccountName,username)) {
-					res=(fu!=null);
+				try {
+					using(var fu=UserPrincipal.FindByIdentity(ctx,IdentityType.SamAccountName,username)) {
+						res=(fu!=null);
+					}
+				}catch{
+					res=false;
 				}
 			}
 			return res;
