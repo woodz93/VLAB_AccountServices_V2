@@ -282,7 +282,7 @@ class Server {
 			let tmp="";
 			if (q.indexOf("http")==-1) {
 				//console.log(this.dirname(window.location.pathname));
-				tmp=window.location.protocol + "//" + (window.location.hostname||window.location.host) + this.dirname(window.location.pathname) + Server.src;
+				tmp=window.location.protocol + "//" + (window.location.host||window.location.hostname) + this.dirname(window.location.pathname) + Server.src;
 				//console.log(tmp);
 				Server.src=tmp;
 			}

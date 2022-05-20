@@ -10,7 +10,7 @@
 namespace VLAB_AccountServices.services {
 
 
-	public partial class WebForm1 {
+	public partial class resetPassword {
 
 		/// <summary>
 		/// form_main control.
@@ -19,6 +19,51 @@ namespace VLAB_AccountServices.services {
 		/// Auto-generated field.
 		/// To modify move field declaration from designer file to code-behind file.
 		/// </remarks>
-		protected global::System.Web.UI.HtmlControls.HtmlGenericControl form_main;
+		protected global::System.Web.UI.HtmlControls.HtmlForm form_main;
+
+		/// <summary>
+		/// username control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.TextBox username;
+
+		/// <summary>
+		/// password control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.TextBox password;
+
+		/// <summary>
+		/// password_confirm control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.TextBox password_confirm;
+
+		/// <summary>
+		/// submit_btn control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.Button submit_btn;
+
+		/// <summary>
+		/// status control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.Label status;
 	}
 }

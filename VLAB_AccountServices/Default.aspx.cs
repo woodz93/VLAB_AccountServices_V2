@@ -11,7 +11,15 @@ namespace VLAB_AccountServices
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            //status.Text=Request.Params.GetKey(0);
+            int i=0;
+            int lim=Request.Params.AllKeys.Length;
+            string data="";
+            while(i<lim){
+                data=data+"<br>"+Request.Params.GetKey(i) + " : " + Request.Params.GetValues(i)[0];
+                i++;
+            }
+            status.Text=data+"<br><br>END OF LINE";
         }
     }
 }

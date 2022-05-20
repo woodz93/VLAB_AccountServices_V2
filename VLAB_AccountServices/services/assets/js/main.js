@@ -12,11 +12,11 @@ function ini() {
 	}
 }
 function setup() {
-	if (document.getElementById("password-confirm")) {
+	if (document.getElementById("password_confirm")) {
 		document.getElementById("password").addEventListener("keyup", function (e) {
 			checkPassword();
 		});
-		document.getElementById("password-confirm").addEventListener("keyup", function (e) {
+		document.getElementById("password_confirm").addEventListener("keyup", function (e) {
 			checkPassword();
 		});
 		document.getElementById("status").addEventListener("click", function (e) {
@@ -25,9 +25,9 @@ function setup() {
 		window.addEventListener("keydown", function (event) {
 			if (event.keyCode === 9) {
 				if (event.srcElement.id === "password") {
-					setTimeout(function () { document.getElementById("password-confirm").focus(); }, 0);
+					setTimeout(function () { document.getElementById("password_confirm").focus(); }, 0);
 				}
-				if (event.srcElement.id === "password-confirm") {
+				if (event.srcElement.id === "password_confirm") {
 					setTimeout(function () {
 						document.getElementById("submit").focus();
 					}, 0);
@@ -41,9 +41,9 @@ function setup() {
 }
 
 function checkPassword() {
-	if (document.getElementById("password") && document.getElementById("password-confirm") && document.getElementById("form_main") && document.getElementById("submit")) {
+	if (document.getElementById("password") && document.getElementById("password_confirm") && document.getElementById("form_main") && document.getElementById("submit")) {
 		let fp = document.getElementById("password");
-		let lp = document.getElementById("password-confirm");
+		let lp = document.getElementById("password_confirm");
 		if (fp.value !== lp.value) {
 			checkPasswordValue();
 			//output("Passwords do not match!");
@@ -74,7 +74,7 @@ function checkPassword() {
 function checkPasswordValue() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
-	let passc = document.getElementById("password-confirm");
+	let passc = document.getElementById("password_confirm");
 	let btn = document.getElementById("submit");
 	let res = false;
 	if (user.value.length > 0) {
@@ -100,15 +100,15 @@ function checkPasswordValue() {
 function submitPasswordResetApplication() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
-	let passc = document.getElementById("password-confirm");
+	let passc = document.getElementById("password_confirm");
 	let btn = document.getElementById("submit");
 	if (checkPasswordValue()) {
 		let a = {
-			"src": "assets/svr/passwordReset.aspx",
+			"src": "resetPassword.aspx",
 			"args": {
 				"cmd": "0",
-				"username": user,
-				"password": pass
+				"username": user.value,
+				"password": pass.value
 			}
 		};
 		disableAllFields();
@@ -119,7 +119,7 @@ function submitPasswordResetApplication() {
 function disableAllFields() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
-	let passc = document.getElementById("password-confirm");
+	let passc = document.getElementById("password_confirm");
 	let btn = document.getElementById("submit");
 	user.disable = true;
 	pass.disable = true;
@@ -129,7 +129,7 @@ function disableAllFields() {
 function enableAllFields() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
-	let passc = document.getElementById("password-confirm");
+	let passc = document.getElementById("password_confirm");
 	let btn = document.getElementById("submit");
 	user.disable = false;
 	pass.disable = false;

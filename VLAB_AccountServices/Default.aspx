@@ -15,6 +15,8 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no? redir to /services/createAccount.aspx
     -->
     <div id="js-assets" hidden></div>
-    <form id="form_main" runat="server"></form>
+    <form id="form_main" runat="server">
+        <asp:Label ID="status" name="status" Text="" runat="server"></asp:Label>
+    </form>
 </body>
 </html>

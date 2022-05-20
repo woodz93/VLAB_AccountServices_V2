@@ -181,7 +181,8 @@ label {
 	font-family:arial;
 	font-size:1.5em;
 }
-button, input[type="button"] {
+button, .submit_btn {
+	appearance:button;
 	position: relative;
 	top: 0;
 	left: 50%;
@@ -207,15 +208,33 @@ button, input[type="button"] {
 		100% var(--b-),
 		calc(100% - var(--b-)) 0
 	);
+	text-align:center;
+	font-family:arial;
 	-webkit-transition-duration: var(--idur);
 	-moz-transition-duration: var(--idur);
 	-o-transition-duration: var(--idur);
 	transition-duration: var(--idur);
 }
-button:before {
+.submit_btn {
+	/*
+	width:25%;
+	height:2.0em;
+	*/
+	width:20%;
+	height:auto;
+	padding:25px;
+	font-weight:bolder;
+	font-size:1.5em;
+	clip-path:unset;
+	border:2px solid rgba(255,255,255,0.85);
+	margin-top:10px;
+}
+
+button:before, .submit_btn:before {
 	clear: both;
 	content: "";
 	position: absolute;
+	appearance:button;
 	top: 0;
 	left: 0;
 	width: 200%;
@@ -237,9 +256,10 @@ button:before {
 	-o-transition-duration: var(--tdur);
 	transition-duration: var(--tdur);
 }
-button:hover:before {
+button:hover:before, .submit_btn:hover:before {
 	clear: both;
 	content: "";
+	appearance:button;
 	top: 0%;
 	left: 0%;
 	transform:translateX(-50%) translateY(-50%);

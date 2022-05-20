@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="resetPassword.aspx.cs" Inherits="VLAB_AccountServices.services.WebForm1" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="resetPassword.aspx.cs" Inherits="VLAB_AccountServices.services.resetPassword" %>
 
 <!DOCTYPE html>
 
@@ -11,19 +11,19 @@
 </head>
 <body>
     <div id="bg" class="bg"></div>
-    <div id="form_main" class="container" runat="server" method="post" action="assets/css/main.css">
+    <form id="form_main" class="container" runat="server" method="post">
         <div>
-            <label for="username">Username: </label><input id="username" name="username" type="text" value="" placeholder="UH Username..." />
+            <label for="username">Username: </label><asp:textbox id="username" Text="" runat="server" name="username" type="text" value="" placeholder="UH Username..."></asp:textbox>
             <br />
-            <label for="password">Password: </label><input id="password" name="password" type="password" value="" placeholder="UH Password..." />
+            <label for="password">Password: </label><asp:textbox id="password" Text="" runat="server" name="password" type="password" value="" placeholder="UH Password..."></asp:textbox>
             <button class="peak" onclick="peak(this)" data-ref="password"></button>
             <br />
-            <label for="password-confirm">Confirm Password: </label><input id="password-confirm" name="password-confirm" type="password" value="" placeholder="Confirm password..." />
-            <button class="peak" onclick="peak(this)" data-ref="password-confirm"></button>
+            <label for="password-confirm">Confirm Password: </label><asp:textbox id="password_confirm" Text="" runat="server" name="password_confirm" type="password" value="" placeholder="Confirm password..."></asp:textbox>
+            <button class="peak" onclick="peak(this)" data-ref="password_confirm"></button>
             <br />
-            <button id="submit" type="submit" onclick="submitPasswordResetApplication()">Reset Password</button>
+            <asp:button id="submit_btn" CssClass="submit_btn" name="submit_btn" Text="Reset Password" Onclick="processPassword" runat="server"></asp:button>
         </div>
-        <div id="status" class="status"></div>
-    </div>
+        <asp:label id="status" Text="" runat="server" class="status"></asp:label>
+    </form>
 </body>
 </html>
