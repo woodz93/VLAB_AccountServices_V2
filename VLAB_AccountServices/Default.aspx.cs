@@ -23,21 +23,28 @@ namespace VLAB_AccountServices
         // Performs checks to see if the 
         protected void Page_Load(object sender, EventArgs e)
         {
+            User obj;
             if (CasAuthentication.CurrentPrincipal!=null) {
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
-                string username=System.Web.HttpContext.Current.User.Identity.Name;
+                
+            } else {
+                status.Text="FAILED";
+            }
+            //string username=System.Web.HttpContext.Current.User.Identity.Name;
+                string username="dvalente";
                 //status.Text=username;
                 //this.checkUser(username);
                 string data="{\"username\":\"" + username + "\"}";
-                User obj = JsonSerializer.Deserialize<User>(data);
+                status.Text=data;
+                obj = JsonSerializer.Deserialize<User>(data);
+                /*
+                
                 if (AD.userExists(obj)) {
                     status.Text="User was found in the active directory.";
                 } else {
                     status.Text="User was not found in the active directory.";
                 }
-            } else {
-                status.Text="FAILED";
-            }
+                */
         }
         protected void checkUser(string username) {
             string id=this.genID();
