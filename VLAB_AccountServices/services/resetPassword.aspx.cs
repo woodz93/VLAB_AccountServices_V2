@@ -36,6 +36,9 @@ namespace VLAB_AccountServices.services
             string p=password.Text;
             string pc=password_confirm.Text;
             status.Text="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + resetPassword.ending;
+            submit_btn.Enabled=false;
+            password.Enabled=false;
+            password_confirm.Enabled=false;
         }
 
         protected void Page_Load(object sender, EventArgs e)
