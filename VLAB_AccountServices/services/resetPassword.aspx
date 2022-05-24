@@ -16,14 +16,14 @@
             <label for="username">Username: </label><asp:textbox id="username" Text="" runat="server" name="username" type="text" value="" placeholder="UH Username..."></asp:textbox>
             <br />
             <label for="password">Password: </label><asp:textbox id="password" Text="" runat="server" name="password" type="password" value="" placeholder="UH Password..."></asp:textbox>
-            <button class="peak" onclick="peak(this)" data-ref="password"></button>
+            <button type="button" class="peak" onclick="peak(this)" data-ref="password"></button>
             <br />
             <label for="password-confirm">Confirm Password: </label><asp:textbox id="password_confirm" Text="" runat="server" name="password_confirm" type="password" value="" placeholder="Confirm password..."></asp:textbox>
-            <button class="peak" onclick="peak(this)" data-ref="password_confirm"></button>
+            <button type="button" class="peak" onclick="peak(this)" data-ref="password_confirm"></button>
             <br />
             <asp:button id="submit_btn" CssClass="submit_btn" name="submit_btn" Text="Reset Password" Onclick="processPassword" runat="server"></asp:button>
         </div>
-        <asp:label id="status" Text="" runat="server" class="status"></asp:label>
+        <asp:label id="status" Text="" runat="server" class="status">Console data will be displayed here.</asp:label>
     </form>
 </body>
 </html>

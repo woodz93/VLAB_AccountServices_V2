@@ -9,7 +9,7 @@ namespace VLAB_AccountServices.services {
 		public string[] groups { get; set; }		// The associative groups the user will or already does belong to.
 		public bool ad_exists { get; set; }			// Does the user exist in the active directory?
 		public string algo { get; set; }			// The password hashing algorithm to use within the active directory.
-		public string db_id { get; set; }			// The database reference id to/for the user that is being processed.
+		public string id { get; set; }			// The database reference id to/for the user that is being processed.
 		public string new_username{get;set; }
 
 	}

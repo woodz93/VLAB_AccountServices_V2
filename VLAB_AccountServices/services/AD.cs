@@ -28,7 +28,7 @@ namespace VLAB_AccountServices.services {
 			return res;
 		}
 		// Returns true if the property name exists within the object.
-		private static bool isset(User obj,string key) {
+		public static bool isset(User obj,string key) {
 			bool res=false;
 			if (obj.GetType().GetProperty(key)!=null) {
 				res=true;

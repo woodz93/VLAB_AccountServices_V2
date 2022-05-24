@@ -41,14 +41,14 @@ function setup() {
 }
 
 function checkPassword() {
-	if (document.getElementById("password") && document.getElementById("password_confirm") && document.getElementById("form_main") && document.getElementById("submit")) {
+	if (document.getElementById("password") && document.getElementById("password_confirm") && document.getElementById("form_main") && document.getElementById("submit_btn")) {
 		let fp = document.getElementById("password");
 		let lp = document.getElementById("password_confirm");
 		if (fp.value !== lp.value) {
 			checkPasswordValue();
 			//output("Passwords do not match!");
-			if (!document.getElementById("submit").disabled) {
-				document.getElementById("submit").disabled = true;
+			if (!document.getElementById("submit_btn").disabled) {
+				document.getElementById("submit_btn").disabled = true;
 			}
 			if (!fp.classList.contains("invalid")) {
 				fp.classList.add("invalid");
@@ -58,8 +58,8 @@ function checkPassword() {
 			}
 		} else {
 			checkPasswordValue();
-			if (document.getElementById("submit").disabled) {
-				document.getElementById("submit").disabled = false;
+			if (document.getElementById("submit_btn").disabled) {
+				document.getElementById("submit_btn").disabled = false;
 			}
 			if (fp.classList.contains("invalid")) {
 				fp.classList.remove("invalid");
@@ -75,7 +75,7 @@ function checkPasswordValue() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
 	let passc = document.getElementById("password_confirm");
-	let btn = document.getElementById("submit");
+	let btn = document.getElementById("submit_btn");
 	let res = false;
 	if (user.value.length > 0) {
 		if (pass.value.length > 4) {
@@ -101,7 +101,7 @@ function submitPasswordResetApplication() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
 	let passc = document.getElementById("password_confirm");
-	let btn = document.getElementById("submit");
+	let btn = document.getElementById("submit_btn");
 	if (checkPasswordValue()) {
 		let a = {
 			"src": "resetPassword.aspx",
@@ -120,7 +120,7 @@ function disableAllFields() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
 	let passc = document.getElementById("password_confirm");
-	let btn = document.getElementById("submit");
+	let btn = document.getElementById("submit_btn");
 	user.disable = true;
 	pass.disable = true;
 	passc.disable = true;
@@ -130,7 +130,7 @@ function enableAllFields() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
 	let passc = document.getElementById("password_confirm");
-	let btn = document.getElementById("submit");
+	let btn = document.getElementById("submit_btn");
 	user.disable = false;
 	pass.disable = false;
 	passc.disable = false;
