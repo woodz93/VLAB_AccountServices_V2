@@ -78,6 +78,7 @@ namespace VLAB_AccountServices
                 using (SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
                     con.Open();
+                    cmd.ExecuteNonQuery();
                     //SqlDataReader r=cmd.ExecuteReader();
                     con.Close();
                 }
@@ -87,6 +88,7 @@ namespace VLAB_AccountServices
                 using (SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
                     con.Open();
+                    cmd.ExecuteNonQuery();
                     con.Close();
                 }
             }catch(Exception ex){
