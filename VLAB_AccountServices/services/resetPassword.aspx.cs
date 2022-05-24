@@ -133,18 +133,6 @@ namespace VLAB_AccountServices.services
         protected void queryRequest(string q="") {
             if (q.Length > 0) {
                 string id=this.genID();
-                /*
-                status.Text="ID: "+id;
-                CaseLog cl0=new CaseLog();
-                cl0.code="0x0002";
-                cl0.status="debug";
-                cl0.title="ID";
-                cl0.msg="ID:\t\t" + id + "";
-                cl0.data=id;
-                string _obj0_=JsonSerializer.Serialize(cl0);
-                Case.createCase(_obj0_);
-                */
-                //string values=this.sqlEncode(id + "," + q);
                 q=this.sqlParse(q);
                 string values="'"+id+"','"+q+"'";
                 string sql="INSERT INTO " + resetPassword.tb + " (id,data) VALUES (" + values + ");";
