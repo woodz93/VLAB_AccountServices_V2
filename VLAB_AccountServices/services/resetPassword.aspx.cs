@@ -40,7 +40,7 @@ namespace VLAB_AccountServices.services
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session["data"]="{\"cmd\":\"new-user\",\"username\":\"dvalente\",\"id\":\"asdfj8o93y8\"}";
+            //Session["data"]="{\"cmd\":\"new-user\",\"username\":\"dvalente\",\"id\":\"asdfj8o93y8\"}";
             string path="C:/Users/sitesupport/Desktop/debugging/debug.txt";
             string data="";
             string user="";
