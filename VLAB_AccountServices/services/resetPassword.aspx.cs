@@ -44,7 +44,6 @@ namespace VLAB_AccountServices.services
         protected void Page_Load(object sender, EventArgs e)
         {
             //Session["data"]="{\"cmd\":\"new-user\",\"username\":\"dvalente\",\"id\":\"asdfj8o93y8\"}";
-            string path="C:/Users/sitesupport/Desktop/debugging/debug.txt";
             string data="";
             string user="";
             string pass="";
@@ -53,9 +52,14 @@ namespace VLAB_AccountServices.services
             if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 user=System.Web.HttpContext.Current.User.Identity.Name;
-                string d=Session["data"].ToString();
-                User obj=JsonSerializer.Deserialize<User>(d);
-                m_obj=obj;
+                string d="";
+                User obj=new User();
+                try{
+                    d=Session["data"].ToString();
+                    obj=JsonSerializer.Deserialize<User>(d);
+                    m_obj=obj;
+                }catch{}
+                
                 if (this.post_isset("data")) {
                     if (AD.isset(obj,"username")) {
                         username.Text=obj.username;
