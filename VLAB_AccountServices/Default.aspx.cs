@@ -41,27 +41,7 @@ namespace VLAB_AccountServices
                 // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
                 Session["data"]=data;
                 Response.Redirect("services/resetPassword.aspx");
-                /*
-                string id=this.genID();
-                string data="";
-                data=JsonSerializer.Serialize(obj);
-                string sql="INSERT INTO " + Default.tb + " (id,data) VALUES ('" + id + "','" + data + "');";
-                */
-                //string username="dvalente";
-                //status.Text=username;
-                //this.checkUser(username);
-                //string data="{\"username\":\"" + username + "\"}";
-                //string id=this.genID();
-                //string sql="INSERT INTO " + Default.tb + " (id,data) VALUES ('" + id + "','" + data + "');";
-                //status.Text=data;
-                /*
-                obj = JsonSerializer.Deserialize<User>(data);
-                if (AD.userExists(obj)) {
-                    status.Text="User was found in the active directory.";
-                } else {
-                    status.Text="User was not found in the active directory.";
-                }
-                */
+                
                 
             } else {
                 status.Text="FAILED";
@@ -100,7 +80,7 @@ namespace VLAB_AccountServices
         protected bool checkUserResponse(string id) {
             bool res=false;
             //string data="{\\\"cmd\\\":\\\"check-user\\\",\\\"username\\\":\\\"" + username + "\\\"}";
-            string sql="SELECT * FROM " + Default.tb + " WHERE id=\"" + id + "\";";
+            string sql="SELECT COUNT(*) AS TOTAL FROM " + Default.tb + " WHERE id=\"" + id + "\";";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
                 using (SqlConnection con=new SqlConnection(constr)) {
@@ -109,20 +89,32 @@ namespace VLAB_AccountServices
                     SqlDataReader r=cmd.ExecuteReader();
                     con.Close();
                     if (r.HasRows) {
-                        res=true;
+                        int co=0;
+                        while(r.Read()){
+                            co=r.GetInt32(0);
+                            break;
+                        }
+                        if (co>0) {
+                            res=true;
+                        } else {
+                            res=this.proc(id);
+                        }
                     } else if (this.cur_count<10) {
-                        Thread.Sleep(500);
-                        this.cur_count++;
-                        res=this.checkUserResponse(id);
+                        res=this.proc(id);
                     } else {
                         res=false;
                     }
+                    //con.Close();
                 }
-                //Thread.Sleep(1000);
-                //res=this.checkUserResponse(id);
             }catch(Exception ex){
                 status.Text="Error occurred while checking for AD user.";
             }
+            return res;
+        }
+        protected bool proc(string id) {
+            Thread.Sleep(500);                          // Replace with something less harmfull for processing.
+            this.cur_count++;
+            bool res=this.checkUserResponse(id);
             return res;
         }
         // ID controller method. Checks if the generated ID does not exist on the database. If it does not, then the generated ID will be returned.

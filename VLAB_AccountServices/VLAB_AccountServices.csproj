@@ -123,6 +123,7 @@
     <Compile Include="services\AD.cs" />
     <Compile Include="services\assets\Case.cs" />
     <Compile Include="services\CaseLog.cs" />
+    <Compile Include="services\timeout.cs" />
     <Compile Include="services\User.cs" />
     <Compile Include="services\createAccount.aspx.cs">
       <DependentUpon>createAccount.aspx</DependentUpon>
