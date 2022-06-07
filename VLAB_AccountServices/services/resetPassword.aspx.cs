@@ -10,6 +10,7 @@ using System.Text.Json;
 using System.Data.SqlClient;
 using DotNetCasClient;
 using DotNetCasClient.Security;
+using VLAB_AccountServices.services.assets.sys;
 
 namespace VLAB_AccountServices.services
 {
@@ -54,28 +55,36 @@ namespace VLAB_AccountServices.services
                 user=System.Web.HttpContext.Current.User.Identity.Name;
                 string d="";
                 User obj=new User();
+                //obj.username="test";
                 try{
                     d=Session["data"].ToString();
                     obj=JsonSerializer.Deserialize<User>(d);
                     m_obj=obj;
                 }catch{}
-                
+                obj.username="dvalente";
+                //username.Text="FAILED";
+                //username.Text="\""+sys.getCWD()+"\"";
                 if (this.post_isset("data")) {
                     if (AD.isset(obj,"username")) {
                         username.Text=obj.username;
+                        username.Text="FAILED";
                         username.Enabled=false;
                         user=obj.username;
+                        //username.Text="\""+sys.getCWD()+"\"";
                     } else if (CasAuthentication.CurrentPrincipal!=null) {
                         username.Text=user;
                         username.Enabled=false;
+                        //username.Text="\""+sys.getCWD()+"\"";
                     } else {
                         username.Text="";
                         status.Text="Failed to get username request.";
+                        //username.Text="\""+sys.getCWD()+"\"";
                     }
                 } else {
                     username.Text=user;
                     username.Enabled=false;
                 }
+                //username.Text="\""+sys.getCWD()+"\"";
                 if (AD.isset(obj,"cmd")) {
                     if (obj.cmd=="new-user") {
                         submit_btn.Text="Create Account";
@@ -91,6 +100,7 @@ namespace VLAB_AccountServices.services
             } else {
                 status.Text="Could not discover parameter data.";
             }
+            //username.Text=sys.getCWD();
             if (IsPostBack) {
                 //data=Request.Form.GetValues("username")[0];
                 //File.WriteAllText(path,data);

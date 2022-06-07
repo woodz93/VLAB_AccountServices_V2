@@ -122,6 +122,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="services\AD.cs" />
     <Compile Include="services\assets\Case.cs" />
+    <Compile Include="services\assets\sys\sys.cs" />
     <Compile Include="services\CaseLog.cs" />
     <Compile Include="services\timeout.cs" />
     <Compile Include="services\User.cs" />

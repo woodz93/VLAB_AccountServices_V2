@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Text.Json;
 using VLAB_AccountServices.services;
 using System.Threading;
+using VLAB_AccountServices.services.assets.sys;
 
 namespace VLAB_AccountServices
 {
@@ -40,10 +41,25 @@ namespace VLAB_AccountServices
                 string data=JsonSerializer.Serialize(obj);
                 // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
                 Session["data"]=data;
+                sys.flush();
                 Response.Redirect("services/resetPassword.aspx");
                 
                 
             } else {
+                string username="dvalente";
+                bool tmp=this.checkUser(username);
+                obj.username=username;
+                obj.id=this.genID();
+                if (tmp==true) {
+                    obj.cmd="set-password";
+                } else {
+                    obj.cmd="new-user";
+                }
+                string data=JsonSerializer.Serialize(obj);
+                // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
+                Session["data"]=data;
+                sys.flush();
+                Response.Redirect("services/resetPassword.aspx");
                 status.Text="FAILED";
             }
             
@@ -68,11 +84,11 @@ namespace VLAB_AccountServices
                 using (SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
                     con.Open();
-                    cmd.ExecuteNonQuery();
+                    //cmd.ExecuteNonQuery();
                     con.Close();
                 }
             }catch(Exception ex){
-
+                sys.error(ex.Message);
             }
             return res;
         }
