@@ -9,9 +9,20 @@ using System.Threading;
 namespace VLAB_AccountServices.services.assets.sys {
 	public class sys {
 
-		protected static string debug_buffer="";
+		public static string debug_buffer="";
 		protected static bool output_flush=false;
 		protected static bool logging=true;
+
+		public static string getBuffer() {
+			string res=sys.debug_buffer;
+			if (res.IndexOf("\n")!=-1) {
+				res=res.Replace("\n","<br>");
+			}
+			if (res.IndexOf("\t")!=-1) {
+				res=res.Replace("\t","&nbsp;&nbsp;&nbsp;&nbsp;");
+			}
+			return res;
+		}
 
 		public static void error(string q) {
 			q=sys.sanitize(q);

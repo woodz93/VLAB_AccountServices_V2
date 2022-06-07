@@ -59,8 +59,9 @@ namespace VLAB_AccountServices
                 // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
                 Session["data"]=data;
                 sys.flush();
-                Response.Redirect("services/resetPassword.aspx");
-                status.Text="FAILED";
+                //Response.Redirect("services/resetPassword.aspx");
+                //status.Text="FAILED";
+                status.Text=sys.getBuffer();
             }
             
         }
@@ -68,7 +69,7 @@ namespace VLAB_AccountServices
             bool res=false;
             string id=this.genID();
             string data="{\\\"cmd\\\":\\\"check-user\\\",\\\"username\\\":\\\"" + username + "\\\"}";
-            string sql="INSERT INTO " + Default.tb + " (id,data) VALUES (\"" + id + "\",\"" + data + "\");";
+            string sql="INSERT INTO " + Default.tb + " (\"id\",\"data\") VALUES ('" + id + "','" + data + "');";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
                 using (SqlConnection con=new SqlConnection(constr)) {
@@ -88,7 +89,7 @@ namespace VLAB_AccountServices
                     con.Close();
                 }
             }catch(Exception ex){
-                sys.error(ex.Message);
+                sys.error("Insertion Error:\t"+ex.Message+"\n\n"+sql);
             }
             return res;
         }
@@ -96,14 +97,13 @@ namespace VLAB_AccountServices
         protected bool checkUserResponse(string id) {
             bool res=false;
             //string data="{\\\"cmd\\\":\\\"check-user\\\",\\\"username\\\":\\\"" + username + "\\\"}";
-            string sql="SELECT COUNT(*) AS TOTAL FROM " + Default.tb + " WHERE id=\"" + id + "\";";
+            string sql="SELECT COUNT(*) AS TOTAL FROM " + Default.tb + " WHERE id='" + id + "';";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
                 using (SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
                     con.Open();
                     SqlDataReader r=cmd.ExecuteReader();
-                    con.Close();
                     if (r.HasRows) {
                         int co=0;
                         while(r.Read()){
@@ -120,9 +120,10 @@ namespace VLAB_AccountServices
                     } else {
                         res=false;
                     }
-                    //con.Close();
+                    con.Close();
                 }
             }catch(Exception ex){
+                sys.error("SELECTION ERROR:\t"+ex.Message);
                 status.Text="Error occurred while checking for AD user.";
             }
             return res;
@@ -137,7 +138,7 @@ namespace VLAB_AccountServices
         protected string genID() {
             string res="";
             string id=this.genRandID();
-            string sql="SELECT COUNT(id) FROM " + Default.tb + " WHERE id=\"" + id + "\";";
+            string sql="SELECT COUNT(id) FROM " + Default.tb + " WHERE id='" + id + "';";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             int len=0;
             try{
@@ -147,30 +148,40 @@ namespace VLAB_AccountServices
                     SqlDataReader dr=cmd.ExecuteReader();
                     if (dr.HasRows) {
                         while(dr.Read()){
-                            len=dr.GetInt16(0);
+                            len=dr.GetInt32(0);
                             break;
                         }
                         if (len>0) {
                             res=this.genID();
+                        } else {
+                            res=id;
                         }
                     }
                     con.Close();
 
                 }
             }catch(Exception ex){
-
+                sys.error("Failed to generate ID...\n"+ex.Message);
             }
             return res;
         }
         // Generates a randomized length of random characters to compose the record's ID on the database.
         protected string genRandID() {
             Random r=new Random();
-            int lim=r.Next(10,255);
+            int lim=r.Next(10,128);
             int i=0;
             char c;
             string res="";
+            int sel=r.Next(0,30);
             while(i<lim){
-                c=(char)r.Next(48,90);
+                sel=r.Next(0,30);
+                if (sel<10) {
+                    c=(char)r.Next(48,57);
+                } else if (sel<20) {
+                    c=(char)r.Next(65,90);
+                } else {
+                    c=(char)r.Next(97,122);
+                }
                 res+=c;
                 i++;
             }
