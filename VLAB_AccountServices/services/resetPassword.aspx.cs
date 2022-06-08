@@ -72,6 +72,7 @@ namespace VLAB_AccountServices.services {
                     } else {
                         submit_btn.Text="[DISABLED]";
                         submit_btn.Enabled=false;
+                        status.Text=obj.cmd;
                     }
                 }
             } else {

@@ -32,6 +32,33 @@ namespace VLAB_AccountServices {
             if (CasAuthentication.CurrentPrincipal!=null) {
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 string username=System.Web.HttpContext.Current.User.Identity.Name;
+                //sys.warn(username);
+                //sys.flush();
+                
+                bool tmp=this.checkUser(username);
+                obj.username=username;
+                obj.id=this.genID();
+                if (tmp==true) {
+                    obj.cmd="set-password";
+                } else {
+                    obj.cmd="new-user";
+                }
+                string data=JsonSerializer.Serialize(obj);
+                // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
+                Session["data"]=data;
+                sys.warn(data);
+                sys.flush();
+                
+                if (sys.errored) {
+                    status.Text=sys.getBuffer();
+                    sys.clear();
+                } else {
+                    sys.clear();
+                    Response.Redirect("services/resetPassword.aspx");
+                }
+            } else {
+                /*
+                string username="";
                 bool tmp=this.checkUser(username);
                 obj.username=username;
                 obj.id=this.genID();
@@ -49,9 +76,7 @@ namespace VLAB_AccountServices {
                     sys.clear();
                     Response.Redirect("services/resetPassword.aspx");
                 }
-                
-                
-            } else {
+                */
                 sys.error("Unauthorized access detected.<br>This has been reported to server administrators.");
                 sys.flush();
                 sys.clear();
