@@ -47,10 +47,14 @@ namespace VLAB_AccountServices.services {
                 obj.username="dvalente";
                 if (this.post_isset("data")) {
                     if (AD.isset(obj,"username")) {
-                        username.Text=obj.username;
-                        username.Text="FAILED";
-                        username.Enabled=false;
-                        user=obj.username;
+                        if (!String.IsNullOrEmpty(obj.username)) {
+                            username.Text=obj.username;
+                            //username.Text="FAILED";
+                            username.Enabled=false;
+                            user=obj.username;
+                        } else {
+                            Response.Redirect("../Default.aspx");
+                        }
                     } else if (CasAuthentication.CurrentPrincipal!=null) {
                         username.Text=user;
                         username.Enabled=false;
