@@ -36,7 +36,7 @@ namespace VLAB_AccountServices.services {
             } else if (this.mode==0x01) {
                 sys.flush();
                 sys.clear();
-                status.Text=sys.buffer;
+                status.Text+=sys.buffer;
             }
         }
 
@@ -57,9 +57,13 @@ namespace VLAB_AccountServices.services {
                     d=Session["data"].ToString();
                     obj=JsonSerializer.Deserialize<User>(d);
                     m_obj=obj;
-                }catch{
+                    this.pass=true;
+                }catch(Exception ex){
                     //Response.Redirect("../Default.aspx");
-                    status.Text+="ERROR-007";
+                    //status.Text+="ERROR-007";
+                    sys.error(ex.Message);
+                    sys.flush();
+                    status.Text+=sys.buffer;
                     if (!String.IsNullOrEmpty(obj.cmd) && !String.IsNullOrEmpty(obj.username)) {
                         this.pass=true;
                     } else {

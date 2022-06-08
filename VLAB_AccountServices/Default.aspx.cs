@@ -51,10 +51,13 @@ namespace VLAB_AccountServices {
                 sys.flush();
                 
                 if (sys.errored) {
+                    sys.error("System errored out.");
                     status.Text=sys.getBuffer();
                     sys.clear();
+                    sys.errored=false;
                 } else {
                     sys.clear();
+                    status.Text+="<br>REDIRECTING...";
                     Response.Redirect("services/resetPassword.aspx");
                 }
             } else {
