@@ -48,6 +48,9 @@ namespace VLAB_AccountServices.services {
             string mode="";
             
             User m_obj=new User();
+
+            status.Text+="<br><br>&quot;"+Session["data"]+"&quot;<br><br>";
+
             status.Text+="<br>Page loaded<br>";
             if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
                 status.Text+="<br>Processing request...<br>";

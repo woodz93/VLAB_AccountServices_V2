@@ -32,6 +32,8 @@ namespace VLAB_AccountServices {
         {
             User obj=new User();
             Default.st=status;
+            sys.errored=false;
+            sys.clear();
             if (CasAuthentication.CurrentPrincipal!=null) {
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 string username=System.Web.HttpContext.Current.User.Identity.Name;
@@ -138,6 +140,8 @@ namespace VLAB_AccountServices {
                 string data="{\"cmd\":\""+this.obj.cmd+"\",\"username\":\""+this.obj.username+"\"}";
                 Session["data"]=data;
                 status.Text+="<br>REDIRECTING...";
+                status.Text+="<br><br>"+data+"<br><br>";
+                status.Text+="<br><br>"+Session["data"]+"<br><br>";
                 Response.Redirect("services/resetPassword.aspx");
             }
             return 1;
