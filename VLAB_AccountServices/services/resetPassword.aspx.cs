@@ -46,7 +46,6 @@ namespace VLAB_AccountServices.services {
                 }catch{
                     Response.Redirect("../Default.aspx");
                 }
-                obj.username="dvalente";
                 if (this.post_isset("data")) {
                     if (AD.isset(obj,"cmd")) {
                         if (!String.IsNullOrEmpty(obj.cmd)) {
@@ -57,7 +56,8 @@ namespace VLAB_AccountServices.services {
                                     username.Enabled=false;
                                     user=obj.username;
                                 } else {
-                                    Response.Redirect("../Default.aspx");
+                                    //Response.Redirect("../Default.aspx");
+                                    status.Text+="ERROR-002";
                                 }
                             } else if (CasAuthentication.CurrentPrincipal!=null) {
                                 username.Text=user;
@@ -67,16 +67,19 @@ namespace VLAB_AccountServices.services {
                                 status.Text="Failed to get username request.";
                             }
                         } else {
-                            Response.Redirect("../Default.aspx");
+                            //Response.Redirect("../Default.aspx");
+                            status.Text+="ERROR-001";
                         }
                     } else {
-                        Response.Redirect("../Default.aspx");
+                        //Response.Redirect("../Default.aspx");
+                        status.Text+="ERROR-000";
                     }
                     
                 } else {
                     //username.Text=user;
                     //username.Enabled=false;
-                    Response.Redirect("../Default.aspx");
+                    //Response.Redirect("../Default.aspx");
+                    status.Text+="ERROR-003";
                 }
                 if (AD.isset(obj,"cmd")) {
                     if (obj.cmd=="new-user") {
@@ -89,13 +92,15 @@ namespace VLAB_AccountServices.services {
                         submit_btn.Text="[DISABLED]";
                         submit_btn.Enabled=false;
                         status.Text="Command does not exist.";
-                        Response.Redirect("../Default.aspx");
+                        //Response.Redirect("../Default.aspx");
+                        status.Text+="ERROR-004";
                     }
                 } else {
                     submit_btn.Text="[DISABLED]";
                     submit_btn.Enabled=false;
                     status.Text="Failed to get data.";
-                    Response.Redirect("../Default.aspx");
+                    //Response.Redirect("../Default.aspx");
+                    status.Text+="ERROR-005";
                 }
             } else {
                 status.Text="Could not discover parameter data.";
