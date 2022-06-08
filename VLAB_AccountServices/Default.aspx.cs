@@ -138,6 +138,7 @@ namespace VLAB_AccountServices {
                             sys.error("Request timmed out.<br>Please reload the page and try again.");
                             sys.flush();
                             sys.clear();
+                            this.removeRecord(id);                      // Removes the record from the database to clear up space.
                         }
                     } else {
                         sys.warn("FOUND RECORD!");
