@@ -35,7 +35,7 @@ namespace VLAB_AccountServices.services {
                 Response.Redirect("../Default.aspx");
             } else if (this.mode==0x01) {
                 sys.flush();
-                sys.clear();
+                //sys.clear();
                 status.Text+=sys.buffer;
             }
         }
@@ -48,22 +48,34 @@ namespace VLAB_AccountServices.services {
             string mode="";
             
             User m_obj=new User();
+            status.Text+="<br>Page loaded<br>";
             if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
+                status.Text+="<br>Processing request...<br>";
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 user=System.Web.HttpContext.Current.User.Identity.Name;
                 string d="";
                 User obj=new User();
+                sys.warn("POST and CAS check passed.");
+                sys.flush();
+                status.Text+=sys.buffer;
+                //sys.clear();
+                status.Text+="<br>Parsing data...<br>";
+                status.Text+="<br>SESSION DATA: &quot;"+Session["data"]+"&quot;<br>";
                 try{
                     d=Session["data"].ToString();
+                    status.Text+="<br>Object Data: &quot;"+d+"&quot<br>";
                     obj=JsonSerializer.Deserialize<User>(d);
                     m_obj=obj;
-                    this.pass=true;
+                    //this.pass=true;
+                    
                 }catch(Exception ex){
                     //Response.Redirect("../Default.aspx");
                     //status.Text+="ERROR-007";
                     sys.error(ex.Message);
-                    sys.flush();
-                    status.Text+=sys.buffer;
+                    //sys.flush();
+                    status.Text+="<br>- "+ex.Message+"<br>";
+                    //status.Text+=sys.buffer;
+                    this.redirect();
                     if (!String.IsNullOrEmpty(obj.cmd) && !String.IsNullOrEmpty(obj.username)) {
                         this.pass=true;
                     } else {
@@ -75,6 +87,16 @@ namespace VLAB_AccountServices.services {
                         this.redirect();
                     }
                 }
+
+                if (this.pass) {
+                    status.Text+="<br>- Passed checks.<br>USERNAME: &quot;"+obj.username+"&quot;<br>CMD: &quot;"+obj.cmd+"&quot;<br>";
+                    if (!(user.Length>0) && !(obj.username.Length>0)) {
+                        sys.error("No username found.");
+                        this.pass=false;
+                        this.redirect();
+                    }
+                }
+
                 if (this.pass) {
                     if (this.post_isset("data")) {
                         if (AD.isset(obj,"cmd")) {
@@ -96,7 +118,7 @@ namespace VLAB_AccountServices.services {
                                     username.Enabled=false;
                                 } else {
                                     username.Text="";
-                                    status.Text="Failed to get username request.";
+                                    status.Text+="Failed to get username request.";
                                 }
                             } else {
                                 //Response.Redirect("../Default.aspx");
@@ -130,7 +152,7 @@ namespace VLAB_AccountServices.services {
                             } else {
                                 submit_btn.Text="[DISABLED]";
                                 submit_btn.Enabled=false;
-                                status.Text="Command does not exist.";
+                                status.Text+="Command does not exist.";
                                 //Response.Redirect("../Default.aspx");
                                 //status.Text+="ERROR-004";
                                 sys.error("Command not recognized.");
@@ -145,7 +167,7 @@ namespace VLAB_AccountServices.services {
                     } else {
                         submit_btn.Text="[DISABLED]";
                         submit_btn.Enabled=false;
-                        status.Text="Failed to get data.";
+                        status.Text+="Failed to get data.";
                         //Response.Redirect("../Default.aspx");
                         //status.Text+="ERROR-005";
                         sys.error("Command property does not exist.");
@@ -156,7 +178,7 @@ namespace VLAB_AccountServices.services {
                     this.redirect();
                 }
             } else {
-                status.Text="Could not discover parameter data.";
+                status.Text+="Could not discover parameter data.";
                 //Response.Redirect("../Default.aspx");
                 //status.Text+="ERROR-006";
                 sys.error("POST has not data or CAS was not initialized.");

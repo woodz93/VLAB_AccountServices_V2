@@ -24,6 +24,9 @@ namespace VLAB_AccountServices {
         public static string id="";
         public static byte mode=0x00;
         protected static int ct=0;
+        private User obj;
+        private string username;
+        private int pt=0;
         // Performs checks to see if the 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -34,8 +37,10 @@ namespace VLAB_AccountServices {
                 string username=System.Web.HttpContext.Current.User.Identity.Name;
                 //sys.warn(username);
                 //sys.flush();
-                
+                obj.username=username;
+                this.obj=obj;
                 bool tmp=this.checkUser(username);
+                /*
                 obj.username=username;
                 obj.id=this.genID();
                 if (tmp==true) {
@@ -43,13 +48,14 @@ namespace VLAB_AccountServices {
                 } else {
                     obj.cmd="new-user";
                 }
+                */
                 //string data=JsonSerializer.Serialize(obj);
-                string data="{\"cmd\":\""+obj.cmd+"\",\"username\":\""+obj.username+"\"}";
+                //string data="{\"cmd\":\""+obj.cmd+"\",\"username\":\""+obj.username+"\"}";
                 // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
                 //Session["data"]=data;
-                sys.warn(data);
-                sys.flush();
-                
+                //sys.warn(data);
+                //sys.flush();
+                /*
                 if (sys.errored) {
                     sys.error("System errored out.");
                     status.Text=sys.getBuffer();
@@ -60,6 +66,7 @@ namespace VLAB_AccountServices {
                     status.Text+="<br>REDIRECTING...";
                     Response.Redirect("services/resetPassword.aspx");
                 }
+                */
             } else {
                 /*
                 string username="";
@@ -116,7 +123,23 @@ namespace VLAB_AccountServices {
 		public async Task<int> dbCheck() {
             await this.db_check(Default.id);
             await this.removeRecord(Default.id);
-            
+            if (sys.errored) {
+                sys.error("System errored out.");
+                status.Text=sys.getBuffer();
+                sys.clear();
+                sys.errored=false;
+			} else {
+                sys.clear();
+                if(this.pt==1) {
+					this.obj.cmd="set-password";
+				} else if(this.pt==2) {
+					this.obj.cmd="new-user";
+				}
+                string data="{\"cmd\":\""+this.obj.cmd+"\",\"username\":\""+this.obj.username+"\"}";
+                Session["data"]=data;
+                status.Text+="<br>REDIRECTING...";
+                Response.Redirect("services/resetPassword.aspx");
+            }
             return 1;
         }
         protected async Task<int> removeRecord(string id) {
@@ -182,6 +205,11 @@ namespace VLAB_AccountServices {
                         sys.warn("FOUND RECORD!");
                         sys.warn(tmp);
                         sys.flush();
+                        if (tmp.IndexOf("status\":true")!=-1) {
+                            this.pt=1;
+                        } else {
+                            this.pt=2;
+                        }
                     }
                     res=1;
                 }
