@@ -4,11 +4,13 @@ using System;
 using System.Data.SqlClient;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using VLAB_AccountServices.services.assets.sys;
 
 namespace VLAB_AccountServices.services {
 
 	public partial class resetPassword : System.Web.UI.Page
     {
+        protected byte mode=0x01;
         protected static string db="UHMC_VLab";
 		protected static string tb="vlab_pendingusers";
 		protected static string db_ip="172.20.0.142";
@@ -16,6 +18,7 @@ namespace VLAB_AccountServices.services {
 		protected static string db_username="uhmcad_user";
 		protected static string db_password="MauiC0LLegeAD2252!";
         protected static string ending="<br><br>You may contact <a href=\"tel:+18089843283\" target=\"_blank\">(808) 984-3283</a>, email <a href=\"mailto:uhmchelp@hawaii.edu\" target=\"_blank\">uhmchelp@hawaii.edu</a>, or submit a ticket at <a href=\"https://maui.hawaii.edu/helpdesk/#gform_7\" target=\"_blank\">https://maui.hawaii.edu/helpdesk/#gform_7</a> for further assistance.";
+        protected bool pass=false;
 
         public void processPassword(Object sender, EventArgs e) {
             string u=username.Text;
@@ -27,12 +30,23 @@ namespace VLAB_AccountServices.services {
             password_confirm.Enabled=false;
         }
 
+        protected void redirect() {
+            if (this.mode==0x00) {
+                Response.Redirect("../Default.aspx");
+            } else if (this.mode==0x01) {
+                sys.flush();
+                sys.clear();
+                status.Text=sys.buffer;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             string data="";
             string user="";
             string pass="";
             string mode="";
+            
             User m_obj=new User();
             if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
@@ -44,67 +58,105 @@ namespace VLAB_AccountServices.services {
                     obj=JsonSerializer.Deserialize<User>(d);
                     m_obj=obj;
                 }catch{
-                    Response.Redirect("../Default.aspx");
+                    //Response.Redirect("../Default.aspx");
+                    status.Text+="ERROR-007";
+                    if (!String.IsNullOrEmpty(obj.cmd) && !String.IsNullOrEmpty(obj.username)) {
+                        this.pass=true;
+                    } else {
+                        if (String.IsNullOrEmpty(obj.cmd)) {
+                            sys.error("User object is missing the command specification.");
+                        } else if (!String.IsNullOrEmpty(obj.username)) {
+                            sys.error("User object is missing the username specification.");
+                        }
+                        this.redirect();
+                    }
                 }
-                if (this.post_isset("data")) {
-                    if (AD.isset(obj,"cmd")) {
-                        if (!String.IsNullOrEmpty(obj.cmd)) {
-                            if (AD.isset(obj,"username")) {
-                                if (!String.IsNullOrEmpty(obj.username)) {
-                                    username.Text=obj.username;
-                                    //username.Text="FAILED";
+                if (this.pass) {
+                    if (this.post_isset("data")) {
+                        if (AD.isset(obj,"cmd")) {
+                            if (!String.IsNullOrEmpty(obj.cmd)) {
+                                if (AD.isset(obj,"username")) {
+                                    if (!String.IsNullOrEmpty(obj.username)) {
+                                        username.Text=obj.username;
+                                        //username.Text="FAILED";
+                                        username.Enabled=false;
+                                        user=obj.username;
+                                    } else {
+                                        //Response.Redirect("../Default.aspx");
+                                        //status.Text+="ERROR-002";
+                                        sys.error("Username property does not exist or is not set.");
+                                        this.redirect();
+                                    }
+                                } else if (CasAuthentication.CurrentPrincipal!=null) {
+                                    username.Text=user;
                                     username.Enabled=false;
-                                    user=obj.username;
                                 } else {
-                                    //Response.Redirect("../Default.aspx");
-                                    status.Text+="ERROR-002";
+                                    username.Text="";
+                                    status.Text="Failed to get username request.";
                                 }
-                            } else if (CasAuthentication.CurrentPrincipal!=null) {
-                                username.Text=user;
-                                username.Enabled=false;
                             } else {
-                                username.Text="";
-                                status.Text="Failed to get username request.";
+                                //Response.Redirect("../Default.aspx");
+                                //status.Text+="ERROR-001";
+                                sys.error("Command was not specified.");
+                                this.redirect();
                             }
                         } else {
                             //Response.Redirect("../Default.aspx");
-                            status.Text+="ERROR-001";
+                            //status.Text+="ERROR-000";
+                            sys.error("Command property does not exist within the object.");
+                            this.redirect();
                         }
-                    } else {
-                        //Response.Redirect("../Default.aspx");
-                        status.Text+="ERROR-000";
-                    }
                     
-                } else {
-                    //username.Text=user;
-                    //username.Enabled=false;
-                    //Response.Redirect("../Default.aspx");
-                    status.Text+="ERROR-003";
-                }
-                if (AD.isset(obj,"cmd")) {
-                    if (obj.cmd=="new-user") {
-                        submit_btn.Text="Create Account";
-                        mode="new-user";
-                    } else if (obj.cmd=="set-password") {
-                        submit_btn.Text="Reset Password";
-                        mode="set-password";
+                    } else {
+                        //username.Text=user;
+                        //username.Enabled=false;
+                        //Response.Redirect("../Default.aspx");
+                        //status.Text+="ERROR-003";
+                        sys.error("POST argument does not contain data.");
+                        this.redirect();
+                    }
+                    if (AD.isset(obj,"cmd")) {
+                        if (!String.IsNullOrEmpty(obj.cmd)) {
+                            if (obj.cmd=="new-user") {
+                                submit_btn.Text="Create Account";
+                                mode="new-user";
+                            } else if (obj.cmd=="set-password") {
+                                submit_btn.Text="Reset Password";
+                                mode="set-password";
+                            } else {
+                                submit_btn.Text="[DISABLED]";
+                                submit_btn.Enabled=false;
+                                status.Text="Command does not exist.";
+                                //Response.Redirect("../Default.aspx");
+                                //status.Text+="ERROR-004";
+                                sys.error("Command not recognized.");
+                                this.redirect();
+                            }
+                        } else {
+                            //Response.Redirect("../Default.aspx");
+                            //status.Text+="ERROR-100";
+                            sys.error("Command property does not exist or is not set.");
+                            this.redirect();
+                        }
                     } else {
                         submit_btn.Text="[DISABLED]";
                         submit_btn.Enabled=false;
-                        status.Text="Command does not exist.";
+                        status.Text="Failed to get data.";
                         //Response.Redirect("../Default.aspx");
-                        status.Text+="ERROR-004";
+                        //status.Text+="ERROR-005";
+                        sys.error("Command property does not exist.");
+                        this.redirect();
                     }
                 } else {
-                    submit_btn.Text="[DISABLED]";
-                    submit_btn.Enabled=false;
-                    status.Text="Failed to get data.";
-                    //Response.Redirect("../Default.aspx");
-                    status.Text+="ERROR-005";
+                    sys.error("Failed to pass checks.");
+                    this.redirect();
                 }
             } else {
                 status.Text="Could not discover parameter data.";
                 //Response.Redirect("../Default.aspx");
+                //status.Text+="ERROR-006";
+                sys.error("POST has not data or CAS was not initialized.");
+                this.redirect();
             }
             if (IsPostBack) {
                 if (AD.isset(m_obj,"username")) {
