@@ -46,12 +46,17 @@ namespace VLAB_AccountServices
                 string data=JsonSerializer.Serialize(obj);
                 // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
                 Session["data"]=data;
-                //sys.flush();
-                Response.Redirect("services/resetPassword.aspx");
+                if (sys.errored) {
+                    status.Text=sys.getBuffer();
+                } else {
+                    sys.clear();
+                    Response.Redirect("services/resetPassword.aspx");
+                }
                 
                 
             } else {
-                string username="dvalente";
+                /*
+                string username="";
                 bool tmp=this.checkUser(username);
                 obj.username=username;
                 obj.id=this.genID();
@@ -63,18 +68,16 @@ namespace VLAB_AccountServices
                 string data=JsonSerializer.Serialize(obj);
                 // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
                 Session["data"]=data;
-                //sys.flush();
-                //Response.Redirect("services/resetPassword.aspx");
-                //status.Text="FAILED";
                 if (sys.errored) {
                     status.Text=sys.getBuffer();
                 } else {
                     sys.clear();
                     Response.Redirect("services/resetPassword.aspx");
                 }
-                //this.Test();
-                //RegisterAsyncTask(new PageAsyncTask(Test));
-                //this.Test();
+                */
+                sys.error("Unauthorized access detected.<br>This has been reported to server administrators.");
+                sys.flush();
+                sys.clear();
             }
         }
 
