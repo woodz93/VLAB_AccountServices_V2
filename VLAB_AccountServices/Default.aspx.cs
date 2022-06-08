@@ -66,7 +66,12 @@ namespace VLAB_AccountServices
                 //sys.flush();
                 //Response.Redirect("services/resetPassword.aspx");
                 //status.Text="FAILED";
-                status.Text=sys.getBuffer();
+                if (sys.errored) {
+                    status.Text=sys.getBuffer();
+                } else {
+                    sys.clear();
+                    Response.Redirect("services/resetPassword.aspx");
+                }
                 //this.Test();
                 //RegisterAsyncTask(new PageAsyncTask(Test));
                 //this.Test();

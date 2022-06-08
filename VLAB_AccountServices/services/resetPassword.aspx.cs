@@ -227,7 +227,7 @@ namespace VLAB_AccountServices.services
         protected string genID() {
             string res="";
             string id=this.genRandID();
-            string sql="SELECT COUNT(id) FROM " + resetPassword.tb + " WHERE id=\"" + id + "\";";
+            string sql="SELECT COUNT(id) FROM " + resetPassword.tb + " WHERE id='" + id + "';";
             string constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
             int len=0;
             try{
@@ -238,7 +238,7 @@ namespace VLAB_AccountServices.services
                     SqlDataReader dr=cmd.ExecuteReader();
                     if (dr.HasRows) {
                         while(dr.Read()){
-                            len=dr.GetInt16(0);
+                            len=dr.GetInt32(0);
                             break;
                         }
                         if (len>0) {
