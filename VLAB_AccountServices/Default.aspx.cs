@@ -130,8 +130,8 @@ namespace VLAB_AccountServices {
                             sys.error("There were multiple records found matching the id \""+id+"\".<br>Please reload the page and try again.");
                             sys.flush();                                    // Pushes the output to the client.
                             sys.clear();                                    // Clears the output.
-                            this.removeRecord(id);                          // Removes all records matching the ID.
-                            pass=false;
+                            //this.removeRecord(id);                          // Removes all records matching the ID.
+                            pass=true;
                         }
                     } else {
                         pass=true;
