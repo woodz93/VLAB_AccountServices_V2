@@ -116,13 +116,22 @@ namespace VLAB_AccountServices {
                     SqlDataReader r=cmd.ExecuteReader();
                     string tmp="";
                     bool pass=false;
+                    int i=0;
                     if (r.HasRows) {
-                        while(r.Read()){
-                            tmp=r.GetString(1);
-                            if (tmp.IndexOf("status")!=-1) {
+                        while(r.Read()){                                    // Iterates through all records containing the same record id (In the event there are multiple requests which should NOT happen).
+                            tmp=r.GetString(1);                             // Gets the record data.
+                            if (tmp.IndexOf("status")!=-1) {                // Checks if the record was changed.
                                 pass=true;
                                 break;
                             }
+                            i++;
+                        }
+                        if (i>1) {                                          // Checks if the number of records that exist is invalid.
+                            sys.error("There were multiple records found matching the id \""+id+"\".<br>Please reload the page and try again.");
+                            sys.flush();                                    // Pushes the output to the client.
+                            sys.clear();                                    // Clears the output.
+                            this.removeRecord(id);                          // Removes all records matching the ID.
+                            pass=false;
                         }
                     } else {
                         pass=true;
