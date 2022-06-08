@@ -1,29 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Text.Json;
-using System.Data.SqlClient;
-using DotNetCasClient;
+﻿using DotNetCasClient;
 using DotNetCasClient.Security;
-using VLAB_AccountServices.services.assets.sys;
+using System;
+using System.Data.SqlClient;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
-namespace VLAB_AccountServices.services
-{
+namespace VLAB_AccountServices.services {
 
-    public partial class resetPassword : System.Web.UI.Page
+	public partial class resetPassword : System.Web.UI.Page
     {
-        
-        //protected System.Web.UI.WebControls.TextBox username;
-        //protected System.Web.UI.WebControls.TextBox password;
-        //protected System.Web.UI.WebControls.TextBox password_confirm;
-        //protected System.Web.UI.WebControls.Content;
-        //protected System.Web.UI.WebControls.
-
         protected static string db="UHMC_VLab";
 		protected static string tb="vlab_pendingusers";
 		protected static string db_ip="172.20.0.142";
@@ -44,7 +29,6 @@ namespace VLAB_AccountServices.services
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Session["data"]="{\"cmd\":\"new-user\",\"username\":\"dvalente\",\"id\":\"asdfj8o93y8\"}";
             string data="";
             string user="";
             string pass="";
@@ -55,36 +39,29 @@ namespace VLAB_AccountServices.services
                 user=System.Web.HttpContext.Current.User.Identity.Name;
                 string d="";
                 User obj=new User();
-                //obj.username="test";
                 try{
                     d=Session["data"].ToString();
                     obj=JsonSerializer.Deserialize<User>(d);
                     m_obj=obj;
                 }catch{}
                 obj.username="dvalente";
-                //username.Text="FAILED";
-                //username.Text="\""+sys.getCWD()+"\"";
                 if (this.post_isset("data")) {
                     if (AD.isset(obj,"username")) {
                         username.Text=obj.username;
                         username.Text="FAILED";
                         username.Enabled=false;
                         user=obj.username;
-                        //username.Text="\""+sys.getCWD()+"\"";
                     } else if (CasAuthentication.CurrentPrincipal!=null) {
                         username.Text=user;
                         username.Enabled=false;
-                        //username.Text="\""+sys.getCWD()+"\"";
                     } else {
                         username.Text="";
                         status.Text="Failed to get username request.";
-                        //username.Text="\""+sys.getCWD()+"\"";
                     }
                 } else {
                     username.Text=user;
                     username.Enabled=false;
                 }
-                //username.Text="\""+sys.getCWD()+"\"";
                 if (AD.isset(obj,"cmd")) {
                     if (obj.cmd=="new-user") {
                         submit_btn.Text="Create Account";
@@ -100,13 +77,8 @@ namespace VLAB_AccountServices.services
             } else {
                 status.Text="Could not discover parameter data.";
             }
-            //username.Text=sys.getCWD();
             if (IsPostBack) {
-                //data=Request.Form.GetValues("username")[0];
-                //File.WriteAllText(path,data);
-                //user=Request.Form.GetValues("username")[0];
                 if (AD.isset(m_obj,"username")) {
-                    //user=m_obj.username;
                     pass=Request.Form.GetValues("password")[0];
                     if (this.validate(pass)) {
                         data="{\"cmd\":\"" + mode + "\",\"username\":\"" + user + "\",\"password\":\"" + pass + "\"}";
@@ -201,21 +173,6 @@ namespace VLAB_AccountServices.services
         }
 
         protected string sqlEncode(string q=""){
-            //List <string> invalid_chars=new List<string>();
-            /*
-            string[] invalid_chars={
-                "\"",
-                "`",
-                "\\"
-            };
-            int i=0;
-            while(i<invalid_chars.Length){
-                if (q.Contains(invalid_chars[i])) {
-                    q=q.Replace(invalid_chars[i],"");
-                }
-            }
-            */
-            //string regexp_str="([^A-z0-9_!@#\\$%\\^&\\*\\(\\)\\-\\{\\}\\[\\]\\.\\,\\`\\~`\n\t:\\?\\<\\>\\|\\/]+|[^\\u200b]+)";
             string regexp_str="[^\\u0020-\\u007e]";
             if (!Regex.IsMatch(q,regexp_str)) {
                 q=Regex.Replace(q,regexp_str,"");

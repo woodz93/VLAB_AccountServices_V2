@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using DotNetCasClient;
+﻿using DotNetCasClient;
 using DotNetCasClient.Security;
+using System;
 using System.Data.SqlClient;
 using System.Text.Json;
-using VLAB_AccountServices.services;
 using System.Threading;
-using VLAB_AccountServices.services.assets.sys;
 using System.Threading.Tasks;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using VLAB_AccountServices.services;
+using VLAB_AccountServices.services.assets.sys;
 
-namespace VLAB_AccountServices
-{
-    public partial class Default : System.Web.UI.Page
+namespace VLAB_AccountServices {
+	public partial class Default : System.Web.UI.Page
     {
         protected static string db="UHMC_VLab";
 		protected static string tb="vlab_pendingusers";
@@ -55,26 +51,6 @@ namespace VLAB_AccountServices
                 
                 
             } else {
-                /*
-                string username="";
-                bool tmp=this.checkUser(username);
-                obj.username=username;
-                obj.id=this.genID();
-                if (tmp==true) {
-                    obj.cmd="set-password";
-                } else {
-                    obj.cmd="new-user";
-                }
-                string data=JsonSerializer.Serialize(obj);
-                // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
-                Session["data"]=data;
-                if (sys.errored) {
-                    status.Text=sys.getBuffer();
-                } else {
-                    sys.clear();
-                    Response.Redirect("services/resetPassword.aspx");
-                }
-                */
                 sys.error("Unauthorized access detected.<br>This has been reported to server administrators.");
                 sys.flush();
                 sys.clear();
@@ -98,36 +74,10 @@ namespace VLAB_AccountServices
                     SqlCommand cmd=new SqlCommand(sql,con);
                     con.Open();
                     cmd.ExecuteNonQuery();
-                    //SqlDataReader r=cmd.ExecuteReader();
                     con.Close();
-                    /*
-                    Thread.Sleep(1000);
-                    cmd=new SqlCommand("SELECT * FROM "+Default.tb+" WHERE id='"+id+"';",con);
-                    con.Open();
-                    SqlDataReader r=cmd.ExecuteReader();
-                    string tmp="";
-                    while(r.Read()){
-                        tmp+=r.GetString(1);
-                    }
-                    sys.error(tmp);
-                    con.Close();
-                    */
                 }
-                //Thread.Sleep(1000);
-                //this.dbCheck(id);
-                //RegisterAsyncTask(new PageAsyncTask(db_check));
                 Default.id=id;
                 RegisterAsyncTask(new PageAsyncTask(dbCheck));
-                /*
-                res=this.checkUserResponse(id);
-                sql="DELETE FROM " + Default.tb + " WHERE id='" + id + "';";
-                using (SqlConnection con=new SqlConnection(constr)) {
-                    SqlCommand cmd=new SqlCommand(sql,con);
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-                }
-                */
             }catch(Exception ex){
                 sys.error("Insertion Error:\t"+ex.Message+"\n\n"+sql);
             }
@@ -167,7 +117,6 @@ namespace VLAB_AccountServices
                     bool pass=false;
                     if (r.HasRows) {
                         while(r.Read()){
-                            //tmp+=r.GetString(0)+":&nbsp;&nbsp;&nbsp;&nbsp;"+r.GetString(1)+"<br><br>";
                             tmp=r.GetString(1);
                             if (tmp.IndexOf("status")!=-1) {
                                 pass=true;
@@ -195,12 +144,9 @@ namespace VLAB_AccountServices
             }
             return res;
         }
-
-
         // Waits for the database record matching the request matches...
         protected bool checkUserResponse(string id) {
             bool res=false;
-            //string data="{\\\"cmd\\\":\\\"check-user\\\",\\\"username\\\":\\\"" + username + "\\\"}";
             string sql="SELECT COUNT(*) AS TOTAL FROM " + Default.tb + " WHERE id='" + id + "';";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
