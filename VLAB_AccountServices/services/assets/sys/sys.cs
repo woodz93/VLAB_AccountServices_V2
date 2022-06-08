@@ -110,6 +110,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 		public static void flush() {
 			if (sys.logging) {
 				if (sys.output_flush) {
+					/*
 					string path=sys.getCWD()+"logs\\";
 					if (!Directory.Exists(path)) {
 						Directory.CreateDirectory(path);
@@ -152,6 +153,8 @@ namespace VLAB_AccountServices.services.assets.sys {
 						sys.output_flush=false;
 					}
 					Thread.Sleep(3000);
+					*/
+					Default.st.Text=sys.getBuffer();
 				}
 			}
 		}

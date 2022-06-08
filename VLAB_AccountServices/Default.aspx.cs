@@ -11,6 +11,7 @@ using System.Text.Json;
 using VLAB_AccountServices.services;
 using System.Threading;
 using VLAB_AccountServices.services.assets.sys;
+using System.Threading.Tasks;
 
 namespace VLAB_AccountServices
 {
@@ -23,10 +24,13 @@ namespace VLAB_AccountServices
 		protected static string db_username="uhmcad_user";
 		protected static string db_password="MauiC0LLegeAD2252!";
         protected int cur_count=0;
+        public static Label st;
+        public static string id="";
         // Performs checks to see if the 
         protected void Page_Load(object sender, EventArgs e)
         {
             User obj=new User();
+            Default.st=status;
             if (CasAuthentication.CurrentPrincipal!=null) {
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 string username=System.Web.HttpContext.Current.User.Identity.Name;
@@ -41,7 +45,7 @@ namespace VLAB_AccountServices
                 string data=JsonSerializer.Serialize(obj);
                 // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
                 Session["data"]=data;
-                sys.flush();
+                //sys.flush();
                 Response.Redirect("services/resetPassword.aspx");
                 
                 
@@ -58,13 +62,23 @@ namespace VLAB_AccountServices
                 string data=JsonSerializer.Serialize(obj);
                 // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
                 Session["data"]=data;
-                sys.flush();
+                //sys.flush();
                 //Response.Redirect("services/resetPassword.aspx");
                 //status.Text="FAILED";
                 status.Text=sys.getBuffer();
+                //this.Test();
+                RegisterAsyncTask(new PageAsyncTask(Test));
+                //this.Test();
             }
             
         }
+
+        public async Task<int>Test() {
+            await Task.Delay(3000);
+            status.Text+="HELLO WORLD";
+            return 1;
+        }
+
         protected bool checkUser(string username) {
             bool res=false;
             string id=this.genID();
@@ -78,21 +92,86 @@ namespace VLAB_AccountServices
                     cmd.ExecuteNonQuery();
                     //SqlDataReader r=cmd.ExecuteReader();
                     con.Close();
+                    /*
+                    Thread.Sleep(1000);
+                    cmd=new SqlCommand("SELECT * FROM "+Default.tb+" WHERE id='"+id+"';",con);
+                    con.Open();
+                    SqlDataReader r=cmd.ExecuteReader();
+                    string tmp="";
+                    while(r.Read()){
+                        tmp+=r.GetString(1);
+                    }
+                    sys.error(tmp);
+                    con.Close();
+                    */
                 }
-                Thread.Sleep(1000);
+                //Thread.Sleep(1000);
+                //this.dbCheck(id);
+                //RegisterAsyncTask(new PageAsyncTask(db_check));
+                Default.id=id;
+                RegisterAsyncTask(new PageAsyncTask(dbCheck));
+                /*
                 res=this.checkUserResponse(id);
-                sql="DELETE FROM " + Default.tb + " WHERE id=\"" + id + "\";";
+                sql="DELETE FROM " + Default.tb + " WHERE id='" + id + "';";
                 using (SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
                     con.Open();
-                    //cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
                     con.Close();
                 }
+                */
             }catch(Exception ex){
                 sys.error("Insertion Error:\t"+ex.Message+"\n\n"+sql);
             }
             return res;
         }
+		public async Task<int> dbCheck() {
+            await this.db_check(Default.id);
+            return 1;
+        }
+        public async Task<int> db_check(string id) {
+            int res=0;
+            string sql="SELECT * FROM " + Default.tb + " WHERE id='"+id+"';";
+            string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
+            try{
+                using(SqlConnection con=new SqlConnection(constr)) {
+                    SqlCommand cmd=new SqlCommand(sql,con);
+                    con.Open();
+                    SqlDataReader r=cmd.ExecuteReader();
+                    string tmp="";
+                    bool pass=false;
+                    if (r.HasRows) {
+                        while(r.Read()){
+                            //tmp+=r.GetString(0)+":&nbsp;&nbsp;&nbsp;&nbsp;"+r.GetString(1)+"<br><br>";
+                            tmp=r.GetString(1);
+                            if (tmp.IndexOf("status")!=-1) {
+                                pass=true;
+                                break;
+                            }
+                        }
+                    } else {
+                        pass=true;
+                    }
+                    con.Close();
+                    if (!pass) {
+                        await Task.Delay(1000);
+                        sys.warn("Couldn't find record...");
+                        sys.flush();
+                        await db_check(id);
+                    } else {
+                        sys.warn("FOUND RECORD!");
+                        sys.warn(tmp);
+                        sys.flush();
+                    }
+                    res=1;
+                }
+            }catch(Exception e){
+                sys.error("An error occurred while asynchronously checking the database...<br><br>"+e.Message);
+            }
+            return res;
+        }
+
+
         // Waits for the database record matching the request matches...
         protected bool checkUserResponse(string id) {
             bool res=false;
