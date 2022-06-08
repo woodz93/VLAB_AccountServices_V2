@@ -23,6 +23,7 @@ namespace VLAB_AccountServices {
         public static Label st;
         public static string id="";
         public static byte mode=0x00;
+        protected static int ct=0;
         // Performs checks to see if the 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -128,10 +129,16 @@ namespace VLAB_AccountServices {
                     }
                     con.Close();
                     if (!pass) {
-                        await Task.Delay(1000);
-                        sys.warn("Checking for record update...");
-                        sys.flush();
-                        await this.db_check(id);
+                        if (Default.ct<10) {
+                            await Task.Delay(1000);
+                            sys.warn("No records found.<br>Attempting to check for record update...");
+                            sys.flush();
+                            await this.db_check(id);
+                        } else {
+                            sys.error("Request timmed out.<br>Please reload the page and try again.");
+                            sys.flush();
+                            sys.clear();
+                        }
                     } else {
                         sys.warn("FOUND RECORD!");
                         sys.warn(tmp);
