@@ -72,11 +72,18 @@ namespace VLAB_AccountServices.services {
                     } else {
                         submit_btn.Text="[DISABLED]";
                         submit_btn.Enabled=false;
-                        status.Text=obj.cmd;
+                        status.Text="Command does not exist.";
+                        Response.Redirect("../Default.aspx");
                     }
+                } else {
+                    submit_btn.Text="[DISABLED]";
+                    submit_btn.Enabled=false;
+                    status.Text="Failed to get data.";
+                    Response.Redirect("../Default.aspx");
                 }
             } else {
                 status.Text="Could not discover parameter data.";
+                //Response.Redirect("../Default.aspx");
             }
             if (IsPostBack) {
                 if (AD.isset(m_obj,"username")) {
