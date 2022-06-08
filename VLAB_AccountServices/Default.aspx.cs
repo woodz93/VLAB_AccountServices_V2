@@ -26,6 +26,7 @@ namespace VLAB_AccountServices
         protected int cur_count=0;
         public static Label st;
         public static string id="";
+        public static byte mode=0x00;
         // Performs checks to see if the 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -67,10 +68,9 @@ namespace VLAB_AccountServices
                 //status.Text="FAILED";
                 status.Text=sys.getBuffer();
                 //this.Test();
-                RegisterAsyncTask(new PageAsyncTask(Test));
+                //RegisterAsyncTask(new PageAsyncTask(Test));
                 //this.Test();
             }
-            
         }
 
         public async Task<int>Test() {
@@ -127,6 +127,23 @@ namespace VLAB_AccountServices
         }
 		public async Task<int> dbCheck() {
             await this.db_check(Default.id);
+            await this.removeRecord(Default.id);
+            
+            return 1;
+        }
+        protected async Task<int> removeRecord(string id) {
+            string sql="DELETE FROM " + Default.tb + " WHERE id='"+id+"';";
+            string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
+            try{
+                using(SqlConnection con=new SqlConnection(constr)) {
+                    SqlCommand cmd=new SqlCommand(sql,con);
+                    con.Open();
+                    cmd.ExecuteNonQuery();                      // Deletes the record from the database.
+                    con.Close();
+                }
+            }catch(Exception e){
+                sys.error("Failed to delete record with id of \""+id+"\"\n"+e.Message+"\n\n"+sql);
+            }
             return 1;
         }
         public async Task<int> db_check(string id) {
@@ -155,9 +172,9 @@ namespace VLAB_AccountServices
                     con.Close();
                     if (!pass) {
                         await Task.Delay(1000);
-                        sys.warn("Couldn't find record...");
+                        sys.warn("Checking for record update...");
                         sys.flush();
-                        await db_check(id);
+                        await this.db_check(id);
                     } else {
                         sys.warn("FOUND RECORD!");
                         sys.warn(tmp);

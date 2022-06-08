@@ -152,7 +152,7 @@ namespace VLAB_AccountServices.services
                 string id=this.genID();
                 q=this.sqlParse(q);
                 string values="'"+id+"','"+q+"'";
-                string sql="INSERT INTO " + resetPassword.tb + " (id,data) VALUES (" + values + ");";
+                string sql="INSERT INTO " + resetPassword.tb + " (\"id\",\"data\") VALUES (" + values + ");";
                 string constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
                 try{
                     using (SqlConnection con=new SqlConnection(constr)) {

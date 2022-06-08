@@ -12,6 +12,8 @@ namespace VLAB_AccountServices.services.assets.sys {
 		public static string debug_buffer="";
 		protected static bool output_flush=false;
 		protected static bool logging=true;
+		public static bool errored=false;
+		public static string buffer="";
 
 		public static string getBuffer() {
 			string res=sys.debug_buffer;
@@ -35,6 +37,9 @@ namespace VLAB_AccountServices.services.assets.sys {
 			sys.debug_buffer+=q+"\n";
 			if (!sys.output_flush) {
 				sys.output_flush=true;
+			}
+			if (!sys.errored) {
+				sys.errored=true;
 			}
 		}
 		public static void warn(string q) {
@@ -154,7 +159,11 @@ namespace VLAB_AccountServices.services.assets.sys {
 					}
 					Thread.Sleep(3000);
 					*/
-					Default.st.Text=sys.getBuffer();
+					try{
+						Default.st.Text=sys.getBuffer();
+					}catch{
+						sys.buffer=sys.getBuffer();
+					}
 				}
 			}
 		}
