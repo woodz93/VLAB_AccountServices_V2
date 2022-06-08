@@ -1,10 +1,5 @@
 ﻿using System;
-using DotNetCasClient;
-using DotNetCasClient.Security;
-using System.Data.SqlClient;
 using System.IO;
-
-using System.DirectoryServices.AccountManagement;
 
 namespace VLAB_AccountServices.services {
 	internal class Case {

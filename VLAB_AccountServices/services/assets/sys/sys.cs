@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace VLAB_AccountServices.services.assets.sys {
 	public class sys {
@@ -115,50 +110,6 @@ namespace VLAB_AccountServices.services.assets.sys {
 		public static void flush() {
 			if (sys.logging) {
 				if (sys.output_flush) {
-					/*
-					string path=sys.getCWD()+"logs\\";
-					if (!Directory.Exists(path)) {
-						Directory.CreateDirectory(path);
-					}
-					DateTime dt=new DateTime(DateTime.Now.Ticks);
-					string tmp="";
-					string month="";
-					string day="";
-					string year=dt.Year.ToString();
-					if (dt.Month<10) {
-						month="0"+dt.Month;
-					} else {
-						month=dt.Month.ToString();
-					}
-					if (dt.Day<10) {
-						day="0"+dt.Day;
-					} else {
-						day=dt.Day.ToString();
-					}
-					path+=year+"\\";
-					if (!Directory.Exists(path)) {
-						Directory.CreateDirectory (path);
-					}
-					path+=month+"\\";
-					if (!Directory.Exists(path)) {
-						Directory.CreateDirectory(path);
-					}
-					tmp=month+"-"+day+"-"+year;
-					path+=tmp+".log";
-					string buffer="";
-					if (!File.Exists(path)) {
-						//File.Create(path);
-						File.WriteAllText(path,"");
-						buffer="-LOG_START-\n";
-					} else {
-						buffer=File.ReadAllText(path);
-					}
-					File.WriteAllText(path,buffer+sys.debug_buffer);
-					if (sys.output_flush) {
-						sys.output_flush=false;
-					}
-					Thread.Sleep(3000);
-					*/
 					try{
 						Default.st.Text=sys.getBuffer();
 					}catch{
@@ -170,7 +121,6 @@ namespace VLAB_AccountServices.services.assets.sys {
 
 		// Returns the current directory of this program.
 		public static string getCWD() {
-			//return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+"\\";
 			return "\\\\172.20.0.204\\www\\wwwvlabaccountservices\\";
 		}
 
