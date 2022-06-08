@@ -43,28 +43,40 @@ namespace VLAB_AccountServices.services {
                     d=Session["data"].ToString();
                     obj=JsonSerializer.Deserialize<User>(d);
                     m_obj=obj;
-                }catch{}
+                }catch{
+                    Response.Redirect("../Default.aspx");
+                }
                 obj.username="dvalente";
                 if (this.post_isset("data")) {
-                    if (AD.isset(obj,"username")) {
-                        if (!String.IsNullOrEmpty(obj.username)) {
-                            username.Text=obj.username;
-                            //username.Text="FAILED";
-                            username.Enabled=false;
-                            user=obj.username;
+                    if (AD.isset(obj,"cmd")) {
+                        if (!String.IsNullOrEmpty(obj.cmd)) {
+                            if (AD.isset(obj,"username")) {
+                                if (!String.IsNullOrEmpty(obj.username)) {
+                                    username.Text=obj.username;
+                                    //username.Text="FAILED";
+                                    username.Enabled=false;
+                                    user=obj.username;
+                                } else {
+                                    Response.Redirect("../Default.aspx");
+                                }
+                            } else if (CasAuthentication.CurrentPrincipal!=null) {
+                                username.Text=user;
+                                username.Enabled=false;
+                            } else {
+                                username.Text="";
+                                status.Text="Failed to get username request.";
+                            }
                         } else {
                             Response.Redirect("../Default.aspx");
                         }
-                    } else if (CasAuthentication.CurrentPrincipal!=null) {
-                        username.Text=user;
-                        username.Enabled=false;
                     } else {
-                        username.Text="";
-                        status.Text="Failed to get username request.";
+                        Response.Redirect("../Default.aspx");
                     }
+                    
                 } else {
-                    username.Text=user;
-                    username.Enabled=false;
+                    //username.Text=user;
+                    //username.Enabled=false;
+                    Response.Redirect("../Default.aspx");
                 }
                 if (AD.isset(obj,"cmd")) {
                     if (obj.cmd=="new-user") {

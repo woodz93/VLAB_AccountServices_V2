@@ -43,9 +43,10 @@ namespace VLAB_AccountServices {
                 } else {
                     obj.cmd="new-user";
                 }
-                string data=JsonSerializer.Serialize(obj);
+                //string data=JsonSerializer.Serialize(obj);
+                string data="{\"cmd\":\""+obj.cmd+"\",\"username\":\""+obj.username+"\"}";
                 // REDIRECT TO PASSWORD RESET PAGE (Send json object to determine if an account should be made or just a password reset should be conducted).
-                Session["data"]=data;
+                //Session["data"]=data;
                 sys.warn(data);
                 sys.flush();
                 
