@@ -30,6 +30,8 @@ namespace VLAB_AccountServices {
         // Performs checks to see if the 
         protected void Page_Load(object sender, EventArgs e)
         {
+            Session.Clear();
+            Session.Add("data","");
             User obj=new User();
             Default.st=status;
             sys.errored=false;
@@ -142,6 +144,7 @@ namespace VLAB_AccountServices {
                 status.Text+="<br>REDIRECTING...";
                 status.Text+="<br><br>"+data+"<br><br>";
                 status.Text+="<br><br>"+Session["data"]+"<br><br>";
+                Session.Add("data",data);
                 Response.Redirect("services/resetPassword.aspx");
             }
             return 1;

@@ -1,6 +1,7 @@
 ﻿using DotNetCasClient;
 using DotNetCasClient.Security;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -48,6 +49,9 @@ namespace VLAB_AccountServices.services {
             string mode="";
             
             User m_obj=new User();
+
+            //List<System.Collections.Specialized.NameObjectCollectionBase.KeysCollection> list=Session.Contents.Keys;
+            
 
             status.Text+="<br><br>&quot;"+Session["data"]+"&quot;<br><br>";
 
