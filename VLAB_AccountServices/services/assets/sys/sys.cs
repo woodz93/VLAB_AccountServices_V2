@@ -126,10 +126,20 @@ namespace VLAB_AccountServices.services.assets.sys {
 
 		// Returns a sanitized string.
 		public static string sanitize(string q) {
+			string exp="[^\\u0020-\\u007e]+";					// Matches all characters that are beyond the scope of the ASCII keyboard characters.
+			if (Regex.IsMatch(q,exp)) {
+				q=Regex.Replace(q,exp,"");
+			}
+			exp="[\\u0027\\u005c]+";							// Matches characters that would be able to escape the SQL string.
+			if (Regex.IsMatch(q,exp)) {
+				q=Regex.Replace(q,exp,"");
+			}
+			/*
 			string patt=@"[^A-z0-9_\-~`!@#$%\^&\*\(\)\+=\{\[\}\]|\\'\:;\,\.<>\?\/ \t"+"\""+"]+";
 			if (Regex.Match(q,patt).Success) {
 				q=Regex.Replace(q,patt,"");
 			}
+			*/
 			return q;
 		}
 
