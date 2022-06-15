@@ -1,7 +1,6 @@
 ﻿using DotNetCasClient;
 using DotNetCasClient.Security;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -41,6 +40,7 @@ namespace VLAB_AccountServices.services {
             }
         }
 
+
         protected void Page_Load(object sender, EventArgs e)
         {
             string data="";
@@ -60,6 +60,14 @@ namespace VLAB_AccountServices.services {
                 status.Text+="<br>Processing request...<br>";
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 user=System.Web.HttpContext.Current.User.Identity.Name;
+                string campus="";
+                try{
+                    //campus=sp.Assertion.Attributes["campusKey"].ToString();
+                    //campus=this.getAttribute(sp,"cn");
+                    status.Text+="<br>\""+campus+"\"<br><br>";
+                }catch(Exception ec){
+                    status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
+                }
                 string d="";
                 User obj=new User();
                 sys.warn("POST and CAS check passed.");

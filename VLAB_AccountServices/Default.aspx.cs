@@ -1,6 +1,7 @@
 ﻿using DotNetCasClient;
 using DotNetCasClient.Security;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -40,12 +41,29 @@ namespace VLAB_AccountServices {
             if (CasAuthentication.CurrentPrincipal!=null) {
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 string username=System.Web.HttpContext.Current.User.Identity.Name;
-                //string campus=System.Web.HttpContext.Current.
+                string campus="";
+
+                int i=0;
+                foreach(var item in 
+                    status.Text+=""+list[i]+"<br>";
+                    i++;
+                }
+
+                /*
+                if (sp.Assertion.Attributes.ContainsKey("cn")) {
+
+                }
+                */
                 //sys.warn(username);
                 //sys.flush();
+
+
+                /*
                 obj.username=username;
                 this.obj=obj;
                 bool tmp=this.checkUser(username);
+                */
+
                 /*
                 obj.username=username;
                 obj.id=this.genID();
@@ -109,7 +127,7 @@ namespace VLAB_AccountServices {
         protected bool checkUser(string username) {
             bool res=false;
             string id=this.genID();
-            string data="{\\\"cmd\\\":\\\"check-user\\\",\\\"username\\\":\\\"" + username + "\\\"}";
+            string data="{\"cmd\":\"check-user\",\"username\":\"" + username + "\"}";
             string sql="INSERT INTO " + Default.tb + " (\"id\",\"data\") VALUES ( @ID , @DATA );";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
