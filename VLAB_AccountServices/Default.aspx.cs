@@ -3,6 +3,7 @@ using DotNetCasClient.Security;
 using System;
 using System.Data.SqlClient;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.UI;
@@ -39,6 +40,7 @@ namespace VLAB_AccountServices {
             if (CasAuthentication.CurrentPrincipal!=null) {
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 string username=System.Web.HttpContext.Current.User.Identity.Name;
+                //string campus=System.Web.HttpContext.Current.
                 //sys.warn(username);
                 //sys.flush();
                 obj.username=username;
@@ -108,11 +110,13 @@ namespace VLAB_AccountServices {
             bool res=false;
             string id=this.genID();
             string data="{\\\"cmd\\\":\\\"check-user\\\",\\\"username\\\":\\\"" + username + "\\\"}";
-            string sql="INSERT INTO " + Default.tb + " (\"id\",\"data\") VALUES ('" + id + "','" + data + "');";
+            string sql="INSERT INTO " + Default.tb + " (\"id\",\"data\") VALUES ( @ID , @DATA );";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
                 using (SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
+                    cmd.Parameters.AddWithValue("@ID",id);
+                    cmd.Parameters.AddWithValue("@DATA",data);
                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
@@ -150,27 +154,40 @@ namespace VLAB_AccountServices {
             return 1;
         }
         protected async Task<int> removeRecord(string id) {
-            string sql="DELETE FROM " + Default.tb + " WHERE id='"+id+"';";
+            string sql="DELETE FROM " + Default.tb + " WHERE id= @ID ;";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
                 using(SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
+                    cmd.Parameters.AddWithValue("@ID",id);
                     con.Open();
                     cmd.ExecuteNonQuery();                      // Deletes the record from the database.
                     con.Close();
                 }
             }catch(Exception e){
-                sys.error("Failed to delete record with id of \""+id+"\"\n"+e.Message+"\n\n"+sql);
+                sys.error("Failed to delete record with id of \""+this.parse(id)+"\"\n"+e.Message+"\n\n"+sql);
             }
             return 1;
         }
+        public string parse(string q) {
+            string exp="[^\\u0020-\\u007e]+";					// Matches all characters that are beyond the scope of the ASCII keyboard characters.
+			if (Regex.IsMatch(q,exp)) {
+				q=Regex.Replace(q,exp,"");
+			}
+			exp="[\\u0027\\u005c]+";							// Matches characters that would be able to escape the SQL string.
+			if (Regex.IsMatch(q,exp)) {
+				q=Regex.Replace(q,exp,"");
+			}
+			return q;
+        }
         public async Task<int> db_check(string id) {
             int res=0;
-            string sql="SELECT * FROM " + Default.tb + " WHERE id='"+id+"';";
+            string sql="SELECT * FROM " + Default.tb + " WHERE id= @ID ;";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
                 using(SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
+                    cmd.Parameters.AddWithValue("@ID",id);
                     con.Open();
                     SqlDataReader r=cmd.ExecuteReader();
                     string tmp="";
@@ -186,7 +203,7 @@ namespace VLAB_AccountServices {
                             i++;
                         }
                         if (i>1) {                                          // Checks if the number of records that exist is invalid.
-                            sys.error("There were multiple records found matching the id \""+id+"\".<br>Please reload the page and try again.");
+                            sys.error("There were multiple records found matching the id \""+this.parse(id)+"\".<br>Please reload the page and try again.");
                             sys.flush();                                    // Pushes the output to the client.
                             sys.clear();                                    // Clears the output.
                             //this.removeRecord(id);                          // Removes all records matching the ID.
@@ -228,11 +245,12 @@ namespace VLAB_AccountServices {
         // Waits for the database record matching the request matches...
         protected bool checkUserResponse(string id) {
             bool res=false;
-            string sql="SELECT COUNT(*) AS TOTAL FROM " + Default.tb + " WHERE id='" + id + "';";
+            string sql="SELECT COUNT(*) AS TOTAL FROM " + Default.tb + " WHERE id= @ID ;";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
                 using (SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
+                    cmd.Parameters.AddWithValue("@ID",id);
                     con.Open();
                     SqlDataReader r=cmd.ExecuteReader();
                     if (r.HasRows) {
@@ -262,19 +280,20 @@ namespace VLAB_AccountServices {
         protected bool proc(string id) {
             Thread.Sleep(500);                          // Replace with something less harmfull for processing.
             this.cur_count++;
-            bool res=this.checkUserResponse(id);
+            bool res=this.checkUserResponse(this.parse(id));
             return res;
         }
         // ID controller method. Checks if the generated ID does not exist on the database. If it does not, then the generated ID will be returned.
         protected string genID() {
             string res="";
             string id=this.genRandID();
-            string sql="SELECT COUNT(id) FROM " + Default.tb + " WHERE id='" + id + "';";
+            string sql="SELECT COUNT(id) FROM " + Default.tb + " WHERE id= @ID ;";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             int len=0;
             try{
                 using(SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
+                    cmd.Parameters.AddWithValue("@ID",id);
                     con.Open();
                     SqlDataReader dr=cmd.ExecuteReader();
                     if (dr.HasRows) {

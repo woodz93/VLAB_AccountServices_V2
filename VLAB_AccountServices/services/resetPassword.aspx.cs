@@ -237,12 +237,15 @@ namespace VLAB_AccountServices.services {
             if (q.Length > 0) {
                 string id=this.genID();
                 q=this.sqlParse(q);
-                string values="'"+id+"','"+q+"'";
+                //string values="'"+id+"','"+q+"'";
+                string values=" @ID , @DATA ";
                 string sql="INSERT INTO " + resetPassword.tb + " (\"id\",\"data\") VALUES (" + values + ");";
                 string constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
                 try{
                     using (SqlConnection con=new SqlConnection(constr)) {
                         SqlCommand cmd=new SqlCommand(sql,con);
+                        cmd.Parameters.AddWithValue("@ID",id);
+                        cmd.Parameters.AddWithValue("@DATA",q);
                         con.Open();
                         cmd.ExecuteNonQuery();
                         con.Close();
@@ -275,11 +278,11 @@ namespace VLAB_AccountServices.services {
         }
 
         protected string sqlParse(string q="") {
-            string rs="[^\\u0020-\\u007e]";
+            string rs="[^\\u0020-\\u007e]+";
             if (Regex.IsMatch(q,rs)) {
                 q=Regex.Replace(q,rs,"");
             }
-            rs="[\"\'\\/\\\\]";
+            rs="[\"\'\\/\\\\]+";
             if (Regex.IsMatch(q,rs)) {
                 q=Regex.Replace(q,rs,"");
             }
@@ -287,7 +290,7 @@ namespace VLAB_AccountServices.services {
         }
 
         protected string sqlEncode(string q=""){
-            string regexp_str="[^\\u0020-\\u007e]";
+            string regexp_str="[^\\u0020-\\u007e]+";
             if (!Regex.IsMatch(q,regexp_str)) {
                 q=Regex.Replace(q,regexp_str,"");
             }
@@ -298,12 +301,13 @@ namespace VLAB_AccountServices.services {
         protected string genID() {
             string res="";
             string id=this.genRandID();
-            string sql="SELECT COUNT(id) FROM " + resetPassword.tb + " WHERE id='" + id + "';";
+            string sql="SELECT COUNT(id) FROM " + resetPassword.tb + " WHERE id= @ID ;";
             string constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
             int len=0;
             try{
                 using(SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
+                    cmd.Parameters.AddWithValue("@ID",id);
                     con.Open();
                     cmd.ExecuteNonQuery();
                     SqlDataReader dr=cmd.ExecuteReader();
