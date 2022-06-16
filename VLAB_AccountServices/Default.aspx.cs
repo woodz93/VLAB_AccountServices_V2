@@ -33,7 +33,8 @@ namespace VLAB_AccountServices {
         // Performs checks to see if the 
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session.Clear();
+            //Session.Clear();
+            //Session.Add("data","{\"cmd\":\"FAILURE\"}");
             Session.Add("data","");
             User obj=new User();
             Default.st=status;

@@ -24,7 +24,7 @@ namespace VLAB_AccountServices.services {
             string u=username.Text;
             string p=password.Text;
             string pc=password_confirm.Text;
-            status.Text="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + resetPassword.ending;
+            status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + resetPassword.ending;
             submit_btn.Enabled=false;
             password.Enabled=false;
             password_confirm.Enabled=false;
@@ -52,6 +52,7 @@ namespace VLAB_AccountServices.services {
 
             //List<System.Collections.Specialized.NameObjectCollectionBase.KeysCollection> list=Session.Contents.Keys;
             
+            //Response.Write("<br>HELLO WORLD<br>");
 
             //status.Text+="<br><br>&quot;"+Session["data"]+"&quot;<br><br>";
 
@@ -65,23 +66,27 @@ namespace VLAB_AccountServices.services {
                 try{
                     //campus=sp.Assertion.Attributes["campusKey"].ToString();
                     //campus=this.getAttribute(sp,"cn");
-                    status.Text+="<br>\""+user+"\"<br><br>";
+                    //status.Text+="<br>\""+user+"\"<br><br>";
                 }catch(Exception ec){
                     status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
                 }
                 string d="";
                 User obj=new User();
-                sys.warn("POST and CAS check passed.");
-                sys.flush();
-                status.Text+=sys.buffer;
+                //sys.warn("POST and CAS check passed.");
+                //sys.flush();
+                //status.Text+=sys.buffer;
                 //sys.clear();
-                status.Text+="<br>Parsing data...<br>";
-                status.Text+="<br>SESSION DATA: &quot;"+Session["data"]+"&quot;<br>";
+                //status.Text+="<br>Parsing data...<br>";
+                //status.Text+="<br>SESSION DATA: &quot;"+Session["data"]+"&quot;<br>";
+                
                 try{
                     d=Session["data"].ToString();
                     status.Text+="<br>Object Data: &quot;"+d+"&quot<br>";
+                    
                     obj=JsonSerializer.Deserialize<User>(d);
-                    m_obj=obj;
+                    //m_obj=obj;
+                    m_obj=JsonSerializer.Deserialize<User>(d);
+
                     //this.pass=true;
                     
                 }catch(Exception ex){
@@ -89,7 +94,7 @@ namespace VLAB_AccountServices.services {
                     //status.Text+="ERROR-007";
                     sys.error(ex.Message);
                     //sys.flush();
-                    status.Text+="<br>- "+ex.Message+"<br>";
+                    //status.Text+="<br>- "+ex.Message+"<br>";
                     //status.Text+=sys.buffer;
                     this.redirect();
                     if (!String.IsNullOrEmpty(obj.cmd) && !String.IsNullOrEmpty(obj.username)) {
@@ -103,6 +108,7 @@ namespace VLAB_AccountServices.services {
                         this.redirect();
                     }
                 }
+                Response.Write(d+"- END -");
 
                 if (this.pass) {
                     status.Text+="<br>- Passed checks.<br>USERNAME: &quot;"+obj.username+"&quot;<br>CMD: &quot;"+obj.cmd+"&quot;<br>";
@@ -157,7 +163,9 @@ namespace VLAB_AccountServices.services {
                         sys.error("POST argument does not contain data.");
                         this.redirect();
                     }
+                    //Response.Write(obj.cmd+" HELLO WORLD");
                     if (AD.isset(obj,"cmd")) {
+                        
                         if (!String.IsNullOrEmpty(obj.cmd)) {
                             if (obj.cmd=="new-user") {
                                 submit_btn.Text="Create Account";
@@ -202,11 +210,28 @@ namespace VLAB_AccountServices.services {
             }
             if (IsPostBack) {
                 if (AD.isset(m_obj,"username")) {
+                    if (AD.isset(m_obj,"cmd")) {
+                        if (m_obj.cmd=="set-password") {
+                            mode="set-password";
+                        } else if (m_obj.cmd=="new-user") {
+                            mode="new-user";
+                        }
+                        //status.Text+="<br>&quot;"+m_obj.cmd+"&quot;<br>";
+                        if (!(mode.Length>2)) {
+                            if (submit_btn.Text=="Reset Password") {
+                                mode="set-password";
+                            } else if (submit_btn.Text=="Create Account") {
+                                mode="new-user";
+                            }
+                        }
+                    } else {
+                        status.Text+="<br>ERROR: MISSING CMD PROPERTY FROM USER OBJECT.<br>";
+                    }
                     pass=Request.Form.GetValues("password")[0];
                     if (this.validate(pass)) {
                         data="{\"cmd\":\"" + mode + "\",\"username\":\"" + user + "\",\"password\":\"" + pass + "\"}";
                         this.queryRequest(data);
-                        status.Text="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + resetPassword.ending;
+                        status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
                     } else {
                         password.Text=this.sqlParse(pass);
                         password_confirm.Text=this.sqlParse(pass);
@@ -245,15 +270,17 @@ namespace VLAB_AccountServices.services {
         protected void queryRequest(string q="") {
             if (q.Length > 0) {
                 string id=this.genID();
-                q=this.sqlParse(q);
+                //q=this.sqlParse(q);
                 //string values="'"+id+"','"+q+"'";
-                string values=" @ID , @DATA ";
-                string sql="INSERT INTO " + resetPassword.tb + " (\"id\",\"data\") VALUES (" + values + ");";
+                //status.Text+="<br><br>DATA<br>"+id+"<br><br>";
+                //string values=" @DATA ";
+                string sql="INSERT INTO " + resetPassword.tb + " (\"id\",\"data\") VALUES ('"+id+"', @DATA );";
                 string constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
+                //status.Text+=sql;
                 try{
                     using (SqlConnection con=new SqlConnection(constr)) {
                         SqlCommand cmd=new SqlCommand(sql,con);
-                        cmd.Parameters.AddWithValue("@ID",id);
+                        //cmd.Parameters.AddWithValue("@ID",id);
                         cmd.Parameters.AddWithValue("@DATA",q);
                         con.Open();
                         cmd.ExecuteNonQuery();
@@ -318,7 +345,6 @@ namespace VLAB_AccountServices.services {
                     SqlCommand cmd=new SqlCommand(sql,con);
                     cmd.Parameters.AddWithValue("@ID",id);
                     con.Open();
-                    cmd.ExecuteNonQuery();
                     SqlDataReader dr=cmd.ExecuteReader();
                     if (dr.HasRows) {
                         while(dr.Read()){
@@ -327,42 +353,35 @@ namespace VLAB_AccountServices.services {
                         }
                         if (len>0) {
                             res=this.genID();
+                        } else {
+                            res=id;
                         }
                     }
                     con.Close();
 
                 }
             }catch(Exception ex){
-                res=this.genRandID();
+                sys.error("Failed to generate ID...\n"+ex.Message);
             }
             return res;
         }
         // Generates a randomized length of random characters to compose the record's ID on the database.
         protected string genRandID() {
             Random r=new Random();
-            int lim=r.Next(5,255);
+            int lim=r.Next(10,128);
             int i=0;
             char c;
             string res="";
-            int sel=r.Next(0,100);
-            int st=48;
-            int en=90;
+            int sel=r.Next(0,30);
             while(i<lim){
-                sel=r.Next(0,100);
-                if (sel<=25) {
-                    st=48;
-                    en=57;
-                } else if (sel>25 && sel<=50) {
-                    st=65;
-                    en=90;
-                } else if (sel>50 && sel<75) {
-                    st=97;
-                    en=122;
+                sel=r.Next(0,30);
+                if (sel<10) {
+                    c=(char)r.Next(48,57);
+                } else if (sel<20) {
+                    c=(char)r.Next(65,90);
                 } else {
-                    st=95;
-                    en=96;
+                    c=(char)r.Next(97,122);
                 }
-                c=(char)r.Next(st,en);
                 res+=c;
                 i++;
             }

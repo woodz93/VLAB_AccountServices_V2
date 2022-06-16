@@ -21,7 +21,7 @@
             <label for="password-confirm">Confirm Password: </label><asp:textbox id="password_confirm" Text="" runat="server" name="password_confirm" type="password" value="" placeholder="Confirm password..."></asp:textbox>
             <button type="button" class="peak" onclick="peak(this)" data-ref="password_confirm"></button>
             <br />
-            <asp:button id="submit_btn" CssClass="submit_btn" name="submit_btn" Text="Reset Password" Onclick="processPassword" runat="server"></asp:button>
+            <asp:button id="submit_btn" CssClass="submit_btn" name="submit_btn" Text="[ERROR]" Onclick="processPassword" runat="server"></asp:button>
         </div>
         <asp:label id="status" Text="" runat="server" class="status">Console data will be displayed here.</asp:label>
     </form>
