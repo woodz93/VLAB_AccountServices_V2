@@ -4,7 +4,9 @@ using System;
 using System.Data.SqlClient;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Web;
 using VLAB_AccountServices.services.assets.sys;
+using VLAB_AccountServices.services.assets.svr;
 
 namespace VLAB_AccountServices.services {
 
@@ -57,6 +59,17 @@ namespace VLAB_AccountServices.services {
             //status.Text+="<br><br>&quot;"+Session["data"]+"&quot;<br><br>";
 
             //status.Text+="<br>Page loaded<br>";
+            
+            int ii=0;
+            string bu="<br>SESSION DATA ("+Session.Count+"):<br>";
+            while(ii<HttpContext.Current.Session.Keys.Count){
+                bu+="<br>"+ii+".) "+HttpContext.Current.Session.Keys[ii]+" = &quot;"+HttpContext.Current.Session[Session.Keys[ii]]+"&quot;";
+                ii++;
+            }
+            status.Text+=bu;
+            Response.Write(bu);
+            
+
             if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
                 //status.Text+="<br>Processing request...<br>";
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
@@ -108,7 +121,15 @@ namespace VLAB_AccountServices.services {
                         this.redirect();
                     }
                 }
-                Response.Write(d+"- END -");
+
+                int i=0;
+                string buff="";
+                while(i<Session.Keys.Count){
+                    buff+="<br>"+i+".) "+Session.Keys[i];
+                    i++;
+                }
+
+                Response.Write(buff+"<br>- END -");
 
                 if (this.pass) {
                     status.Text+="<br>- Passed checks.<br>USERNAME: &quot;"+obj.username+"&quot;<br>CMD: &quot;"+obj.cmd+"&quot;<br>";

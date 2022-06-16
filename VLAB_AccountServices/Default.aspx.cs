@@ -8,10 +8,12 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using VLAB_AccountServices.services;
 using VLAB_AccountServices.services.assets.sys;
+using VLAB_AccountServices.services.assets.svr;
 
 namespace VLAB_AccountServices {
 	public partial class Default : System.Web.UI.Page
@@ -35,6 +37,7 @@ namespace VLAB_AccountServices {
         {
             //Session.Clear();
             //Session.Add("data","{\"cmd\":\"FAILURE\"}");
+            //System.Web.HttpContext
             Session.Add("data","");
             User obj=new User();
             Default.st=status;
@@ -43,9 +46,9 @@ namespace VLAB_AccountServices {
             if (CasAuthentication.CurrentPrincipal!=null) {
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 string username=System.Web.HttpContext.Current.User.Identity.Name;
-                string campus="";
+                //string campus="";
 
-                int i=0;
+                //int i=0;
 
                 /*
                 if (sp.Assertion.Attributes.ContainsKey("cn")) {
@@ -56,11 +59,11 @@ namespace VLAB_AccountServices {
                 //sys.flush();
 
 
-                /*
+                
                 obj.username=username;
                 this.obj=obj;
-                bool tmp=this.checkUser(username);
-                */
+                this.checkUser(username);
+                
 
                 /*
                 obj.username=username;
@@ -77,7 +80,7 @@ namespace VLAB_AccountServices {
                 //Session["data"]=data;
                 //sys.warn(data);
                 //sys.flush();
-                
+                /*
                 if (sys.errored) {
                     sys.error("System errored out.");
                     status.Text=sys.getBuffer();
@@ -88,6 +91,7 @@ namespace VLAB_AccountServices {
                     status.Text+="<br>REDIRECTING...";
                     Response.Redirect("services/resetPassword.aspx");
                 }
+                */
                 
             } else {
                 /*
@@ -179,8 +183,20 @@ namespace VLAB_AccountServices {
                 status.Text+="<br>REDIRECTING...";
                 status.Text+="<br><br>"+data+"<br><br>";
                 status.Text+="<br><br>"+Session["data"]+"<br><br>";
-                Session.Add("data",data);
+                //HttpContext.Current.Session.Add("data",data);
+                HttpContext.Current.Session["data"]=data;
+                CookieCache.Set("data",data);
                 Response.Redirect("services/resetPassword.aspx");
+                /*
+                int i=0;
+                string buff="SESSION DATA:<br>";
+                while(i<HttpContext.Current.Session.Keys.Count){
+                    buff+="<br>"+i+".) "+HttpContext.Current.Session.Keys[i]+" = &quot;"+HttpContext.Current.Session[Session.Keys[i]]+"&quot;";
+                    i++;
+                }
+                //Response.Write(buff);
+                status.Text+=buff;
+                */
             }
             return 1;
         }
