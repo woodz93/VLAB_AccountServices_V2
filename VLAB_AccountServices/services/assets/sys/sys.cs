@@ -9,7 +9,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 		protected static bool logging=true;
 		public static bool errored=false;
 		public static string buffer="";
-
+		// Returns the converted output buffer string into an HTML-formatted string.
 		public static string getBuffer() {
 			string res=sys.debug_buffer;
 			if (res.IndexOf("\n")!=-1) {
@@ -20,7 +20,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 			}
 			return res;
 		}
-
+		// Adds an error to the output buffer.
 		public static void error(string q) {
 			q=sys.sanitize(q);
 			string time=sys.getTime();
@@ -37,6 +37,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 				sys.errored=true;
 			}
 		}
+		// Adds a warning message to the output buffer.
 		public static void warn(string q) {
 			q=sys.sanitize(q);
 			string time=sys.getTime();
@@ -50,22 +51,22 @@ namespace VLAB_AccountServices.services.assets.sys {
 				sys.output_flush=true;
 			}
 		}
-
+		// Clears the output buffer.
 		public static void clear() {
 			sys.debug_buffer="";
 			if (sys.output_flush) {
 				sys.output_flush=false;
 			}
 		}
-
+		// Returns a string representing the current date and time.
 		public static string getTime() {
-			string res="";
+			string res;
 			DateTime dt=new DateTime(DateTime.Now.Ticks);
-			string hour="";
-			string minute="";
-			string second="";
-			string month="";
-			string day="";
+			string hour;
+			string minute;
+			string second;
+			string month;
+			string day;
 			string year=dt.Year.ToString();
 			string sym="AM";
 			if (dt.Month<10) {
@@ -106,7 +107,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 			res=month+"-"+day+"-"+year+" | "+hour+":"+minute+":"+second+" "+sym;
 			return res;
 		}
-
+		// Returns the converted output buffer into HTML-formatted string.
 		public static void flush() {
 			if (sys.logging) {
 				if (sys.output_flush) {
@@ -118,12 +119,20 @@ namespace VLAB_AccountServices.services.assets.sys {
 				}
 			}
 		}
-
 		// Returns the current directory of this program.
 		public static string getCWD() {
 			return "\\\\172.20.0.204\\www\\wwwvlabaccountservices\\";
 		}
-
+		// Writes a string to the status element (Works only on the Default page).
+		public static void Write(string q) {
+			if (sys.logging) {
+				if (!String.IsNullOrEmpty(q)) {
+					if (!String.IsNullOrWhiteSpace(q)) {
+						Default.StatusElm.Text+=q+"<br>";
+					}
+				}
+			}
+		}
 		// Returns a sanitized string.
 		public static string sanitize(string q) {
 			string exp="[^\\u0020-\\u007e]+";					// Matches all characters that are beyond the scope of the ASCII keyboard characters.
@@ -134,14 +143,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 			if (Regex.IsMatch(q,exp)) {
 				q=Regex.Replace(q,exp,"");
 			}
-			/*
-			string patt=@"[^A-z0-9_\-~`!@#$%\^&\*\(\)\+=\{\[\}\]|\\'\:;\,\.<>\?\/ \t"+"\""+"]+";
-			if (Regex.Match(q,patt).Success) {
-				q=Regex.Replace(q,patt,"");
-			}
-			*/
 			return q;
 		}
-
 	}
 }
