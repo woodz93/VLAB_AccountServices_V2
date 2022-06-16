@@ -76,7 +76,7 @@ namespace VLAB_AccountServices {
                 //Session["data"]=data;
                 //sys.warn(data);
                 //sys.flush();
-                /*
+                
                 if (sys.errored) {
                     sys.error("System errored out.");
                     status.Text=sys.getBuffer();
@@ -87,7 +87,7 @@ namespace VLAB_AccountServices {
                     status.Text+="<br>REDIRECTING...";
                     Response.Redirect("services/resetPassword.aspx");
                 }
-                */
+                
             } else {
                 /*
                 string username="";
@@ -129,7 +129,7 @@ namespace VLAB_AccountServices {
                 cmd.CommandType=CommandType.StoredProcedure;
                 await con.OpenAsync();
                 await cmd.ExecuteNonQueryAsync();
-                con.Close();;
+                con.Close();
             }
             return 1;
         }
