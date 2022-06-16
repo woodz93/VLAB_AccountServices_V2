@@ -2,6 +2,7 @@
 using DotNetCasClient.Security;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -44,10 +45,6 @@ namespace VLAB_AccountServices {
                 string campus="";
 
                 int i=0;
-                foreach(var item in 
-                    status.Text+=""+list[i]+"<br>";
-                    i++;
-                }
 
                 /*
                 if (sp.Assertion.Attributes.ContainsKey("cn")) {
@@ -124,28 +121,43 @@ namespace VLAB_AccountServices {
             return 1;
         }
 
+        // Asynchronously invokes the store procedure that invokes the script.
+        protected async Task<int> InvokeApplication() {
+            string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
+            using(var con=new SqlConnection(constr)) {
+                SqlCommand cmd=new SqlCommand("AccountServicesInvokeADApplication",con);
+                cmd.CommandType=CommandType.StoredProcedure;
+                await con.OpenAsync();
+                await cmd.ExecuteNonQueryAsync();
+                con.Close();;
+            }
+            return 1;
+        }
+        // Sends a request to check if the username exists on the AD server.
         protected bool checkUser(string username) {
             bool res=false;
-            string id=this.genID();
-            string data="{\"cmd\":\"check-user\",\"username\":\"" + username + "\"}";
+            string id=this.genID();                                                     // Gets a unique randomized string of characters for the record id.
+            string data="{\"cmd\":\"check-user\",\"username\":\"" + username + "\"}";   // The data value of the request that indicates the request to check if the user exists...
             string sql="INSERT INTO " + Default.tb + " (\"id\",\"data\") VALUES ( @ID , @DATA );";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
                 using (SqlConnection con=new SqlConnection(constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
-                    cmd.Parameters.AddWithValue("@ID",id);
-                    cmd.Parameters.AddWithValue("@DATA",data);
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    con.Close();
+                    cmd.Parameters.AddWithValue("@ID",id);                              // Sanitizes the id string.
+                    cmd.Parameters.AddWithValue("@DATA",data);                          // Sanitizes the data string.
+                    con.Open();                                                         // Opens a connection to the database.
+                    cmd.ExecuteNonQuery();                                              // Executes the SQL query.
+                    con.Close();                                                        // Closes the database connection.
                 }
-                Default.id=id;
-                RegisterAsyncTask(new PageAsyncTask(dbCheck));
+                this.InvokeApplication();                                               // Invokes the AD program.
+                Default.id=id;                                                          // Sets the record id into the class property.
+                RegisterAsyncTask(new PageAsyncTask(dbCheck));                          // Performs an asynchronous call to the response checking method.
             }catch(Exception ex){
                 sys.error("Insertion Error:\t"+ex.Message+"\n\n"+sql);
             }
             return res;
         }
+        // Asynchronously sets the session data after the database has returned with the proper data.
 		public async Task<int> dbCheck() {
             await this.db_check(Default.id);
             await this.removeRecord(Default.id);
@@ -171,6 +183,7 @@ namespace VLAB_AccountServices {
             }
             return 1;
         }
+        // Asynchronously removes the record that matches the record id specified.
         protected async Task<int> removeRecord(string id) {
             string sql="DELETE FROM " + Default.tb + " WHERE id= @ID ;";
             string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
@@ -187,6 +200,7 @@ namespace VLAB_AccountServices {
             }
             return 1;
         }
+        // Returns the sanitized string.
         public string parse(string q) {
             string exp="[^\\u0020-\\u007e]+";					// Matches all characters that are beyond the scope of the ASCII keyboard characters.
 			if (Regex.IsMatch(q,exp)) {
@@ -198,6 +212,7 @@ namespace VLAB_AccountServices {
 			}
 			return q;
         }
+        // Asynchronously checks if the database for the results.
         public async Task<int> db_check(string id) {
             int res=0;
             string sql="SELECT * FROM " + Default.tb + " WHERE id= @ID ;";
@@ -215,8 +230,8 @@ namespace VLAB_AccountServices {
                         while(r.Read()){                                    // Iterates through all records containing the same record id (In the event there are multiple requests which should NOT happen).
                             tmp=r.GetString(1);                             // Gets the record data.
                             if (tmp.IndexOf("status")!=-1) {                // Checks if the record was changed.
-                                pass=true;
-                                break;
+                                pass=true;                                  // Sets the continuation variable to true once complete.
+                                break;                                      // Breaks out of the loop since there is no need to continue.
                             }
                             i++;
                         }
@@ -224,33 +239,33 @@ namespace VLAB_AccountServices {
                             sys.error("There were multiple records found matching the id \""+this.parse(id)+"\".<br>Please reload the page and try again.");
                             sys.flush();                                    // Pushes the output to the client.
                             sys.clear();                                    // Clears the output.
-                            //this.removeRecord(id);                          // Removes all records matching the ID.
-                            pass=true;
+                            //this.removeRecord(id);                        // Removes all records matching the ID.
+                            pass=true;                                      // Sets the continuation variable to continue with the process.
                         }
                     } else {
                         pass=true;
                     }
-                    con.Close();
-                    if (!pass) {
-                        if (Default.ct<10) {
-                            await Task.Delay(1000);
+                    con.Close();                                            // Closes the database connection.
+                    if (!pass) {                                            // Checks if the continuation variable is false...
+                        if (Default.ct<10) {                                // If the counter is less than 10...
+                            await Task.Delay(1000);                         // Wait for 1 second...
                             sys.warn("No records found.<br>Attempting to check for record update...");
-                            sys.flush();
-                            await this.db_check(id);
+                            sys.flush();                                    // Flushes/Outputs the console data to the client.
+                            await this.db_check(id);                        // Repeats the check again.
                         } else {
                             sys.error("Request timmed out.<br>Please reload the page and try again.");
                             sys.flush();
-                            sys.clear();
-                            this.removeRecord(id);                      // Removes the record from the database to clear up space.
+                            sys.clear();                                    // Clears the console debug buffer.
+                            this.removeRecord(id);                          // Removes the record from the database to clear up space.
                         }
                     } else {
                         sys.warn("FOUND RECORD!");
                         sys.warn(tmp);
                         sys.flush();
-                        if (tmp.IndexOf("status\":true")!=-1) {
-                            this.pt=1;
+                        if (tmp.IndexOf("status\":true")!=-1) {             // Checks if the response returned true (Indicates that the user was found on the AD).
+                            this.pt=1;                                      // Sets the status variable to indicate that the user was found.
                         } else {
-                            this.pt=2;
+                            this.pt=2;                                      // Sets the status variable to indicate that the user was not found.
                         }
                     }
                     res=1;
