@@ -53,18 +53,18 @@ namespace VLAB_AccountServices.services {
             //List<System.Collections.Specialized.NameObjectCollectionBase.KeysCollection> list=Session.Contents.Keys;
             
 
-            status.Text+="<br><br>&quot;"+Session["data"]+"&quot;<br><br>";
+            //status.Text+="<br><br>&quot;"+Session["data"]+"&quot;<br><br>";
 
-            status.Text+="<br>Page loaded<br>";
+            //status.Text+="<br>Page loaded<br>";
             if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
-                status.Text+="<br>Processing request...<br>";
+                //status.Text+="<br>Processing request...<br>";
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 user=System.Web.HttpContext.Current.User.Identity.Name;
                 string campus="";
                 try{
                     //campus=sp.Assertion.Attributes["campusKey"].ToString();
                     //campus=this.getAttribute(sp,"cn");
-                    status.Text+="<br>\""+campus+"\"<br><br>";
+                    status.Text+="<br>\""+user+"\"<br><br>";
                 }catch(Exception ec){
                     status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
                 }
