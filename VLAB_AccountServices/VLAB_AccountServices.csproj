@@ -175,6 +175,8 @@
     <Compile Include="services\assets\svr\CookieCache.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="services\assets\sys\console.cs" />
+    <Compile Include="services\assets\sys\Status.cs" />
     <Compile Include="services\assets\sys\sys.cs" />
     <Compile Include="services\CaseLog.cs" />
     <Compile Include="services\timeout.cs" />

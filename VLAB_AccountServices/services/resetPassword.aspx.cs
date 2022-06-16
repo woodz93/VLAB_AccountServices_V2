@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 using System.Web;
 using VLAB_AccountServices.services.assets.sys;
 using VLAB_AccountServices.services.assets.svr;
+using System.Threading;
+using System.Collections.Generic;
+using System.Web.UI.WebControls;
 
 namespace VLAB_AccountServices.services {
 
@@ -21,6 +24,12 @@ namespace VLAB_AccountServices.services {
 		protected static string db_password="MauiC0LLegeAD2252!";
         protected static string ending="<br><br>You may contact <a href=\"tel:+18089843283\" target=\"_blank\">(808) 984-3283</a>, email <a href=\"mailto:uhmchelp@hawaii.edu\" target=\"_blank\">uhmchelp@hawaii.edu</a>, or submit a ticket at <a href=\"https://maui.hawaii.edu/helpdesk/#gform_7\" target=\"_blank\">https://maui.hawaii.edu/helpdesk/#gform_7</a> for further assistance.";
         protected bool pass=false;
+        protected int counter=0;
+
+        protected List<string>cols=null;
+
+        private static string constr=null;
+        public static Label StatusElm;
 
         public void processPassword(Object sender, EventArgs e) {
             string u=username.Text;
@@ -50,16 +59,14 @@ namespace VLAB_AccountServices.services {
             string pass="";
             string mode="";
             
+            resetPassword.constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
+            try{
+                resetPassword.StatusElm=status;
+            }catch(Exception ex){
+
+            }
+
             User m_obj=new User();
-
-            //List<System.Collections.Specialized.NameObjectCollectionBase.KeysCollection> list=Session.Contents.Keys;
-            
-            //Response.Write("<br>HELLO WORLD<br>");
-
-            //status.Text+="<br><br>&quot;"+Session["data"]+"&quot;<br><br>";
-
-            //status.Text+="<br>Page loaded<br>";
-            
             int ii=0;
             string bu="<br>SESSION DATA ("+Session.Count+"):<br>";
             while(ii<HttpContext.Current.Session.Keys.Count){
@@ -69,7 +76,6 @@ namespace VLAB_AccountServices.services {
             status.Text+=bu;
             Response.Write(bu);
             
-
             if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
                 //status.Text+="<br>Processing request...<br>";
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
@@ -85,13 +91,6 @@ namespace VLAB_AccountServices.services {
                 }
                 string d="";
                 User obj=new User();
-                //sys.warn("POST and CAS check passed.");
-                //sys.flush();
-                //status.Text+=sys.buffer;
-                //sys.clear();
-                //status.Text+="<br>Parsing data...<br>";
-                //status.Text+="<br>SESSION DATA: &quot;"+Session["data"]+"&quot;<br>";
-                
                 try{
                     d=Session["data"].ToString();
                     status.Text+="<br>Object Data: &quot;"+d+"&quot<br>";
@@ -287,7 +286,7 @@ namespace VLAB_AccountServices.services {
             }
             return res;
         }
-
+        // Sends a request query to the database and waits for a response.
         protected void queryRequest(string q="") {
             if (q.Length > 0) {
                 string id=this.genID();
@@ -296,10 +295,9 @@ namespace VLAB_AccountServices.services {
                 //status.Text+="<br><br>DATA<br>"+id+"<br><br>";
                 //string values=" @DATA ";
                 string sql="INSERT INTO " + resetPassword.tb + " (\"id\",\"data\") VALUES ('"+id+"', @DATA );";
-                string constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
                 //status.Text+=sql;
                 try{
-                    using (SqlConnection con=new SqlConnection(constr)) {
+                    using (SqlConnection con=new SqlConnection(resetPassword.constr)) {
                         SqlCommand cmd=new SqlCommand(sql,con);
                         //cmd.Parameters.AddWithValue("@ID",id);
                         cmd.Parameters.AddWithValue("@DATA",q);
@@ -307,12 +305,14 @@ namespace VLAB_AccountServices.services {
                         cmd.ExecuteNonQuery();
                         con.Close();
                     }
+                    // Wait for response...
+                    this.ResponseWait(id);
                 }catch{
                     CaseLog cl=new CaseLog();
                     cl.code="0x0001";
                     cl.status="fatal";
                     cl.title="SQL Submission failed";
-                    cl.msg="An error occurred while attempting to process the form submission.\nPerhaps there is a syntax error in the SQL query.\n\nSQL Query:\t\t" + sql + "\n\nConnection string:\t\t" + constr + "\n\nEND OF LINE";
+                    cl.msg="An error occurred while attempting to process the form submission.\nPerhaps there is a syntax error in the SQL query.\n\nSQL Query:\t\t" + sql + "\n\nConnection string:\t\t" + resetPassword.constr + "\n\nEND OF LINE";
                     cl.data=sql;
                     string _obj_=JsonSerializer.Serialize(cl);
                     string cref=Case.createCase(_obj_);
@@ -320,10 +320,166 @@ namespace VLAB_AccountServices.services {
                 }
             }
         }
-
+        // Returns true on success, false otherwise. Repeats until a response was issued by the AD program.
+        protected bool ResponseWait(string id=null) {
+            bool res=false;
+            if (!String.IsNullOrEmpty(id)) {
+                if (!String.IsNullOrWhiteSpace(id)) {
+                    if (this.counter<50) {
+                        Thread.Sleep(100);
+                        if (this.CheckRecordResponse(id)==null) {
+                            Thread.Sleep(50);
+                            this.ResponseWait(id);
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+        // Returns the record response on success, null otherwise.
+        protected string CheckRecordResponse(string id=null) {
+            string res=null;
+            if (!String.IsNullOrEmpty(id)) {
+                if (!String.IsNullOrWhiteSpace(id)) {
+                    List<Dictionary<string,string>> list=this.GetMatchingRecords(id);
+                    int i=0;
+                    uint tmp=0x0000;
+                    string msg;
+                    string file;
+                    string line;
+                    string path;
+                    string str="";
+                    Status ins=new Status();
+                    while(i<list.Count){
+                        if (list[i]["id"]==id) {
+                            if (!String.IsNullOrEmpty(list[i]["data"])) {
+                                if (!String.IsNullOrWhiteSpace(list[i]["data"])) {
+                                    ins.id=list[i]["id"];
+                                    ins.data=list[i]["data"];
+                                    tmp=ins.GetStatus();
+                                    msg=ins.GetMessage();
+                                    file=ins.GetFileName();
+                                    line=ins.GetLine();
+                                    path=ins.GetSource();
+                                    if (msg==null) {
+                                        msg="[NULL]";
+                                    }
+                                    if (msg==null) {
+                                        msg="[NULL]";
+                                    }
+                                    if (file==null) {
+                                        file="[NULL]";
+                                    }
+                                    if (path==null) {
+                                        path="[NULL]";
+                                    }
+                                    if (line==null) {
+                                        line="[NULL]";
+                                    }
+                                    str=msg+"\n\tFrom "+path+"/"+file+" ("+line+")";
+                                    if (tmp!=0x00) {
+                                        if (tmp==0x01) {
+                                            console.Error("Failed to process your request...\n"+str);
+                                            res="Failed";
+                                        } else {
+                                            res="Success";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        i++;
+                    }
+                }
+            }
+            return res;
+        }
+        // Returns a list consisting of all the records that match the ID.
+        protected List<Dictionary<string,string>> GetMatchingRecords(string id=null) {
+            List<Dictionary<string,string>> res=new List<Dictionary<string,string>>();
+            if (!String.IsNullOrEmpty(id)) {
+                if (!String.IsNullOrWhiteSpace(id)) {
+                    int lim=this.GetMatchingRecordsCount(id);
+                    if (lim>0) {
+                        string sql="SELECT * AS TOTAL FROM " + resetPassword.tb + " WHERE id= @ID ;";
+                        int i=0;
+                        int o=0;
+                        List<string> cols=this.GetColumns();
+                        Dictionary<string,string> tmp=new Dictionary<string,string>();
+                        using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
+                            SqlCommand cmd=new SqlCommand(sql,con);
+                            cmd.Parameters.AddWithValue("@ID",id);
+                            con.Open();
+                            SqlDataReader r=cmd.ExecuteReader();
+                            while(i<lim){
+                                o=0;
+                                if (tmp.Count>0) {
+                                    tmp.Clear();
+                                }
+                                while(o<cols.Count){
+                                    tmp.Add(cols[o],r.GetString(o));
+                                    o++;
+                                }
+                                res.Add(tmp);
+                                i++;
+                            }
+                            con.Close();
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+        // Returns a List consisting of all the columns in the database.
+        protected List<string> GetColumns() {
+            List<string> res;
+            if (this.cols!=null) {
+                res=this.cols;
+            } else {
+                string sql="";
+                int i=0;
+                int lim=0;
+                res=new List<string>();
+                using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
+                    SqlCommand cmd=new SqlCommand(sql,con);
+                    con.Open();
+                    SqlDataReader r=cmd.ExecuteReader();
+                    lim=r.FieldCount;
+                    while(i<lim){
+                        res.Add(r.GetName(i));
+                        i++;
+                    }
+                    con.Close();
+                }
+            }
+            return res;
+        }
+        // Returns the number of records that match the ID.
+        protected int GetMatchingRecordsCount(string id=null) {
+            int res=0;
+            if (!String.IsNullOrEmpty(id)) {
+                if (!String.IsNullOrWhiteSpace(id)) {
+                    string sql="SELECT COUNT(*) AS TOTAL FROM " + resetPassword.tb + " WHERE id= @ID ;";
+                    using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
+                        SqlCommand cmd=new SqlCommand(sql,con);
+                        cmd.Parameters.AddWithValue("@ID",id);
+                        con.Open();
+                        SqlDataReader r=cmd.ExecuteReader();
+                        if (r.HasRows) {
+                            while(r.Read()){
+                                res++;
+                            }
+                        }
+                        con.Close();
+                    }
+                }
+            }
+            return res;
+        }
+        // Validates the string based on regular expressions.
         protected bool validate(string q="") {
             bool res=true;
-            string rs="[^\\u0020-\\u007e]";
+            string rs="[^\\u0020-\\u007e]+";
             if (Regex.IsMatch(q,rs)) {
                 res=false;
             }
@@ -333,7 +489,7 @@ namespace VLAB_AccountServices.services {
             }
             return res;
         }
-
+        // Parses the string for SQL usage.
         protected string sqlParse(string q="") {
             string rs="[^\\u0020-\\u007e]+";
             if (Regex.IsMatch(q,rs)) {
@@ -345,24 +501,15 @@ namespace VLAB_AccountServices.services {
             }
             return q;
         }
-
-        protected string sqlEncode(string q=""){
-            string regexp_str="[^\\u0020-\\u007e]+";
-            if (!Regex.IsMatch(q,regexp_str)) {
-                q=Regex.Replace(q,regexp_str,"");
-            }
-            return q;
-        }
-
         // ID controller method. Checks if the generated ID does not exist on the database. If it does not, then the generated ID will be returned.
         protected string genID() {
             string res="";
             string id=this.genRandID();
             string sql="SELECT COUNT(id) FROM " + resetPassword.tb + " WHERE id= @ID ;";
-            string constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
+            
             int len=0;
             try{
-                using(SqlConnection con=new SqlConnection(constr)) {
+                using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
                     cmd.Parameters.AddWithValue("@ID",id);
                     con.Open();

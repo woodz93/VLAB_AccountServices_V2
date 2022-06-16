@@ -24,6 +24,7 @@ namespace VLAB_AccountServices {
 		protected static string db_port="";
 		protected static string db_username="uhmcad_user";
 		protected static string db_password="MauiC0LLegeAD2252!";
+        protected static string constr=null;
         protected int cur_count=0;
         public static Label st;
         public static string id="";
@@ -35,6 +36,7 @@ namespace VLAB_AccountServices {
         // Performs checks to see if the 
         protected void Page_Load(object sender, EventArgs e)
         {
+            Default.constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             Default.StatusElm=status;
             Default.st=status;
             sys.Write("Page loaded.");
@@ -68,8 +70,7 @@ namespace VLAB_AccountServices {
         }
         // Asynchronously invokes the store procedure that invokes the script.
         protected void InvokeApplication() {
-            string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
-            using(var con=new SqlConnection(constr)) {
+            using(var con=new SqlConnection(Default.constr)) {
                 SqlCommand cmd=new SqlCommand("AccountServicesInvokeADApplication",con);    // Command that invokes the SQL stored procedure that invokes the AD script.
                 cmd.CommandType=CommandType.StoredProcedure;                                // Specifies the type of SQL command being used.
                 con.Open();                                                                 // Opens the database connection.
@@ -83,9 +84,8 @@ namespace VLAB_AccountServices {
             string id=this.genID();                                                     // Gets a unique randomized string of characters for the record id.
             string data="{\"cmd\":\"check-user\",\"username\":\"" + username + "\"}";   // The data value of the request that indicates the request to check if the user exists...
             string sql="INSERT INTO " + Default.tb + " (\"id\",\"data\") VALUES ( @ID , @DATA );";
-            string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
-                using (SqlConnection con=new SqlConnection(constr)) {
+                using (SqlConnection con=new SqlConnection(Default.constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);
                     cmd.Parameters.AddWithValue("@ID",id);                              // Sanitizes the id string.
                     cmd.Parameters.AddWithValue("@DATA",data);                          // Sanitizes the data string.
@@ -128,9 +128,8 @@ namespace VLAB_AccountServices {
         // Asynchronously removes the record that matches the record id specified.
         protected void removeRecord(string id) {
             string sql="DELETE FROM " + Default.tb + " WHERE id= @ID ;";
-            string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
-                using(SqlConnection con=new SqlConnection(constr)) {
+                using(SqlConnection con=new SqlConnection(Default.constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);     // Prepares the SQL string query.
                     cmd.Parameters.AddWithValue("@ID",id);      // Sanitizes the ID string for SQL processing.
                     con.Open();                                 // Opens a database connection.
@@ -157,9 +156,8 @@ namespace VLAB_AccountServices {
         public int db_check(string id) {
             int res=0;                                                      // Determines how the form page should process the form data.
             string sql="SELECT * FROM " + Default.tb + " WHERE id= @ID ;";
-            string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             try{
-                using(SqlConnection con=new SqlConnection(constr)) {
+                using(SqlConnection con=new SqlConnection(Default.constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);                 // Prepares the SQL string query.
                     cmd.Parameters.AddWithValue("@ID",id);                  // Sanitizes the ID string for SQL use.
                     con.Open();                                             // Opens a database connection.
@@ -217,10 +215,9 @@ namespace VLAB_AccountServices {
             string res="";
             string id=this.genRandID();                                         // Gets a randomly generated string of characters.
             string sql="SELECT COUNT(id) FROM " + Default.tb + " WHERE id= @ID ;";
-            string constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
             int len=0;                                                          // Will store the number of records that matched the query.
             try{
-                using(SqlConnection con=new SqlConnection(constr)) {
+                using(SqlConnection con=new SqlConnection(Default.constr)) {
                     SqlCommand cmd=new SqlCommand(sql,con);                     // Prepares the SQL query.
                     cmd.Parameters.AddWithValue("@ID",id);                      // Sanitizes the ID for the SQL query.
                     con.Open();                                                 // Opens a database connection.
