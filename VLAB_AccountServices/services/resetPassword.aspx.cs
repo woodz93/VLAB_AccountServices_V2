@@ -60,6 +60,7 @@ namespace VLAB_AccountServices.services {
                 //status.Text+="<br>Processing request...<br>";
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
                 user=System.Web.HttpContext.Current.User.Identity.Name;
+                username.Text=user;
                 string campus="";
                 try{
                     //campus=sp.Assertion.Attributes["campusKey"].ToString();
