@@ -30,6 +30,7 @@ namespace VLAB_AccountServices.services {
 
         private static string constr=null;
         public static Label StatusElm;
+        public Label StatElm;
 
         public void processPassword(Object sender, EventArgs e) {
             string u=username.Text;
@@ -54,19 +55,27 @@ namespace VLAB_AccountServices.services {
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            console.ini(this);
+
             string data="";
             string user="";
             string pass="";
             string mode="";
+
+            
             
             resetPassword.constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
+            //status.Text+="<br>LOADED<br>";
             try{
                 resetPassword.StatusElm=status;
+                this.StatElm=status;
             }catch(Exception ex){
 
             }
-
+            //this.StatElm.Text+="SUCCESS!<br>";
+            //console.Log("SUCCESSER");
             User m_obj=new User();
+            /*
             int ii=0;
             string bu="<br>SESSION DATA ("+Session.Count+"):<br>";
             while(ii<HttpContext.Current.Session.Keys.Count){
@@ -75,6 +84,7 @@ namespace VLAB_AccountServices.services {
             }
             status.Text+=bu;
             Response.Write(bu);
+            */
             
             if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
                 //status.Text+="<br>Processing request...<br>";
@@ -87,20 +97,19 @@ namespace VLAB_AccountServices.services {
                     //campus=this.getAttribute(sp,"cn");
                     //status.Text+="<br>\""+user+"\"<br><br>";
                 }catch(Exception ec){
-                    status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
+                    //status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
+                    console.Error(ec.Message);
                 }
-                string d="";
+                string d;
                 User obj=new User();
                 try{
                     d=Session["data"].ToString();
-                    status.Text+="<br>Object Data: &quot;"+d+"&quot<br>";
-                    
+                    //status.Text+="<br>Object Data: &quot;"+d+"&quot<br>";
                     obj=JsonSerializer.Deserialize<User>(d);
                     //m_obj=obj;
                     m_obj=JsonSerializer.Deserialize<User>(d);
-
-                    //this.pass=true;
-                    
+                    this.pass=true;
+                    console.Warn(d);
                 }catch(Exception ex){
                     //Response.Redirect("../Default.aspx");
                     //status.Text+="ERROR-007";
@@ -114,26 +123,29 @@ namespace VLAB_AccountServices.services {
                     } else {
                         if (String.IsNullOrEmpty(obj.cmd)) {
                             sys.error("User object is missing the command specification.");
+                            console.Error("User object is missing the command specification.");
                         } else if (!String.IsNullOrEmpty(obj.username)) {
                             sys.error("User object is missing the username specification.");
+                            console.Error("User object is missing the username specification.");
                         }
-                        this.redirect();
+                        //this.redirect();
                     }
                 }
-
+                /*
                 int i=0;
                 string buff="";
                 while(i<Session.Keys.Count){
                     buff+="<br>"+i+".) "+Session.Keys[i];
                     i++;
                 }
-
-                Response.Write(buff+"<br>- END -");
-
+                //Response.Write(buff+"<br>- END -");
+                */
                 if (this.pass) {
-                    status.Text+="<br>- Passed checks.<br>USERNAME: &quot;"+obj.username+"&quot;<br>CMD: &quot;"+obj.cmd+"&quot;<br>";
+                    //status.Text+="<br>- Passed checks.<br>USERNAME: &quot;"+obj.username+"&quot;<br>CMD: &quot;"+obj.cmd+"&quot;<br>";
+                    console.Log("Passed checks.");
                     if (!(user.Length>0) && !(obj.username.Length>0)) {
                         sys.error("No username found.");
+                        console.Error("Username is missing.");
                         this.pass=false;
                         this.redirect();
                     }
@@ -184,8 +196,9 @@ namespace VLAB_AccountServices.services {
                         this.redirect();
                     }
                     //Response.Write(obj.cmd+" HELLO WORLD");
+                    console.Log("Pass-000");
                     if (AD.isset(obj,"cmd")) {
-                        
+                        console.Log("Pass-001");
                         if (!String.IsNullOrEmpty(obj.cmd)) {
                             if (obj.cmd=="new-user") {
                                 submit_btn.Text="Create Account";
@@ -218,16 +231,19 @@ namespace VLAB_AccountServices.services {
                         this.redirect();
                     }
                 } else {
-                    sys.error("Failed to pass checks.");
+                    //sys.error("Failed to pass checks.");
+                    console.Error("Failed to pass checks.");
                     this.redirect();
                 }
             } else {
-                status.Text+="Could not discover parameter data.";
+                //status.Text+="Could not discover parameter data.";
+                console.Error("Could not discover parameter data... POST or CAS not initialized.");
                 //Response.Redirect("../Default.aspx");
                 //status.Text+="ERROR-006";
-                sys.error("POST has not data or CAS was not initialized.");
+                //sys.error("POST has not data or CAS was not initialized.");
                 this.redirect();
             }
+            console.Log("END OF LINE-000");
             if (IsPostBack) {
                 if (AD.isset(m_obj,"username")) {
                     if (AD.isset(m_obj,"cmd")) {
@@ -273,10 +289,12 @@ namespace VLAB_AccountServices.services {
                     cl.data=JsonSerializer.Serialize(m_obj);
                     string _obj_=JsonSerializer.Serialize(cl);
                     string cref=Case.createCase(_obj_);
-                    status.Text="Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + resetPassword.ending;
+                    console.Error("Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + resetPassword.ending);
                 }
                 
             }
+            //status.Text+="<br>END OF LINE";
+            console.Log("END OF LINE");
         }
 
         protected bool post_isset(string key) {

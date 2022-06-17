@@ -9,18 +9,29 @@ namespace VLAB_AccountServices.services.assets.sys {
 
 		private static bool enable_output=true;
 		private static uint mode=0x00;
+		private static Default Default_Instance;
+		private static resetPassword resetPassword_Instance;
+
+		public static void ini(Default instance) {
+			console.Default_Instance = instance;
+			console.mode=0x00;
+		}
+		public static void ini(resetPassword instance) {
+			console.resetPassword_Instance = instance;
+			console.mode=0x01;
+		}
 
 		// Writes output to the client.
-		public static void Log(string message=null) {
-			console.Output("[LOG]:\t\t<font style='color:red;font-weight:bolder;'>"+message+"</font>");
+		public static void Log(string message) {
+			console.Output("<font style='color:rgb(255,255,255);font-weight:bolder;'>[LOG]</font>:<font style='color:rgb(255,255,255);font-weight:bolder;'>\t\t"+message+"</font>");
 		}
 		// Writes output to the client.
-		public static void Warn(string message=null) {
-			console.Output("[WARN]:\t\t<font style='color:red;font-weight:bolder;'>"+message+"</font>");
+		public static void Warn(string message) {
+			console.Output("<font style='color:rgb(255,200,50);font-weight:bolder;'>[WARN]</font>:<font style='color:rgb(255,200,50);font-weight:bolder;'>\t\t"+message+"</font>");
 		}
 		// Writes output to the client.
-		public static void Error(string message=null) {
-			console.Output("[ERROR]:\t\t<font style='color:red;font-weight:bolder;'>"+message+"</font>");
+		public static void Error(string message) {
+			console.Output("<font style='color:red;font-weight:bolder;'>[ERROR]</font>:<font style='color:red;font-weight:bolder;'>\t\t"+message+"</font>");
 		}
 
 		private static void Output(string q=null) {
@@ -28,25 +39,34 @@ namespace VLAB_AccountServices.services.assets.sys {
 				if (console.CheckValue(q)) {
 					string str="["+console.getTime()+"] ["+console.GetCallingFunctionPath()+"/"+console.GetCallingFunction()+" (line: "+console.GetCallingFunctionLineNumber()+")] "+q+"\n";
 					str=console.HTMLEncode(str);
+					str="<style>.debug{font-family:monospace;font-size:1.0em;background-color:rgba(0,0,0,0.85);color:#FFF;}</style><div class=\"debug\">"+str+"</div>";
 					if (console.mode==0x00) {
 						try{
 							Default.StatusElm.Text+=str;
 						}catch(Exception e){
-							console.mode=0x01;
-							console.Output(q);
+							try{
+								console.Default_Instance.StatElm.Text+=str;
+							}catch{
+								console.mode=0x01;
+								console.Output(q);
+							}
 						}
 					} else if (console.mode==0x01) {
 						try{
 							resetPassword.StatusElm.Text+=str;
 						}catch(Exception e){
-							console.mode=0x10;
-							console.Output(q);
+							try{
+								console.resetPassword_Instance.StatElm.Text+=str;
+							}catch{
+								console.mode=0x10;
+								console.Output(q);
+							}
 						}
 					} else if (console.mode==0x10) {
 						try{
 							// Write to IIS event logs.
 						}catch(Exception e){
-
+							
 						}
 					}
 				}

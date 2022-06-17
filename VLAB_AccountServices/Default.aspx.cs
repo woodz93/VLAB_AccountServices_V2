@@ -33,39 +33,53 @@ namespace VLAB_AccountServices {
         private User obj;
         private int pt=0;
         public static Label StatusElm;
+        public Label StatElm;
         // Performs checks to see if the 
         protected void Page_Load(object sender, EventArgs e)
         {
-            Default.constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
+            console.ini(this);
             Default.StatusElm=status;
             Default.st=status;
-            sys.Write("Page loaded.");
+            this.StatElm=status;
+            //status.Text+="PAGE LOADED<br>";
+            //Response.Write("PAGE HAS LOADED (RESPONSE FROM SERVER)");
+            console.Log("Page loaded successfully!");
+            Default.constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
+            //sys.Write("Page loaded.");
             Session.Clear();
-            sys.Write("Session variables have been removed.");
-            sys.Write("Creating new session variable placeholder...");
+            //sys.Write("Session variables have been removed.");
+            //sys.Write("Creating new session variable placeholder...");
             Session.Add("data","");
-            sys.Write("Session variable has been created.");
-            sys.Write("Creating a new instance of the User data object...");
+            //sys.Write("Session variable has been created.");
+            //sys.Write("Creating a new instance of the User data object...");
             this.obj=new User();                                                            // Creates a new instance of the User class object.
-            sys.Write("User data object has been created.");
+            //sys.Write("User data object has been created.");
             sys.errored=false;                                                              // Resets the error status.
             sys.clear();                                                                    // Clears the output buffer.
-            sys.Write("Checking CAS principal...");
+            console.Error("TEST");
+            console.Log("Primary initialization completed successfully!");
+            console.Log("TEST");
+            console.Error("PASSER");
+            this.ini();
+        }
+        private void ini() {
+            console.Log("Checking CAS principal...");
+            //sys.Write("Checking CAS principal...");
             if (CasAuthentication.CurrentPrincipal!=null) {                                 // Checks if the user has gone through the CAS system.
-                sys.Write("CAS principal is not null, proceeding with process...");
+                //sys.Write("CAS principal is not null, proceeding with process...");
                 ICasPrincipal sp=CasAuthentication.CurrentPrincipal;                        // Creates a new instance of the CAS principal.
                 string username=System.Web.HttpContext.Current.User.Identity.Name;          // Gets the UH username from the CAS principal.
-                sys.Write("Username has been collected from the CAS system with it's value as &quot;"+username+"&quot;.");
+                //sys.Write("Username has been collected from the CAS system with it's value as &quot;"+username+"&quot;.");
                 this.obj.username=username;                                                 // Stores the username within the User object.
-                this.obj=obj;                                                               // Stores the User object into the class 
-                sys.Write("Objects have been populated... Processing username check request.");
+                //this.obj=obj;                                                               // Stores the User object into the class 
+                //sys.Write("Objects have been populated... Processing username check request.");
+                console.Log("Checking username...");
                 this.checkUser(username);                                                   // Sends the request to the db and waits for the response.
-                sys.Write("Attempting to redirect to the form.");
+                //sys.Write("Attempting to redirect to the form.");
                 this.Redirect();                                                            // Redirects the user to the form page.
             } else {
-                sys.error("Unauthorized access detected.<br>This has been reported to server administrators.");
-                sys.flush();                                                                // Populates the output buffer and prepares it for HTML viewing.
-                sys.clear();                                                                // Clears the output buffer.
+                sys.error("");
+                console.Error("Unauthorized access detected.");
             }
         }
         // Asynchronously invokes the store procedure that invokes the script.
@@ -80,6 +94,7 @@ namespace VLAB_AccountServices {
         }
         // Sends a request to check if the username exists on the AD server.
         protected bool checkUser(string username) {
+            console.Log("Attempting to check user...");
             bool res=false;
             string id=this.genID();                                                     // Gets a unique randomized string of characters for the record id.
             string data="{\"cmd\":\"check-user\",\"username\":\"" + username + "\"}";   // The data value of the request that indicates the request to check if the user exists...
@@ -92,26 +107,30 @@ namespace VLAB_AccountServices {
                     con.Open();                                                         // Opens a connection to the database.
                     cmd.ExecuteNonQuery();                                              // Executes the SQL query.
                     con.Close();                                                        // Closes the database connection.
+                    console.Log("SQL query has been processed/sent to the database.");
                 }
+                console.Log("Invoking AD program...");
                 this.InvokeApplication();                                               // Invokes the AD program.
+                console.Log("AD Program hsa been invoked.");
                 Default.id=id;                                                          // Sets the record id into the class property.
+                console.Log("Attempting to check database results.");
                 this.dbCheck();                                                         // Proceeds to check the response from the database record.
             }catch(Exception ex){
                 sys.error("Insertion Error:\t"+ex.Message+"\n\n"+sql);                  // Sets the error that involves an SQL issue.
+                console.Error("SQL failed to complete/execute...\n"+ex.Message+"\n\n"+sql);
             }
             return res;
         }
         // Asynchronously sets the session data after the database has returned with the proper data.
 		public void dbCheck() {
+            console.Log("Attempting to check the resulting records...");
             this.db_check(Default.id);                                                  // Repeats 50 times or until the record has a response.
             this.removeRecord(Default.id);                                              // Asynchronously removes the record from the database (This works, and does not need to be synchronous) (Removes the record to free up space in the db).
             if (sys.errored) {                                                          // Checks if there are any errors that were thrown.
-                sys.error("System errored out.");                                       // States that an error was thrown (Doesn't actually indicate anything else).
-                status.Text=sys.getBuffer();                                            // Outputs the errors in the buffer.
-                sys.clear();                                                            // Clears the output buffer.
-                sys.errored=false;                                                      // Reset the error status.
+                console.Error("System errored out.");
 			} else {
                 sys.clear();                                                            // Clears the output buffer.
+                console.Log("Value of pt is \""+pt+"\"");
                 if(this.pt==1) {                                                        // Determines what the command/process should be on the form.
 					this.obj.cmd="set-password";                                        // Indicates a password reset operation (Occurs if the user does exist on the AD).
 				} else if(this.pt==2) {
@@ -123,10 +142,12 @@ namespace VLAB_AccountServices {
         }
         // Performs a redirect.
         protected void Redirect() {
+            console.Warn(Session["data"].ToString());
             Response.Redirect("services/resetPassword.aspx");                           // Redirects the user to the form page.
         }
         // Asynchronously removes the record that matches the record id specified.
         protected void removeRecord(string id) {
+            console.Log("Attempting to delete record...");
             string sql="DELETE FROM " + Default.tb + " WHERE id= @ID ;";
             try{
                 using(SqlConnection con=new SqlConnection(Default.constr)) {
@@ -135,9 +156,11 @@ namespace VLAB_AccountServices {
                     con.Open();                                 // Opens a database connection.
                     cmd.ExecuteNonQuery();                      // Deletes the record from the database.
                     con.Close();                                // Closes the database connection.
+                    console.Log("Record has been removed from the database.");
                 }
             }catch(Exception e){
                 sys.error("Failed to delete record with id of \""+this.parse(id)+"\"\n"+e.Message+"\n\n"+sql);
+                console.Error("Failed to delete record with id of \""+this.parse(id)+"\"\n"+e.Message+"\n\n"+sql);
             }
         }
         // Returns the sanitized string.
@@ -169,6 +192,7 @@ namespace VLAB_AccountServices {
                         while(r.Read()){                                    // Iterates through all records containing the same record id (In the event there are multiple requests which should NOT happen).
                             tmp=r.GetString(1);                             // Gets the record data.
                             if (tmp.IndexOf("status")!=-1) {                // Checks if the record was changed.
+                                console.Error(tmp);
                                 pass=true;                                  // Sets the continuation variable to true once complete.
                                 break;                                      // Breaks out of the loop since there is no need to continue.
                             }
@@ -178,15 +202,18 @@ namespace VLAB_AccountServices {
                             sys.error("There were multiple records found matching the id \""+this.parse(id)+"\".<br>Please reload the page and try again.");
                             sys.flush();                                    // Pushes the output to the client.
                             sys.clear();                                    // Clears the output.
+                            console.Error("There were multiple records fiound matching the id.");
                             pass=true;                                      // Sets the continuation variable to continue with the process.
                         }
                     } else {
+                        console.Error("No records found.");
                         pass=true;
                     }
                     con.Close();                                            // Closes the database connection.
                     if (!pass) {                                            // Checks if the continuation variable is false...
                         if (Default.ct<50) {                                // If the counter is less than 10...
                             Thread.Sleep(100);                              // Wait for 1 second...
+                            Default.ct++;
                             this.db_check(id);                              // Repeats the check again.
                         } else {
                             sys.error("Request timmed out.<br>Please reload the page and try again.");
@@ -194,9 +221,12 @@ namespace VLAB_AccountServices {
                             this.removeRecord(id);                          // Removes the record from the database to clear up space.
                         }
                     } else {
+                        /*
                         sys.warn("FOUND RECORD!");
                         sys.warn(tmp);
                         sys.flush();
+                        */
+                        console.Warn("RECORD FOUND!");
                         if (tmp.IndexOf("status\":true")!=-1) {             // Checks if the response returned true (Indicates that the user was found on the AD).
                             this.pt=1;                                      // Sets the status variable to indicate that the user was found.
                         } else {
@@ -207,6 +237,7 @@ namespace VLAB_AccountServices {
                 }
             }catch(Exception e){
                 sys.error("An error occurred while asynchronously checking the database...<br><br>"+e.Message);
+                console.Error("An error has occurred while attempting to check the database...\n"+e.Message);
             }
             return res;
         }
