@@ -15,7 +15,7 @@ namespace VLAB_AccountServices.services {
 
 	public partial class resetPassword : System.Web.UI.Page
     {
-        protected byte mode=0x01;
+        protected byte mode=0x00;
         protected static string db="UHMC_VLab";
 		protected static string tb="vlab_pendingusers";
 		protected static string db_ip="172.20.0.142";
@@ -46,8 +46,9 @@ namespace VLAB_AccountServices.services {
             if (this.mode==0x00) {
                 Response.Redirect("../Default.aspx");
             } else if (this.mode==0x01) {
-                sys.flush();
+                //sys.flush();
                 //sys.clear();
+                console.Warn("Mode is set to debugging.");
                 status.Text+=sys.buffer;
             }
         }
@@ -100,38 +101,49 @@ namespace VLAB_AccountServices.services {
                     //status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
                     console.Error(ec.Message);
                 }
-                string d;
+                string d="{}";
                 User obj=new User();
-                try{
-                    d=Session["data"].ToString();
-                    //status.Text+="<br>Object Data: &quot;"+d+"&quot<br>";
-                    obj=JsonSerializer.Deserialize<User>(d);
-                    //m_obj=obj;
-                    m_obj=JsonSerializer.Deserialize<User>(d);
-                    this.pass=true;
-                    console.Warn(d);
-                }catch(Exception ex){
-                    //Response.Redirect("../Default.aspx");
-                    //status.Text+="ERROR-007";
-                    sys.error(ex.Message);
-                    //sys.flush();
-                    //status.Text+="<br>- "+ex.Message+"<br>";
-                    //status.Text+=sys.buffer;
-                    this.redirect();
-                    if (!String.IsNullOrEmpty(obj.cmd) && !String.IsNullOrEmpty(obj.username)) {
-                        this.pass=true;
-                    } else {
-                        if (String.IsNullOrEmpty(obj.cmd)) {
-                            sys.error("User object is missing the command specification.");
-                            console.Error("User object is missing the command specification.");
-                        } else if (!String.IsNullOrEmpty(obj.username)) {
-                            sys.error("User object is missing the username specification.");
-                            console.Error("User object is missing the username specification.");
+                if (Session.Count>0) {
+                    console.Log("Number of session variables that exist are ("+Session.Count.ToString()+")");
+                    try{
+                        try{
+                            d=Session["data"].ToString();
+                        }catch(Exception exc){
+                            console.Error("Failed to collect data property value... Only ("+Session.Count.ToString()+") properties exist in the session variable.");
                         }
+                        //status.Text+="<br>Object Data: &quot;"+d+"&quot<br>";
+                        obj=JsonSerializer.Deserialize<User>(d);
+                        //m_obj=obj;
+                        m_obj=JsonSerializer.Deserialize<User>(d);
+                        this.pass=true;
+                        console.Warn(d);
+                    }catch(Exception ex){
+                        //Response.Redirect("../Default.aspx");
+                        //status.Text+="ERROR-007";
+                        sys.error(ex.Message);
+                        console.Error(ex.Message);
+                        //sys.flush();
+                        //status.Text+="<br>- "+ex.Message+"<br>";
+                        //status.Text+=sys.buffer;
                         //this.redirect();
+                        if (!String.IsNullOrEmpty(obj.cmd) && !String.IsNullOrEmpty(obj.username)) {
+                            this.pass=true;
+                        } else {
+                            if (String.IsNullOrEmpty(obj.cmd)) {
+                                sys.error("User object is missing the command specification.");
+                                console.Error("User object is missing the command specification.");
+                            } else if (!String.IsNullOrEmpty(obj.username)) {
+                                sys.error("User object is missing the username specification.");
+                                console.Error("User object is missing the username specification.");
+                            }
+                            this.redirect();
+                        }
                     }
+                } else {
+                    console.Warn("Attempting to perform a redirect...");
+                    this.redirect();
                 }
-                /*
+                
                 int i=0;
                 string buff="";
                 while(i<Session.Keys.Count){
@@ -139,7 +151,7 @@ namespace VLAB_AccountServices.services {
                     i++;
                 }
                 //Response.Write(buff+"<br>- END -");
-                */
+                
                 if (this.pass) {
                     //status.Text+="<br>- Passed checks.<br>USERNAME: &quot;"+obj.username+"&quot;<br>CMD: &quot;"+obj.cmd+"&quot;<br>";
                     console.Log("Passed checks.");
@@ -149,6 +161,8 @@ namespace VLAB_AccountServices.services {
                         this.pass=false;
                         this.redirect();
                     }
+                } else {
+                    console.Error("Failed to pass previous check (CHECK CONDUCTED BEFORE USERNAME CHECKING)");
                 }
 
                 if (this.pass) {
