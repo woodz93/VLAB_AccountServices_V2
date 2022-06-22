@@ -70,17 +70,25 @@ namespace VLAB_AccountServices.services {
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			this.ini();
-			this.obj=new User();
+			try{
+				this.ini();
+				this.obj=new User();
+			}catch(Exception execp){
+				console.Error("Failed to initialize...\n\t\t"+execp.Message);
+			}
 			if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
 				/*
 				ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
 				user=System.Web.HttpContext.Current.User.Identity.Name;
 				username.Text=user;
 				*/
-				this.casp=CasAuthentication.CurrentPrincipal;
-				this.Username=System.Web.HttpContext.Current.User.Identity.Name;
-				username.Text=this.Username;
+				try{
+					this.casp=CasAuthentication.CurrentPrincipal;
+					this.Username=System.Web.HttpContext.Current.User.Identity.Name;
+					username.Text=this.Username;
+				}catch(Exception exrp){
+					console.Error("Failed to collect CAS information.\n\t\t"+exrp.Message);
+				}
 				/*
 				string campus="";
 				try{
@@ -118,6 +126,7 @@ namespace VLAB_AccountServices.services {
 
 		// Performs poast-back action.
 		private void ProcessPostBack() {
+			try{
 			bool p=true;
 			string data="";
 			if (debug.Checked) {
@@ -182,6 +191,9 @@ namespace VLAB_AccountServices.services {
 				console.Info("Preparing to send debug command.");
 				this.Debug(this.obj);
 			}
+			}catch(Exception e){
+				console.Error("Failed to process post-back data...\n\t\t"+e.Message);
+			}
 		}
 
 		// Checks object for valid username.
@@ -198,6 +210,7 @@ namespace VLAB_AccountServices.services {
 		}
 		// Processes session data.
 		private void ProcessSessionData() {
+			try{
 			if (this.pass) {
 				if (this.post_isset("data")) {
 					if (AD.isset(this.obj,"cmd")) {
@@ -258,23 +271,36 @@ namespace VLAB_AccountServices.services {
 				console.Error("Failed to pass checks.");
 				this.redirect();
 			}
+			}catch(Exception e){
+				console.Error("Failed to process session data.\n\t\t"+e.Message);
+			}
 		}
 
 		// Disables the submit button.
 		private void DisableSubmitButton() {
-			submit_btn.Text="[DISABLED]";
-			submit_btn.Enabled=false;
+			try{
+				submit_btn.Text="[DISABLED]";
+				submit_btn.Enabled=false;
+			}catch(Exception e){
+				console.Error("Failed to disable submission button.");
+			}
 		}
 
 		// Prepares and validates the username.
 		private bool ValidateUsername() {
 			bool res=true;
-			if (!(this.Username.Length>0) && !(this.obj.username.Length>0)) {
-				sys.error("No username found.");
-				console.Error("Username is missing.");
-				this.pass=false;
-				res=false;
-				this.redirect();
+			try{
+				if (this.obj!=null) {
+					if (!(this.Username.Length>0) && !(this.obj.username.Length>0)) {
+						sys.error("No username found.");
+						console.Error("Username is missing.");
+						this.pass=false;
+						res=false;
+						this.redirect();
+					}
+				}
+			}catch(Exception e){
+				console.Error("Failed to validate username...\n\t\t"+e.Message);
 			}
 			return res;
 		}
