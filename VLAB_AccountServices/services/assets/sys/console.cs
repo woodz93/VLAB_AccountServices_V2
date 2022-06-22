@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace VLAB_AccountServices.services.assets.sys {
 	public class console {
@@ -32,6 +33,14 @@ namespace VLAB_AccountServices.services.assets.sys {
 		// Writes output to the client.
 		public static void Error(string message) {
 			console.Output("<font style='color:red;font-weight:bolder;'>[ERROR]</font>:<font style='color:red;font-weight:bolder;'>\t\t"+message+"</font>");
+		}
+		// Writes output to the client.
+		public static void Info(string message) {
+			console.Output("<font style='color:cyan;font-weight:bolder;'>[INFO]</font>:<font style='color:cyan;font-weight:bolder;'>\t"+message+"</font>");
+		}
+		// Writes output to the client.
+		public static void Success(string message) {
+			console.Output("<font style='color:rgb(100,255,100);font-weight:bolder;'>[SUCCESS]</font>:<font style='color:rgb(100,255,100);font-weight:bolder;'>\t"+message+"</font>");
 		}
 
 		private static void Output(string q=null) {
@@ -106,7 +115,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 			StackTrace s=new StackTrace();
 			return s.GetFrame(3).GetFileLineNumber();
 		}
-
+		// Returns true if the parameter is an acceptable value, false otherwise.
 		private static bool CheckValue(string value=null) {
 			bool res=false;
 			if (!String.IsNullOrEmpty(value)) {
@@ -116,15 +125,16 @@ namespace VLAB_AccountServices.services.assets.sys {
 			}
 			return res;
 		}
-
-
-
-
-
-
-
+		// Returns a sanitized string.
+		public static string sanitize(string q) {
+			string patt=@"[^A-z0-9_\-~`!@#$%\^&\*\(\)\+=\{\[\}\]|\\'\:;\,\.<>\?\/ \t"+"\""+"]+";
+			if (Regex.Match(q,patt).Success) {
+				q=Regex.Replace(q,patt,"");
+			}
+			return q;
+		}
 		// Returns a string representing the current date and time.
-		private static string getTime() {
+		public static string getTime() {
 			string res;
 			DateTime dt=new DateTime(DateTime.Now.Ticks);
 			string hour;
