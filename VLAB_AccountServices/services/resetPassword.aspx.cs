@@ -71,58 +71,58 @@ namespace VLAB_AccountServices.services {
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			try{
-			try{
-				this.ini();
-				this.obj=new User();
-			}catch(Exception execp){
-				console.Error("Failed to initialize...\n\t\t"+execp.Message);
-			}
-			if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
-				/*
-				ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
-				user=System.Web.HttpContext.Current.User.Identity.Name;
-				username.Text=user;
-				*/
 				try{
-					this.casp=CasAuthentication.CurrentPrincipal;
-					this.Username=System.Web.HttpContext.Current.User.Identity.Name;
-					username.Text=this.Username;
-				}catch(Exception exrp){
-					console.Error("Failed to collect CAS information.\n\t\t"+exrp.Message);
+					this.ini();
+					this.obj=new User();
+				}catch(Exception execp){
+					console.Error("Failed to initialize...\n\t\t"+execp.Message);
 				}
-				/*
-				string campus="";
-				try{
-					//campus=sp.Assertion.Attributes["campusKey"].ToString();
-					//campus=this.getAttribute(sp,"cn");
-					//status.Text+="<br>\""+user+"\"<br><br>";
-				}catch(Exception ec){
-					//status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
-					console.Error(ec.Message);
-				}
-				*/
-				if (Session.Count>0) {
-					console.Log("Number of session variables that exist are ("+Session.Count.ToString()+")");
-					this.GetSessionData();
-					if (this.pass) {
-						if (this.ValidateUsername()) {
-							this.ProcessSessionData();				// Sets all elements from session data (Used before submitting the form).
-							if (IsPostBack) {
-								this.ProcessPostBack();				// Processes the submitted form data.
+				if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
+					/*
+					ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
+					user=System.Web.HttpContext.Current.User.Identity.Name;
+					username.Text=user;
+					*/
+					try{
+						this.casp=CasAuthentication.CurrentPrincipal;
+						this.Username=System.Web.HttpContext.Current.User.Identity.Name;
+						username.Text=this.Username;
+					}catch(Exception exrp){
+						console.Error("Failed to collect CAS information.\n\t\t"+exrp.Message);
+					}
+					/*
+					string campus="";
+					try{
+						//campus=sp.Assertion.Attributes["campusKey"].ToString();
+						//campus=this.getAttribute(sp,"cn");
+						//status.Text+="<br>\""+user+"\"<br><br>";
+					}catch(Exception ec){
+						//status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
+						console.Error(ec.Message);
+					}
+					*/
+					if (Session.Count>0) {
+						console.Log("Number of session variables that exist are ("+Session.Count.ToString()+")");
+						this.GetSessionData();
+						if (this.pass) {
+							if (this.ValidateUsername()) {
+								this.ProcessSessionData();				// Sets all elements from session data (Used before submitting the form).
+								if (IsPostBack) {
+									this.ProcessPostBack();				// Processes the submitted form data.
+								}
 							}
+						} else {
+							console.Error("Failed to pass previous check (CHECK CONDUCTED BEFORE USERNAME CHECKING)");
 						}
 					} else {
-						console.Error("Failed to pass previous check (CHECK CONDUCTED BEFORE USERNAME CHECKING)");
+						console.Warn("Attempting to perform a redirect...");
+						this.redirect();
 					}
 				} else {
-					console.Warn("Attempting to perform a redirect...");
+					console.Error("Could not discover parameter data... POST or CAS not initialized.");
 					this.redirect();
 				}
-			} else {
-				console.Error("Could not discover parameter data... POST or CAS not initialized.");
-				this.redirect();
-			}
-			console.Log("END OF LINE");
+				console.Log("END OF LINE");
 			}catch(Exception excep){
 				status.Text+="<br><br>"+excep.Message+"<br><br>";
 			}
