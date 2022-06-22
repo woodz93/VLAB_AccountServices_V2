@@ -71,6 +71,7 @@ namespace VLAB_AccountServices.services {
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			try{
+			try{
 				this.ini();
 				this.obj=new User();
 			}catch(Exception execp){
@@ -122,6 +123,9 @@ namespace VLAB_AccountServices.services {
 				this.redirect();
 			}
 			console.Log("END OF LINE");
+			}catch(Exception excep){
+				status.Text+="<br><br>"+excep.Message+"<br><br>";
+			}
 		}
 
 		// Performs poast-back action.
