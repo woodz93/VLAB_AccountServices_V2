@@ -450,7 +450,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		// Returns true if the column ID was populated, false otherwise.
 		private bool CheckColumnID() {
 			bool res=false;
-			if (!(this.cols.Count>0)) {
+			if (this.cols.Count>0) {
 				if (this.cols.Contains("id") || this.cols.Contains("ID")) {
 					int sel=-1;
 					if (this.cols.IndexOf("id")!=-1) {
