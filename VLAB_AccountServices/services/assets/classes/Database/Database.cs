@@ -415,7 +415,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					} else {
 						this.Error("No columns specified.",0x000A);
 						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
-						
+						this.ShowColumns();
 					}
 				} else if (this.action==DatabasePrincipal.ExistsPrincipal) {
 					if (!(this.cols.Count>0)) {
