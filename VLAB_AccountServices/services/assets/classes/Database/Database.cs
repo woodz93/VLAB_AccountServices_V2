@@ -380,6 +380,23 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
+		// Outputs columns.
+		public void ShowColumns() {
+			int i=0;
+			int lim=this.cols.Count;
+			console.Success("START OF COLUMNS");
+			while(i<lim){
+				console.Warn(this.cols[i]);
+				i++;
+			}
+			console.Success("END OF COLUMNS");
+			console.Success("START OF COLUMN VALUES");
+			i=0;
+			foreach(var item in this.pairs) {
+				console.Warn("\""+item.Key+"\": \""+item.Value+"\"");
+			}
+			console.Success("END OF COLUMN VALUES");
+		}
 		// Returns true if everything is needed in order to process the query, false otherwise.
 		private bool CheckQuery() {
 			bool res=false;
@@ -397,6 +414,8 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						}
 					} else {
 						this.Error("No columns specified.",0x000A);
+						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
+						
 					}
 				} else if (this.action==DatabasePrincipal.ExistsPrincipal) {
 					if (!(this.cols.Count>0)) {
@@ -669,7 +688,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				res=this.AddColumn(column_name);
 				if (Database.CheckValue(value)&&res) {
 					res=this.SetValue(column_name, value);
-					console.Info("Columns added...");
+					console.Success("Column added...");
 				} else {
 					console.Error("Failed to create column... Column name failed to pass validation...\n\t\tColumn Name:\t\t\""+column_name+"\"");
 				}
