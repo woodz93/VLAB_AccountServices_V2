@@ -12,6 +12,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 		private static uint mode=0x00;
 		private static Default Default_Instance;
 		private static resetPassword resetPassword_Instance;
+		public static bool errored=false;
 
 		public static void ini(Default instance) {
 			console.Default_Instance = instance;
@@ -33,6 +34,9 @@ namespace VLAB_AccountServices.services.assets.sys {
 		// Writes output to the client.
 		public static void Error(string message) {
 			console.Output("<font style='color:red;font-weight:bolder;'>[ERROR]</font>:<font style='color:red;font-weight:bolder;'>\t\t"+message+"</font>");
+			if (!console.errored) {
+				console.errored=true;
+			}
 		}
 		// Writes output to the client.
 		public static void Info(string message) {

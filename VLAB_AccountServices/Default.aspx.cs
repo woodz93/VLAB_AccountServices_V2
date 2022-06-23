@@ -138,8 +138,12 @@ namespace VLAB_AccountServices {
 		}
 		// Performs a redirect.
 		protected void Redirect() {
-			console.Warn(Session["data"].ToString());
-			//Response.Redirect("services/resetPassword.aspx");								// Redirects the user to the form page.
+			if (!(console.errored) && !(sys.errored)) {
+				console.Warn(Session["data"].ToString());
+				Response.Redirect("services/resetPassword.aspx");								// Redirects the user to the form page.
+			} else {
+				console.Info("Unable to redirect... An error has been thrown.");
+			}
 		}
 		// Asynchronously removes the record that matches the record id specified.
 		protected void removeRecord(string id) {
