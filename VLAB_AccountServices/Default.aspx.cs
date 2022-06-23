@@ -79,7 +79,7 @@ namespace VLAB_AccountServices {
 				this.CheckUsername(username);
 
 				//sys.Write("Attempting to redirect to the form.");
-				//this.Redirect();															// Redirects the user to the form page.
+				this.Redirect();															// Redirects the user to the form page.
 			} else {
 				sys.error("");
 				console.Error("Unauthorized access detected.");
