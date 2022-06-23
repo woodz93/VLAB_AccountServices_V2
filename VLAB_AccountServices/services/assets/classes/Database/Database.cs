@@ -402,13 +402,13 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			bool res=false;
 			if (this.action!=DatabasePrincipal.NullPrincipal) {
 				if (this.action==DatabasePrincipal.SelectPrincipal) {
-					if (!(this.cols.Count>0)) {
+					if (this.cols.Count>0) {
 						res=true;
 					} else {
 						this.Error("No columns specified.",0x000A);
 					}
 				} else if (this.action==DatabasePrincipal.InsertPrincipal) {
-					if (!(this.cols.Count>0)) {
+					if (this.cols.Count>0) {
 						if (this.CheckColumnID()) {
 							res=true;
 						}
@@ -418,7 +418,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						this.ShowColumns();
 					}
 				} else if (this.action==DatabasePrincipal.ExistsPrincipal) {
-					if (!(this.cols.Count>0)) {
+					if (this.cols.Count>0) {
 						res=true;
 					} else {
 						this.Error("No columns specified.",0x000A);
