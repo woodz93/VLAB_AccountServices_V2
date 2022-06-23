@@ -58,27 +58,22 @@ namespace VLAB_AccountServices {
 			sys.errored=false;																// Resets the error status.
 			sys.clear();																	// Clears the output buffer.
 			console.Log("Primary initialization completed successfully!");
-			console.Error("PASSER");
+			//console.Error("PASSER");
 			this.ini();
 		}
 		private void ini() {
 			console.Log("Checking CAS principal...");
-			//sys.Write("Checking CAS principal...");
 			if (CasAuthentication.CurrentPrincipal!=null) {									// Checks if the user has gone through the CAS system.
-				//sys.Write("CAS principal is not null, proceeding with process...");
 				ICasPrincipal sp=CasAuthentication.CurrentPrincipal;						// Creates a new instance of the CAS principal.
 				string username=System.Web.HttpContext.Current.User.Identity.Name;			// Gets the UH username from the CAS principal.
 				//sys.Write("Username has been collected from the CAS system with it's value as &quot;"+username+"&quot;.");
 				this.obj.username=username;													// Stores the username within the User object.
-				//this.obj=obj;																// Stores the User object into the class 
-				//sys.Write("Objects have been populated... Processing username check request.");
 				console.Log("Checking username...");
 				
 				
 				//this.checkUser(username);													// Sends the request to the db and waits for the response.
 				this.CheckUsername(username);
 
-				//sys.Write("Attempting to redirect to the form.");
 				this.Redirect();															// Redirects the user to the form page.
 			} else {
 				sys.error("");
@@ -86,17 +81,21 @@ namespace VLAB_AccountServices {
 			}
 		}
 
+
 		private bool CheckUsername(string u=null) {
 			bool res=false;
 			if (Str.CheckStr(u)) {
-				string id=this.genID();
+				Default.id=this.genID();
 				string data="{\"cmd\":\"check-user\",\"username\":\""+u+"\"}";
 				Database ins=new Database();
 				ins.SetAction(DatabasePrincipal.InsertPrincipal);
-				ins.AddColumn("id",id);
+				ins.AddColumn("id",Default.id);
 				ins.AddColumn("data",data);
 				bool tmp=ins.Send();
-				if (!tmp) {
+				if (tmp) {
+					ins.InvokeApplication();
+					this.dbCheck();
+				} else {
 					console.Error("An error occurred while attempting to insert a new record into the database...");
 				}
 			}
