@@ -22,7 +22,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		private string constr=null;
 		private bool con_open=false;
 		private SqlConnection con=null;
-		private List<string> cols=new List<string>();
+		public List<string> cols=new List<string>();
 		//private List<string> vals=new List<string>();
 		private Dictionary<string,string> pairs=new Dictionary<string,string>();
 		private List<uint> action_list=new List<uint>();
@@ -669,6 +669,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				res=this.AddColumn(column_name);
 				if (Database.CheckValue(value)&&res) {
 					res=this.SetValue(column_name, value);
+					console.Info("Columns added...");
 				} else {
 					console.Error("Failed to create column... Column name failed to pass validation...\n\t\tColumn Name:\t\t\""+column_name+"\"");
 				}
