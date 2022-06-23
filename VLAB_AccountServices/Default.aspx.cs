@@ -87,10 +87,14 @@ namespace VLAB_AccountServices {
 			if (Str.CheckStr(u)) {
 				Default.id=this.genID();
 				string data="{\"cmd\":\"check-user\",\"username\":\""+u+"\"}";
+				console.Log("Creating a new database class instance...");
 				Database ins=new Database();
 				ins.SetAction(DatabasePrincipal.InsertPrincipal);
 				ins.AddColumn("id",Default.id);
 				ins.AddColumn("data",data);
+				console.Info("ID:\t\t"+Default.id);
+				console.Info("Data:\t\t"+data);
+				console.Log("Attempting to submit database query...");
 				bool tmp=ins.Send();
 				if (tmp) {
 					ins.InvokeApplication();
