@@ -1,15 +1,14 @@
 ﻿using DotNetCasClient;
 using DotNetCasClient.Security;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Web;
-using VLAB_AccountServices.services.assets.sys;
-using VLAB_AccountServices.services.assets.svr;
 using System.Threading;
-using System.Collections.Generic;
 using System.Web.UI.WebControls;
+using VLAB_AccountServices.services.assets.svr;
+using VLAB_AccountServices.services.assets.sys;
 
 namespace VLAB_AccountServices.services {
 
@@ -34,6 +33,13 @@ namespace VLAB_AccountServices.services {
 		public static Label StatusElm;
 		public Label StatElm;
 
+		private User obj;
+		protected ICasPrincipal casp;
+		protected string Username=null;
+		protected string Password=null;
+		private string Mode="";
+
+		// Processes the password.
 		public void processPassword(Object sender, EventArgs e) {
 			string u=username.Text;
 			string p=password.Text;
@@ -43,7 +49,7 @@ namespace VLAB_AccountServices.services {
 			password.Enabled=false;
 			password_confirm.Enabled=false;
 		}
-
+		// Performs a redirect action.
 		protected void redirect() {
 			if (this.mode==0x00) {
 				Response.Redirect("../Default.aspx");
@@ -55,45 +61,27 @@ namespace VLAB_AccountServices.services {
 			}
 		}
 
+		// Performs a first-time initialization of all variables and data.
+		protected void ini() {
+			console.ini(this);
+			this.SetConnectionString();
+			this.SetElements();
+		}
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			console.ini(this);
-
-			string data="";
-			string user="";
-			string pass="";
-			string mode="";
-
-			
-			
-			resetPassword.constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
-			//status.Text+="<br>LOADED<br>";
-			try{
-				resetPassword.StatusElm=status;
-				this.StatElm=status;
-			}catch(Exception ex){
-
-			}
-			//this.StatElm.Text+="SUCCESS!<br>";
-			//console.Log("SUCCESSER");
-			User m_obj=new User();
-			/*
-			int ii=0;
-			string bu="<br>SESSION DATA ("+Session.Count+"):<br>";
-			while(ii<HttpContext.Current.Session.Keys.Count){
-				bu+="<br>"+ii+".) "+HttpContext.Current.Session.Keys[ii]+" = &quot;"+HttpContext.Current.Session[Session.Keys[ii]]+"&quot;";
-				ii++;
-			}
-			status.Text+=bu;
-			Response.Write(bu);
-			*/
-			
+			this.ini();
+			this.obj=new User();
 			if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
-				//status.Text+="<br>Processing request...<br>";
+				/*
 				ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
 				user=System.Web.HttpContext.Current.User.Identity.Name;
 				username.Text=user;
+				*/
+				this.casp=CasAuthentication.CurrentPrincipal;
+				this.Username=System.Web.HttpContext.Current.User.Identity.Name;
+				username.Text=this.Username;
+				/*
 				string campus="";
 				try{
 					//campus=sp.Assertion.Attributes["campusKey"].ToString();
@@ -103,237 +91,250 @@ namespace VLAB_AccountServices.services {
 					//status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
 					console.Error(ec.Message);
 				}
-				string d="{}";
-				User obj=new User();
+				*/
 				if (Session.Count>0) {
 					console.Log("Number of session variables that exist are ("+Session.Count.ToString()+")");
-					try{
-						try{
-							d=Session["data"].ToString();
-						}catch(Exception exc){
-							console.Error("Failed to collect data property value... Only ("+Session.Count.ToString()+") properties exist in the session variable.");
-						}
-						//status.Text+="<br>Object Data: &quot;"+d+"&quot<br>";
-						obj=JsonSerializer.Deserialize<User>(d);
-						//m_obj=obj;
-						m_obj=JsonSerializer.Deserialize<User>(d);
-						try{
-							this.id=obj.id;
-						}catch{
-
-						}
-						this.pass=true;
-						console.Warn(d);
-					}catch(Exception ex){
-						//Response.Redirect("../Default.aspx");
-						//status.Text+="ERROR-007";
-						sys.error(ex.Message);
-						console.Error(ex.Message);
-						//sys.flush();
-						//status.Text+="<br>- "+ex.Message+"<br>";
-						//status.Text+=sys.buffer;
-						//this.redirect();
-						if (!String.IsNullOrEmpty(obj.cmd) && !String.IsNullOrEmpty(obj.username)) {
-							this.pass=true;
-						} else {
-							if (String.IsNullOrEmpty(obj.cmd)) {
-								sys.error("User object is missing the command specification.");
-								console.Error("User object is missing the command specification.");
-							} else if (!String.IsNullOrEmpty(obj.username)) {
-								sys.error("User object is missing the username specification.");
-								console.Error("User object is missing the username specification.");
+					this.GetSessionData();
+					if (this.pass) {
+						if (this.ValidateUsername()) {
+							this.ProcessSessionData();				// Sets all elements from session data (Used before submitting the form).
+							if (IsPostBack) {
+								this.ProcessPostBack();				// Processes the submitted form data.
 							}
-							this.redirect();
 						}
+					} else {
+						console.Error("Failed to pass previous check (CHECK CONDUCTED BEFORE USERNAME CHECKING)");
 					}
 				} else {
 					console.Warn("Attempting to perform a redirect...");
 					this.redirect();
 				}
-				
-				int i=0;
-				string buff="";
-				while(i<Session.Keys.Count){
-					buff+="<br>"+i+".) "+Session.Keys[i];
-					i++;
-				}
-				//Response.Write(buff+"<br>- END -");
-				
-				if (this.pass) {
-					//status.Text+="<br>- Passed checks.<br>USERNAME: &quot;"+obj.username+"&quot;<br>CMD: &quot;"+obj.cmd+"&quot;<br>";
-					console.Log("Passed checks.");
-					if (!(user.Length>0) && !(obj.username.Length>0)) {
-						sys.error("No username found.");
-						console.Error("Username is missing.");
-						this.pass=false;
-						this.redirect();
-					}
-				} else {
-					console.Error("Failed to pass previous check (CHECK CONDUCTED BEFORE USERNAME CHECKING)");
-				}
-
-				if (this.pass) {
-					if (this.post_isset("data")) {
-						if (AD.isset(obj,"cmd")) {
-							if (!String.IsNullOrEmpty(obj.cmd)) {
-								if (AD.isset(obj,"username")) {
-									if (!String.IsNullOrEmpty(obj.username)) {
-										username.Text=obj.username;
-										//username.Text="FAILED";
-										username.Enabled=false;
-										user=obj.username;
-									} else {
-										//Response.Redirect("../Default.aspx");
-										//status.Text+="ERROR-002";
-										sys.error("Username property does not exist or is not set.");
-										this.redirect();
-									}
-								} else if (CasAuthentication.CurrentPrincipal!=null) {
-									username.Text=user;
-									username.Enabled=false;
-								} else {
-									username.Text="";
-									status.Text+="Failed to get username request.";
-								}
-							} else {
-								//Response.Redirect("../Default.aspx");
-								//status.Text+="ERROR-001";
-								sys.error("Command was not specified.");
-								this.redirect();
-							}
-						} else {
-							//Response.Redirect("../Default.aspx");
-							//status.Text+="ERROR-000";
-							sys.error("Command property does not exist within the object.");
-							this.redirect();
-						}
-					
-					} else {
-						//username.Text=user;
-						//username.Enabled=false;
-						//Response.Redirect("../Default.aspx");
-						//status.Text+="ERROR-003";
-						sys.error("POST argument does not contain data.");
-						this.redirect();
-					}
-					//Response.Write(obj.cmd+" HELLO WORLD");
-					//console.Log("Pass-000");
-					if (AD.isset(obj,"cmd")) {
-						//console.Log("Pass-001");
-						if (!String.IsNullOrEmpty(obj.cmd)) {
-							if (obj.cmd=="new-user") {
-								submit_btn.Text="Create Account";
-								mode="new-user";
-							} else if (obj.cmd=="set-password") {
-								submit_btn.Text="Reset Password";
-								mode="set-password";
-							} else {
-								submit_btn.Text="[DISABLED]";
-								submit_btn.Enabled=false;
-								status.Text+="Command does not exist.";
-								//Response.Redirect("../Default.aspx");
-								//status.Text+="ERROR-004";
-								sys.error("Command not recognized.");
-								this.redirect();
-							}
-						} else {
-							//Response.Redirect("../Default.aspx");
-							//status.Text+="ERROR-100";
-							sys.error("Command property does not exist or is not set.");
-							this.redirect();
-						}
-					} else {
-						submit_btn.Text="[DISABLED]";
-						submit_btn.Enabled=false;
-						status.Text+="Failed to get data.";
-						//Response.Redirect("../Default.aspx");
-						//status.Text+="ERROR-005";
-						sys.error("Command property does not exist.");
-						this.redirect();
-					}
-				} else {
-					//sys.error("Failed to pass checks.");
-					console.Error("Failed to pass checks.");
-					this.redirect();
-				}
 			} else {
-				//status.Text+="Could not discover parameter data.";
 				console.Error("Could not discover parameter data... POST or CAS not initialized.");
-				//Response.Redirect("../Default.aspx");
-				//status.Text+="ERROR-006";
-				//sys.error("POST has not data or CAS was not initialized.");
 				this.redirect();
 			}
-			//console.Log("END OF LINE-000");
-			bool p=true;
-			if (IsPostBack) {
-				if (debug.Checked) {
-					p=false;
-					console.Info("Debug mode has been enabled.");
-				}
-				if (p) {
-					console.Info("Performing normal tasks...");
-					if (AD.isset(m_obj,"username")) {
-						if (AD.isset(m_obj,"cmd")) {
-							if (m_obj.cmd=="set-password") {
-								mode="set-password";
-							} else if (m_obj.cmd=="new-user") {
-								mode="new-user";
-							}
-							//status.Text+="<br>&quot;"+m_obj.cmd+"&quot;<br>";
-							if (!(mode.Length>2)) {
-								if (submit_btn.Text=="Reset Password") {
-									mode="set-password";
-									console.Info("Mode has been set to \"set-password\"");
-								} else if (submit_btn.Text=="Create Account") {
-									mode="new-user";
-									console.Info("Mode has been set to \"new-user\"");
-								}
-							}
-						} else {
-							//status.Text+="<br>ERROR: MISSING CMD PROPERTY FROM USER OBJECT.<br>";
-							console.Error("Missing \"cmd\" property from \"User\" object.");
-						}
-						pass=Request.Form.GetValues("password")[0];
-						if (this.validate(pass)) {
-							data="{\"cmd\":\"" + mode + "\",\"username\":\"" + user + "\",\"password\":\"" + pass + "\"}";
-							console.Info("Preparing to send regulated command.");
-							this.queryRequest(data);
-							status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
-						} else {
-							password.Text=this.sqlParse(pass);
-							password_confirm.Text=this.sqlParse(pass);
-							console.Info("Password has been modified.");
-							status.Text+="Your password has been modified for validation, please review the changed password and re-submit this form.";
-						}
-					} else {
-						user="NULL";
-						string m="[UNKNOWN]";
-						if (mode=="new-user") {
-							m="create a new user account";
-						} else if (mode=="set-password") {
-							m="reset your account password";
-						}
-						CaseLog cl=new CaseLog();
-						cl.code="0x0000";
-						cl.status="fatal";
-						cl.title="Malformed data";
-						cl.msg="Username was not included in the session variables.\nPossible attempt to access page without authorization.";
-						cl.data=JsonSerializer.Serialize(m_obj);
-						string _obj_=JsonSerializer.Serialize(cl);
-						string cref=Case.createCase(_obj_);
-						console.Error("Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + resetPassword.ending);
-					}
-				} else {
-					console.Info("Preparing to send debug command.");
-					this.Debug(m_obj);
-				}
-				
-			}
-			//status.Text+="<br>END OF LINE";
 			console.Log("END OF LINE");
 		}
 
+		// Performs poast-back action.
+		private void ProcessPostBack() {
+			bool p=true;
+			string data="";
+			if (debug.Checked) {
+				p=false;
+				console.Info("Debug mode has been enabled.");
+			}
+			this.Username="PASS";
+			if (p) {
+				console.Info("Performing normal tasks...");
+				if (AD.isset(this.obj,"username")) {
+					if (AD.isset(this.obj,"cmd")) {
+						if (this.obj.cmd=="set-password") {
+							this.Mode="set-password";
+						} else if (this.obj.cmd=="new-user") {
+							this.Mode="new-user";
+						}
+						//status.Text+="<br>&quot;"+this.obj.cmd+"&quot;<br>";
+						if (!(this.Mode.Length>2)) {
+							if (submit_btn.Text=="Reset Password") {
+								this.Mode="set-password";
+								console.Info("Mode has been set to \"set-password\"");
+							} else if (submit_btn.Text=="Create Account") {
+								this.Mode="new-user";
+								console.Info("Mode has been set to \"new-user\"");
+							}
+						}
+					} else {
+						//status.Text+="<br>ERROR: MISSING CMD PROPERTY FROM USER OBJECT.<br>";
+						console.Error("Missing \"cmd\" property from \"User\" object.");
+					}
+					this.Password=Request.Form.GetValues("password")[0];
+					if (this.validate(this.Password)) {
+						data="{\"cmd\":\"" + mode + "\",\"username\":\"" + this.Username + "\",\"password\":\"" + this.Password + "\"}";
+						console.Info("Preparing to send regulated command.");
+						this.queryRequest(data);
+						status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
+					} else {
+						password.Text=this.sqlParse(this.Password);
+						password_confirm.Text=this.sqlParse(this.Password);
+						console.Info("Password has been modified.");
+						status.Text+="Your password has been modified for validation, please review the changed password and re-submit this form.";
+					}
+				} else {
+					this.Username="NULL";
+					string m="[UNKNOWN]";
+					if (this.Mode=="new-user") {
+						m="create a new user account";
+					} else if (this.Mode=="set-password") {
+						m="reset your account password";
+					}
+					CaseLog cl=new CaseLog();
+					cl.code="0x0000";
+					cl.status="fatal";
+					cl.title="Malformed data";
+					cl.msg="Username was not included in the session variables.\nPossible attempt to access page without authorization.";
+					cl.data=JsonSerializer.Serialize(this.obj);
+					string _obj_=JsonSerializer.Serialize(cl);
+					string cref=Case.createCase(_obj_);
+					console.Error("Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + resetPassword.ending);
+				}
+			} else {
+				console.Info("Preparing to send debug command.");
+				this.Debug(this.obj);
+			}
+		}
+
+		// Checks object for valid username.
+		private bool CheckString(string q=null) {
+			bool res=false;
+			if (!String.IsNullOrEmpty(q)) {
+				if (!String.IsNullOrWhiteSpace(q)) {
+					if (q.Length>2) {
+						res=true;
+					}
+				}
+			}
+			return res;
+		}
+		// Processes session data.
+		private void ProcessSessionData() {
+			if (this.pass) {
+				if (this.post_isset("data")) {
+					if (AD.isset(this.obj,"cmd")) {
+						if (this.CheckString(this.obj.cmd)) {
+							if (AD.isset(this.obj,"username")) {
+								if (this.CheckString(this.obj.username)) {
+									username.Text=this.obj.username;
+									username.Enabled=false;
+									this.Username=this.obj.username;
+								} else {
+									sys.error("Username property does not exist or is not set.");
+									this.redirect();
+								}
+							} else if (CasAuthentication.CurrentPrincipal!=null) {
+								username.Text=this.Username;
+								username.Enabled=false;
+								console.Error("Failed to authenticate with the CAS client.");
+							} else {
+								username.Text="[FAILED]";
+								username.Enabled=false;
+								console.Error("Failed to get username request.");
+							}
+						} else {
+							sys.error("Command was not specified.");
+							this.redirect();
+						}
+					} else {
+						console.Error("Command property does not exist within the object.");
+						this.redirect();
+					}
+				} else {
+					console.Error("POST argument does not contain data.");
+					this.redirect();
+				}
+				if (AD.isset(this.obj,"cmd")) {
+					if (!String.IsNullOrEmpty(this.obj.cmd)) {
+						if (this.obj.cmd=="new-user") {
+							submit_btn.Text="Create Account";
+							this.Mode="new-user";
+						} else if (this.obj.cmd=="set-password") {
+							submit_btn.Text="Reset Password";
+							this.Mode="set-password";
+						} else {
+							this.DisableSubmitButton();
+							console.Error("Command does not exist.");
+							this.redirect();
+						}
+					} else {
+						console.Error("Command property does not exist or is not set.");
+						this.redirect();
+					}
+				} else {
+					this.DisableSubmitButton();
+					console.Error("Failed to get data.");
+					this.redirect();
+				}
+			} else {
+				console.Error("Failed to pass checks.");
+				this.redirect();
+			}
+		}
+
+		// Disables the submit button.
+		private void DisableSubmitButton() {
+			submit_btn.Text="[DISABLED]";
+			submit_btn.Enabled=false;
+		}
+
+		// Prepares and validates the username.
+		private bool ValidateUsername() {
+			bool res=true;
+			if (!(this.Username.Length>0) && !(this.obj.username.Length>0)) {
+				sys.error("No username found.");
+				console.Error("Username is missing.");
+				this.pass=false;
+				res=false;
+				this.redirect();
+			}
+			return res;
+		}
+
+		// Gets the session data.
+		private void GetSessionData() {
+			string d="{}";
+			try{
+				try{
+					d=Session["data"].ToString();
+				}catch(Exception exc){
+					console.Error("Failed to collect data property value... Only ("+Session.Count.ToString()+") properties exist in the session variable.");
+				}
+				try{
+					this.obj=JsonSerializer.Deserialize<User>(d);
+				}catch(Exception er){
+					console.Error("Failed to deserialize User JSON object.\n\t\t"+er.Message);
+				}
+				try{
+					this.id=this.obj.id;
+				}catch(Exception et){
+					console.Warn("Failed to set id from object reference.\n\t\t"+et.Message);
+				}
+				this.pass=true;
+			}catch(Exception ex){
+				sys.error(ex.Message);
+				console.Error(ex.Message);
+				if (!String.IsNullOrEmpty(this.obj.cmd) && !String.IsNullOrEmpty(this.obj.username)) {
+					this.pass=true;
+				} else {
+					if (String.IsNullOrEmpty(this.obj.cmd)) {
+						sys.error("User object is missing the command specification.");
+						console.Error("User object is missing the command specification.");
+					} else if (!String.IsNullOrEmpty(this.obj.username)) {
+						sys.error("User object is missing the username specification.");
+						console.Error("User object is missing the username specification.");
+					}
+					this.redirect();
+				}
+			}
+		}
+
+		// Sets the connection string for the SQL database.
+		private void SetConnectionString() {
+			try{
+				resetPassword.constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
+			}catch(Exception e){
+				console.Error("Failed to establish connection string.\n\t\t"+e.Message);
+			}
+		}
+		// Prepares all HTML elements for use...
+		private void SetElements() {
+			try{
+				resetPassword.StatusElm=status;
+				this.StatElm=status;
+			}catch(Exception ex){
+				console.Error("Failed to set status element.\n\t\t"+ex.Message);
+			}
+		}
+		// Performs a debugging operation.
 		private void Debug(User obj) {
 			string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"groups\":[\"VD-VLAB4\"]}";
 			DataBase ins=new DataBase();
@@ -343,7 +344,7 @@ namespace VLAB_AccountServices.services {
 			ins.Send();
 			console.Warn("Sending debug request...");
 		}
-
+		// Returns true if the session variable exists.
 		protected bool post_isset(string key) {
 			bool res=false;
 			if (System.Web.HttpContext.Current.Session[key]!=null) {
