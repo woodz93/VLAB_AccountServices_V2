@@ -35,9 +35,9 @@ namespace VLAB_AccountServices.services {
 
 		private User obj;
 		protected ICasPrincipal casp;
-		protected string Username=null;
-		protected string Password=null;
-		private string Mode="";
+		protected string UsernameString=null;
+		protected string PasswordString=null;
+		private string ModeString="";
 
 		// Processes the password.
 		public void processPassword(Object sender, EventArgs e) {
@@ -79,8 +79,8 @@ namespace VLAB_AccountServices.services {
 				username.Text=user;
 				*/
 				this.casp=CasAuthentication.CurrentPrincipal;
-				this.Username=System.Web.HttpContext.Current.User.Identity.Name;
-				username.Text=this.Username;
+				this.UsernameString=System.Web.HttpContext.Current.User.Identity.Name;
+				username.Text=this.UsernameString;
 				/*
 				string campus="";
 				try{
@@ -124,23 +124,23 @@ namespace VLAB_AccountServices.services {
 				p=false;
 				console.Info("Debug mode has been enabled.");
 			}
-			this.Username="PASS";
+			this.UsernameString="PASS";
 			if (p) {
 				console.Info("Performing normal tasks...");
 				if (AD.isset(this.obj,"username")) {
 					if (AD.isset(this.obj,"cmd")) {
 						if (this.obj.cmd=="set-password") {
-							this.Mode="set-password";
+							this.ModeString="set-password";
 						} else if (this.obj.cmd=="new-user") {
-							this.Mode="new-user";
+							this.ModeString="new-user";
 						}
 						//status.Text+="<br>&quot;"+this.obj.cmd+"&quot;<br>";
-						if (!(this.Mode.Length>2)) {
+						if (!(this.ModeString.Length>2)) {
 							if (submit_btn.Text=="Reset Password") {
-								this.Mode="set-password";
+								this.ModeString="set-password";
 								console.Info("Mode has been set to \"set-password\"");
 							} else if (submit_btn.Text=="Create Account") {
-								this.Mode="new-user";
+								this.ModeString="new-user";
 								console.Info("Mode has been set to \"new-user\"");
 							}
 						}
@@ -148,24 +148,24 @@ namespace VLAB_AccountServices.services {
 						//status.Text+="<br>ERROR: MISSING CMD PROPERTY FROM USER OBJECT.<br>";
 						console.Error("Missing \"cmd\" property from \"User\" object.");
 					}
-					this.Password=Request.Form.GetValues("password")[0];
-					if (this.validate(this.Password)) {
-						data="{\"cmd\":\"" + mode + "\",\"username\":\"" + this.Username + "\",\"password\":\"" + this.Password + "\"}";
+					this.PasswordString=Request.Form.GetValues("password")[0];
+					if (this.validate(this.PasswordString)) {
+						data="{\"cmd\":\"" + mode + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\"}";
 						console.Info("Preparing to send regulated command.");
 						this.queryRequest(data);
 						status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
 					} else {
-						password.Text=this.sqlParse(this.Password);
-						password_confirm.Text=this.sqlParse(this.Password);
+						password.Text=this.sqlParse(this.PasswordString);
+						password_confirm.Text=this.sqlParse(this.PasswordString);
 						console.Info("Password has been modified.");
 						status.Text+="Your password has been modified for validation, please review the changed password and re-submit this form.";
 					}
 				} else {
-					this.Username="NULL";
+					this.UsernameString="NULL";
 					string m="[UNKNOWN]";
-					if (this.Mode=="new-user") {
+					if (this.ModeString=="new-user") {
 						m="create a new user account";
-					} else if (this.Mode=="set-password") {
+					} else if (this.ModeString=="set-password") {
 						m="reset your account password";
 					}
 					CaseLog cl=new CaseLog();
@@ -206,13 +206,13 @@ namespace VLAB_AccountServices.services {
 								if (this.CheckString(this.obj.username)) {
 									username.Text=this.obj.username;
 									username.Enabled=false;
-									this.Username=this.obj.username;
+									this.UsernameString=this.obj.username;
 								} else {
 									sys.error("Username property does not exist or is not set.");
 									this.redirect();
 								}
 							} else if (CasAuthentication.CurrentPrincipal!=null) {
-								username.Text=this.Username;
+								username.Text=this.UsernameString;
 								username.Enabled=false;
 								console.Error("Failed to authenticate with the CAS client.");
 							} else {
@@ -236,10 +236,10 @@ namespace VLAB_AccountServices.services {
 					if (!String.IsNullOrEmpty(this.obj.cmd)) {
 						if (this.obj.cmd=="new-user") {
 							submit_btn.Text="Create Account";
-							this.Mode="new-user";
+							this.ModeString="new-user";
 						} else if (this.obj.cmd=="set-password") {
 							submit_btn.Text="Reset Password";
-							this.Mode="set-password";
+							this.ModeString="set-password";
 						} else {
 							this.DisableSubmitButton();
 							console.Error("Command does not exist.");
@@ -269,7 +269,7 @@ namespace VLAB_AccountServices.services {
 		// Prepares and validates the username.
 		private bool ValidateUsername() {
 			bool res=true;
-			if (!(this.Username.Length>0) && !(this.obj.username.Length>0)) {
+			if (!(this.UsernameString.Length>0) && !(this.obj.username.Length>0)) {
 				sys.error("No username found.");
 				console.Error("Username is missing.");
 				this.pass=false;
