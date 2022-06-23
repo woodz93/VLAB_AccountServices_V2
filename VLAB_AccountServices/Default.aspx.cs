@@ -34,7 +34,7 @@ namespace VLAB_AccountServices {
 		protected int cur_count=0;
 		public static Label st;
 		public static string id="";
-		public static byte mode=0x00;
+		public static byte mode=0x01;
 		protected static int ct=0;
 		private User obj;
 		private int pt=0;
@@ -163,7 +163,7 @@ namespace VLAB_AccountServices {
 		}
 		// Performs a redirect.
 		protected void Redirect() {
-			if (!(console.errored) && !(sys.errored)) {
+			if (!(console.errored) && !(sys.errored) && Default.mode==0x00) {
 				console.Warn(Session["data"].ToString());
 				Response.Redirect("services/resetPassword.aspx");								// Redirects the user to the form page.
 			} else {
