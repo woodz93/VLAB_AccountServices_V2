@@ -35,7 +35,7 @@ body {
 	background-size:200% 200%;
 	background-position:0 0;
 	display:block;
-	animation:bg 10s ease-in-out 0s infinite;
+	/*animation:bg 10s ease-in-out 0s infinite;*/
 }
 .bg:after {
 	clear:both;
@@ -106,7 +106,7 @@ body {
 		100% var(--b-),
 		calc(100% - var(--b-)) 0
 	);
-	animation:bgr 10s ease-in-out 0s infinite;
+	/*animation:bgr 10s ease-in-out 0s infinite;*/
 }
 
 @keyframes bgr {
