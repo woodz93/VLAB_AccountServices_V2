@@ -13,7 +13,10 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using VLAB_AccountServices.services;
 using VLAB_AccountServices.services.assets.sys;
-using VLAB_AccountServices.services.assets.svr;
+//using VLAB_AccountServices.services.assets.svr;
+using VLAB_AccountServices.services.assets.classes.Network;
+using VLAB_AccountServices.services.assets.classes.Database;
+using VLAB_AccountServices.services.assets.classes.Str;
 
 namespace VLAB_AccountServices {
 	public partial class Default : System.Web.UI.Page
@@ -70,14 +73,36 @@ namespace VLAB_AccountServices {
 				//this.obj=obj;																// Stores the User object into the class 
 				//sys.Write("Objects have been populated... Processing username check request.");
 				console.Log("Checking username...");
-				this.checkUser(username);													// Sends the request to the db and waits for the response.
+				
+				
+				//this.checkUser(username);													// Sends the request to the db and waits for the response.
+				this.CheckUsername(username);
+
 				//sys.Write("Attempting to redirect to the form.");
-				this.Redirect();															// Redirects the user to the form page.
+				//this.Redirect();															// Redirects the user to the form page.
 			} else {
 				sys.error("");
 				console.Error("Unauthorized access detected.");
 			}
 		}
+
+		private bool CheckUsername(string u=null) {
+			bool res=false;
+			if (Str.CheckStr(u)) {
+				string id=this.genID();
+				string data="{\"cmd\":\"check-user\",\"username\":\""+u+"\"}";
+				Database ins=new Database();
+				ins.SetAction(DatabasePrincipal.InsertPrincipal);
+				ins.AddColumn("id",id);
+				ins.AddColumn("data",data);
+				bool tmp=ins.Send();
+				if (!tmp) {
+					console.Error("An error occurred while attempting to insert a new record into the database...");
+				}
+			}
+			return res;
+		}
+
 		// Asynchronously invokes the store procedure that invokes the script.
 		protected void InvokeApplication() {
 			using(var con=new SqlConnection(Default.constr)) {

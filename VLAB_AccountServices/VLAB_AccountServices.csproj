@@ -172,6 +172,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="services\AD.cs" />
     <Compile Include="services\assets\Case.cs" />
+    <Compile Include="services\assets\classes\Database\DatabasePrincipal.cs" />
+    <Compile Include="services\assets\classes\Database\Database.cs" />
+    <Compile Include="services\assets\classes\Network\Network.cs" />
+    <Compile Include="services\assets\classes\Str\Str.cs" />
+    <Compile Include="services\assets\classes\sys\sys.cs" />
     <Compile Include="services\assets\svr\DataBasePrincipal.cs" />
     <Compile Include="services\assets\svr\DataBase.cs" />
     <Compile Include="services\assets\svr\CookieCache.cs">

@@ -4,23 +4,55 @@ using System.Linq;
 using System.Web;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using VLAB_AccountServices.services.assets.classes.Network;
+using VLAB_AccountServices.services.assets.classes.sys;
 
 namespace VLAB_AccountServices.services.assets.sys {
 	public class console {
 
 		private static bool enable_output=true;
 		private static uint mode=0x00;
+		// Instances:
 		private static Default Default_Instance;
 		private static resetPassword resetPassword_Instance;
-		public static bool errored=false;
+		private static Network Network_Instance;
+		private static sys sys_Instance;
 
+		public static bool errored=false;
+		public static bool ini_complete=false;
+
+
+		// Initializes the console class for use with the Default class.
 		public static void ini(Default instance) {
-			console.Default_Instance = instance;
-			console.mode=0x00;
+			if (!console.ini_complete) {
+				console.Default_Instance = instance;
+				console.mode=0x00;
+				console.ini_complete=true;
+			}
 		}
+		// Initializes the console class for use with the resetPassword class.
 		public static void ini(resetPassword instance) {
-			console.resetPassword_Instance = instance;
-			console.mode=0x01;
+			if (!console.ini_complete) {
+				console.resetPassword_Instance = instance;
+				console.mode=0x01;
+				console.ini_complete=true;
+			}
+		}
+		// Initializes the console class for use with the Network class.
+		public static void ini(Network instance) {
+			if (!console.ini_complete) {
+				console.Network_Instance = instance;
+				console.mode=0x0F;
+				console.ini_complete=true;
+			}
+		}
+		// Initializes the console class for use with the sys class.
+		public static void ini(sys instance) {
+			if (!console.ini_complete) {
+				console.sys_Instance = instance;
+				console.mode=0x0F;
+				console.ini_complete=true;
+			}
 		}
 
 		// Writes output to the client.
