@@ -651,8 +651,14 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 							this.pairs[column_name]=null;
 						}
 						res=true;
+					} else {
+						console.Error("Column name already exists.\n\t\tColumn Name:\t\t\""+column_name+"\"");
 					}
+				} else {
+					console.Error("Column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
 				}
+			} else {
+				console.Error("Column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
 			}
 			return res;
 		}
