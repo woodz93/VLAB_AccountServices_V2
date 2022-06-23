@@ -405,7 +405,9 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					if (this.cols.Count>0) {
 						res=true;
 					} else {
-						this.Error("No columns specified.",0x000A);
+						this.Error("No columns specified while attempting to select records.",0x000A);
+						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
+						this.ShowColumns();
 					}
 				} else if (this.action==DatabasePrincipal.InsertPrincipal) {
 					if (this.cols.Count>0) {
@@ -413,7 +415,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 							res=true;
 						}
 					} else {
-						this.Error("No columns specified.",0x000A);
+						this.Error("No columns specified while attempting to insert new record.",0x000A);
 						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
 						this.ShowColumns();
 					}
@@ -421,7 +423,9 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					if (this.cols.Count>0) {
 						res=true;
 					} else {
-						this.Error("No columns specified.",0x000A);
+						this.Error("No columns specified while attempting to check record existence.",0x000A);
+						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
+						this.ShowColumns();
 					}
 				} else if (this.action==DatabasePrincipal.GenerateUniqueIDPrincipal) {
 					res=true;
