@@ -78,9 +78,13 @@ namespace VLAB_AccountServices.services {
 				user=System.Web.HttpContext.Current.User.Identity.Name;
 				username.Text=user;
 				*/
-				this.casp=CasAuthentication.CurrentPrincipal;
-				this.UsernameString=System.Web.HttpContext.Current.User.Identity.Name;
-				username.Text=this.UsernameString;
+				try{
+					this.casp=CasAuthentication.CurrentPrincipal;
+					this.UsernameString=System.Web.HttpContext.Current.User.Identity.Name;
+					username.Text=this.UsernameString;
+				}catch(Exception ex){
+					console.Error("Failed to collect CAS client information.\n\t\t"+ex.Message);
+				}
 				/*
 				string campus="";
 				try{
