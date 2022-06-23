@@ -202,7 +202,7 @@ namespace VLAB_AccountServices {
 							sys.error("There were multiple records found matching the id \""+this.parse(id)+"\".<br>Please reload the page and try again.");
 							sys.flush();													// Pushes the output to the client.
 							sys.clear();													// Clears the output.
-							console.Error("There were multiple records fiound matching the id.");
+							console.Error("There were multiple records found matching the id.");
 							pass=true;														// Sets the continuation variable to continue with the process.
 						}
 					} else {
@@ -211,7 +211,7 @@ namespace VLAB_AccountServices {
 					}
 					con.Close();															// Closes the database connection.
 					if (!pass) {															// Checks if the continuation variable is false...
-						if (Default.ct<50) {												// If the counter is less than 10...
+						if (Default.ct<100) {												// If the counter is less than 10...
 							Thread.Sleep(100);												// Wait for 1 second...
 							Default.ct++;
 							this.db_check(id);												// Repeats the check again.
