@@ -348,11 +348,14 @@ namespace VLAB_AccountServices.services {
 		// Performs a debugging operation.
 		private void Debug(User obj) {
 			string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"groups\":[\"VD-VLAB4\"]}";
+			this.queryRequest(str);
+			/*
 			DataBase ins=new DataBase();
-			ins.SetAction(DataBasePrincipal.UpdatePrincipal);
+			ins.SetAction(DataBasePrincipal.InsertPrincipal);
 			ins.AddColumn("id",this.id);
 			ins.AddColumn("data",str);
 			ins.Send();
+			*/
 			console.Warn("Sending debug request...");
 		}
 		// Returns true if the session variable exists.
