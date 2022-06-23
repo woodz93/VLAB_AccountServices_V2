@@ -25,6 +25,9 @@ namespace VLAB_AccountServices {
 		protected static string db_username="uhmcad_user";
 		protected static string db_password="MauiC0LLegeAD2252!";
 		protected static string constr=null;
+
+		
+
 		protected int cur_count=0;
 		public static Label st;
 		public static string id="";
@@ -42,7 +45,10 @@ namespace VLAB_AccountServices {
 			Default.st=status;
 			this.StatElm=status;
 			console.Log("Page loaded successfully!");
+			
 			Default.constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
+			//Default.constr=@"Data Source=" + Default.db_ip_alt + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username_alt + ";Password=" + Default.db_password_alt + ";";
+
 			Session.Clear();
 			Session.Add("data","");
 			this.obj=new User();															// Creates a new instance of the User class object.
