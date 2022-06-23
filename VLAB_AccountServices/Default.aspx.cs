@@ -139,7 +139,7 @@ namespace VLAB_AccountServices {
 		// Performs a redirect.
 		protected void Redirect() {
 			console.Warn(Session["data"].ToString());
-			Response.Redirect("services/resetPassword.aspx");								// Redirects the user to the form page.
+			//Response.Redirect("services/resetPassword.aspx");								// Redirects the user to the form page.
 		}
 		// Asynchronously removes the record that matches the record id specified.
 		protected void removeRecord(string id) {
