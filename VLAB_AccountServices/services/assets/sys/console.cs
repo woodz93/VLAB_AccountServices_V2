@@ -138,8 +138,20 @@ namespace VLAB_AccountServices.services.assets.sys {
 		}
 		// Returns a string representing the calling function.
 		private static string GetCallingFunction() {
+			string res="";
 			StackTrace s=new StackTrace();
-			return s.GetFrame(3).GetMethod().Name;
+			//res+=s.GetFrame(1).GetMethod().Name+"()";
+			int i=(s.FrameCount-1);
+			int lim=i;
+			while(i>2){
+				if (i<lim) {
+					res+="->"+s.GetFrame(i).GetMethod().Name+"()";
+				} else {
+					res+=s.GetFrame(i).GetMethod().Name+"()";
+				}
+				i--;
+			}
+			return res;
 		}
 		// Returns a string representing the location of the calling function.
 		private static string GetCallingFunctionPath() {
