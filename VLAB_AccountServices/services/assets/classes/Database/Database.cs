@@ -316,10 +316,9 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			string str=Database.GenerateRandomString();
 			string sql="SELECT COUNT(*) AS TOTAL WHERE id= @ID ;";
 			int i=0;
+			this.Open();
 			SqlCommand cmd=new SqlCommand(sql,this.con);
 			cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
-			//cmd.Parameters["@ID"].Value=str;
-			this.Open();
 			SqlDataReader dr=cmd.ExecuteReader();
 			int len=0;
 			if (dr.HasRows) {
