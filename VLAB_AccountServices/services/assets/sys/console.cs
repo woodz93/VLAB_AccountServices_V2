@@ -142,6 +142,9 @@ namespace VLAB_AccountServices.services.assets.sys {
 			StackTrace s=new StackTrace();
 			//res+=s.GetFrame(1).GetMethod().Name+"()";
 			int i=(s.FrameCount-1);
+			if (i>5) {
+				i=5;
+			}
 			int lim=i;
 			while(i>2){
 				if (i<lim) {
