@@ -661,8 +661,10 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			bool res=false;
 			if (Database.CheckValue(column_name)) {
 				res=this.AddColumn(column_name);
-				if (Database.CheckValue(value)) {
+				if (Database.CheckValue(value)&&res) {
 					res=this.SetValue(column_name, value);
+				} else {
+					console.Error("Failed to create column... Column name failed to pass validation...\n\t\tColumn Name:\t\t\""+column_name+"\"");
 				}
 			}
 			return res;
