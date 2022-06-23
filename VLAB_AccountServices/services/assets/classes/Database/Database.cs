@@ -672,6 +672,8 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				} else {
 					console.Error("Failed to create column... Column name failed to pass validation...\n\t\tColumn Name:\t\t\""+column_name+"\"");
 				}
+			} else {
+				console.Error("Specified column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
 			}
 			return res;
 		}
