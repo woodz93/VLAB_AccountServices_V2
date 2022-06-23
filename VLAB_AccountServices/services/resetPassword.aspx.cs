@@ -39,6 +39,7 @@ namespace VLAB_AccountServices.services {
 		protected string PasswordString=null;
 		private string ModeString="";
 
+
 		// Processes the password.
 		public void processPassword(Object sender, EventArgs e) {
 			string u=username.Text;
@@ -334,10 +335,16 @@ namespace VLAB_AccountServices.services {
 			try{
 				resetPassword.StatusElm=status;
 				this.StatElm=status;
+				//groups.Items.Add("VD-VLAB3");
+				//group_container.Visible=false;
+				Element.SetGroupElement(groups);
+				Element.AddGroup("VD-VLAB3","Virtual Lab 3");
+				Element.SetGroups();
 			}catch(Exception ex){
 				console.Error("Failed to set status element.\n\t\t"+ex.Message);
 			}
 		}
+		
 		// Performs a debugging operation.
 		private void Debug(User obj) {
 			string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"groups\":[\"VD-VLAB4\"]}";
