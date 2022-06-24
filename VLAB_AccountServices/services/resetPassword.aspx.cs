@@ -394,11 +394,15 @@ namespace VLAB_AccountServices.services {
 					ins.SetAction(DatabasePrincipal.InsertPrincipal);
 					ins.AddColumn("id",id);
 					ins.AddColumn("data",q);
-					if (ins.Send()) {
-						ins.InvokeApplication();
-						this.ResponseWait(id);
-					} else {
-						console.Error("An error occurred that prevented the query request from being executed...");
+					try{
+						if (ins.Send()) {
+							ins.InvokeApplication();
+							this.ResponseWait(id);
+						} else {
+							console.Error("An error occurred that prevented the query request from being executed...");
+						}
+					}catch(Exception e){
+						console.Error("Failed to process database query...\n\t\t"+e.Message);
 					}
 					// Wait for response...
 					//this.ResponseWait(id);
