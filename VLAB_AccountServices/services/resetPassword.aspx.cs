@@ -132,7 +132,7 @@ namespace VLAB_AccountServices.services {
 				p=false;
 				console.Info("Debug mode has been enabled.");
 			}
-			this.UsernameString="PASS";
+			//this.UsernameString="PASS";
 			if (p) {
 				console.Info("Performing normal tasks...");
 				if (AD.isset(this.obj,"username")) {
