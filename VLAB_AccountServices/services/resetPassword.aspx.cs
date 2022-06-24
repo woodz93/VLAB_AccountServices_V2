@@ -377,22 +377,32 @@ namespace VLAB_AccountServices.services {
 				//string values="'"+id+"','"+q+"'";
 				//status.Text+="<br><br>DATA<br>"+id+"<br><br>";
 				//string values=" @DATA ";
-				string sql="INSERT INTO " + resetPassword.tb + " (\"id\",\"data\") VALUES ('"+id+"', @DATA );";
+				string sql="INSERT INTO " + resetPassword.tb + " (\"id\",\"data\") VALUES ( @ID, @DATA );";
 				//status.Text+=sql;
 				try{
+					/*
 					using (SqlConnection con=new SqlConnection(resetPassword.constr)) {
 						SqlCommand cmd=new SqlCommand(sql,con);
-						//cmd.Parameters.AddWithValue("@ID",id);
+						cmd.Parameters.AddWithValue("@ID",id);
 						cmd.Parameters.AddWithValue("@DATA",q);
 						con.Open();
 						cmd.ExecuteNonQuery();
 						con.Close();
 					}
+					*/
 					Database ins=new Database();
-					ins.InvokeApplication();
+					ins.SetAction(DatabasePrincipal.InsertPrincipal);
+					ins.AddColumn("id",id);
+					ins.AddColumn("data",q);
+					if (ins.Send()) {
+						ins.InvokeApplication();
+						this.ResponseWait(id);
+					} else {
+						console.Error("An error occurred that prevented the query request from being executed...");
+					}
 					// Wait for response...
-					this.ResponseWait(id);
-				}catch{
+					//this.ResponseWait(id);
+				}catch(Exception e){
 					CaseLog cl=new CaseLog();
 					cl.code="0x0001";
 					cl.status="fatal";
@@ -401,7 +411,8 @@ namespace VLAB_AccountServices.services {
 					cl.data=sql;
 					string _obj_=JsonSerializer.Serialize(cl);
 					string cref=Case.createCase(_obj_);
-					status.Text="An error occurred while attempting to process your request.<br>The issue has been reported to the developer.<br>Your case reference number is <font class=\"case\">" + cref + "</font>" + resetPassword.ending;
+					status.Text="An SQL error occurred while attempting to process your request.<br>The issue has been reported to the developer.<br>Your case reference number is <font class=\"case\">" + cref + "</font>" + resetPassword.ending;
+					console.Error("An error has occurred while attempting to query the request...\n\t\t"+e.Message);
 				}
 			}
 		}
