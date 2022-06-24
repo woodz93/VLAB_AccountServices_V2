@@ -3,6 +3,7 @@ using System.IO;
 using VLAB_AccountServices.services.assets.classes.Network;
 using VLAB_AccountServices.services.assets.classes.Database;
 using VLAB_AccountServices.services.assets.classes.Str;
+using VLAB_AccountServices.services.assets.sys;
 
 namespace VLAB_AccountServices.services {
 	internal class Case {
@@ -16,35 +17,40 @@ namespace VLAB_AccountServices.services {
 
 		private static string case_dir="\\\\172.20.0.101\\a\\Inventory\\programs\\accountservices\\cases\\";
 		private static string case_svr="172.20.0.101";
+		private static string dir="/logs/";
 
 		// Creates a new case and returns the case reference id.
 		public static string createCase(string q) {
 			string res="";
 			string id=null;
-			string dir="C:\\Users\\sitesupport\\source\\repos\\VLAB_AccountServices\\VLAB_AccountServices\\services\\logs\\";
-			if (Network.IsReachable(Case.case_svr)) {
-				try{
-					if (Directory.Exists(Case.case_dir)) {
-						try{
-							id=Case.genIDSvr();
-							File.WriteAllText(Case.case_dir+id+".json",q);
-						}catch{
+			//string dir="C:\\Users\\sitesupport\\source\\repos\\VLAB_AccountServices\\VLAB_AccountServices\\services\\logs\\";
+			try{
+				if (Network.IsReachable(Case.case_svr)) {
+					try{
+						if (Directory.Exists(Case.case_dir)) {
+							try{
+								id=Case.genIDSvr();
+								File.WriteAllText(Case.case_dir+id+".json",q);
+							}catch{
+								id=Case.genID();
+								File.WriteAllText(dir+id+".json",q);
+							}
+						} else {
 							id=Case.genID();
 							File.WriteAllText(dir+id+".json",q);
 						}
-					} else {
+					}catch{
 						id=Case.genID();
 						File.WriteAllText(dir+id+".json",q);
 					}
-				}catch{
+				} else {
 					id=Case.genID();
 					File.WriteAllText(dir+id+".json",q);
 				}
-			} else {
-				id=Case.genID();
-				File.WriteAllText(dir+id+".json",q);
+				res=id;
+			}catch(Exception e){
+				console.Error("Failed to create case file.\n\t\t"+e.Message);
 			}
-			res=id;
 			return res;
 		}
 
@@ -66,17 +72,21 @@ namespace VLAB_AccountServices.services {
 
 		// ID controller method. Checks if the generated ID does not exist on the database. If it does not, then the generated ID will be returned.
 		protected static string genID() {
-			string res="";
+			string res=null;
 			string id=Case.genRandID();
 			int i=0;
 			int lim=50;
 			string file_name=id;
-			while((!File.Exists("C:/Users/sitesupport/source/repos/VLAB_AccountServices/VLAB_AccountServices/services/logs/log_"+file_name+".json")) && (i<lim)){
-				id=Case.genRandID();
-				file_name=id;
-				i++;
+			if (Directory.Exists(Case.dir)) {
+				while((!File.Exists(Case.dir+"log_"+file_name+".json")) && (i<lim)){
+					id=Case.genRandID();
+					file_name=id;
+					i++;
+				}
+				res=file_name;
+			} else {
+				console.Error("Directory does not exist.");
 			}
-			res=file_name;
 			return res;
 		}
 		// Generates a randomized length of random characters to compose the record's ID on the database.
