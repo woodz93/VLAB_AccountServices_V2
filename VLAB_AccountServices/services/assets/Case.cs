@@ -23,6 +23,9 @@ namespace VLAB_AccountServices.services {
 		public static string createCase(string q) {
 			string res="";
 			string id=null;
+			if (!Directory.Exists(Case.dir)) {
+				Directory.CreateDirectory(Case.dir);
+			}
 			//string dir="C:\\Users\\sitesupport\\source\\repos\\VLAB_AccountServices\\VLAB_AccountServices\\services\\logs\\";
 			try{
 				if (Network.IsReachable(Case.case_svr)) {
