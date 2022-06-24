@@ -241,6 +241,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					cmd.ExecuteNonQuery();														// Executes the SQL command.
 					con.Close();																// Closes the database connection.
 				}
+				console.Success("Application successfully invoked.");
 			}catch(Exception e){
 				console.Error("Failed to invoke application...\n\t\t"+e.Message);
 			}
