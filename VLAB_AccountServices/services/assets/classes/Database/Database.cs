@@ -313,48 +313,33 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		// Returns a unique ID string.
 		private string GetUniqueID() {
 			string res=null;
-			string str=Database.GenerateRandomString();
+			string str=this.pairs["id"];
 			string sql="SELECT COUNT(*) AS TOTAL WHERE id= @ID ;";
 			int i=0;
-			this.Open();
-			SqlCommand cmd=new SqlCommand(sql,this.con);
-			cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
-			SqlDataReader dr=cmd.ExecuteReader();
 			int len=0;
-			if (dr.HasRows) {
-				while(dr.Read()){
-					len=dr.GetInt32(0);
-					break;
-				}
-			}
-			this.Close();
-			if (len>0) {
-				while(len>0 && i<500){
-					this.Open();
-					str=Database.GenerateRandomString();
-					cmd.Parameters["@ID"].Value=str;
-					dr=cmd.ExecuteReader();
+			try{
+				using(var con=new SqlConnection(this.constr)){
+					SqlCommand cmd=new SqlCommand(sql,con);
+					cmd.Parameters.AddWithValue("@ID",str);
+					con.Open();
+					SqlDataReader dr=cmd.ExecuteReader();
 					if (dr.HasRows) {
 						while(dr.Read()){
 							len=dr.GetInt32(0);
 							break;
 						}
-						this.Close();
+					}
+					con.Close();
+					if (len>0) {
+						this.pairs["id"]=Database.GenerateRandomString();
+						res=this.GetUniqueID();
 					} else {
-						this.Close();
-						len=0;
-						break;
+						res=str;
 					}
-					if (!(len>0)) {
-						break;
-					}
-					i++;
 				}
-				if (!(len>0)) {
-					res=str;
-				}
+			}catch(Exception e){
+				console.Error("Failed to check if ID exists in database.\n\t\t"+e.Message);
 			}
-			this.Close();
 			return res;
 		}
 		// Returns a randomly generated string consisting of a random length of characters.
