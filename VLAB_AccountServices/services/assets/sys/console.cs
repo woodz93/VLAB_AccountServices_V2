@@ -126,9 +126,9 @@ namespace VLAB_AccountServices.services.assets.sys {
 						list.Add("[\t]+","&nbsp;&nbsp;&nbsp;&nbsp;");
 						list.Add("(\n\r\f|\r\n\f|\f\r\n|\f\n\r|\n\r|\r\n)","<br>");
 						list.Add("[\n]+","<br>");
-						list.Add("[\"]+","&quot;");
-						list.Add("[<]+","&lt;");
-						list.Add("[>]+","&gt;");
+						//list.Add("[\"]+","&quot;");
+						//list.Add("[<]+","&lt;");
+						//list.Add("[>]+","&gt;");
 						foreach(var item in list){
 							//Regex reg=new Regex(item.Key);
 							if (Regex.IsMatch(q,item.Key)) {
