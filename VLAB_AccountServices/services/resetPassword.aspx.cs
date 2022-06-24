@@ -158,7 +158,7 @@ namespace VLAB_AccountServices.services {
 					}
 					this.PasswordString=Request.Form.GetValues("password")[0];
 					if (this.validate(this.PasswordString)) {
-						data="{\"cmd\":\"" + mode + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\"}";
+						data="{\"cmd\":\"" + this.ModeString + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\"}";
 						console.Info("Preparing to send regulated command.");
 						this.queryRequest(data);
 						status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
