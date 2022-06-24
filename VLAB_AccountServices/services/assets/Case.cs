@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using VLAB_AccountServices.services.assets.classes.Network;
+using VLAB_AccountServices.services.assets.classes.Database;
+using VLAB_AccountServices.services.assets.classes.Str;
 
 namespace VLAB_AccountServices.services {
 	internal class Case {
@@ -11,17 +14,55 @@ namespace VLAB_AccountServices.services {
 		protected static string db_username="uhmcad_user";
 		protected static string db_password="MauiC0LLegeAD2252!";
 
+		private static string case_dir="\\\\172.20.0.101\\a\\Inventory\\programs\\accountservices\\cases\\";
+		private static string case_svr="172.20.0.101";
+
 		// Creates a new case and returns the case reference id.
 		public static string createCase(string q) {
 			string res="";
-			string id=Case.genID();
+			string id=null;
 			string dir="C:\\Users\\sitesupport\\source\\repos\\VLAB_AccountServices\\VLAB_AccountServices\\services\\logs\\";
-			//File.Create(dir+id+".json");
-			File.WriteAllText(dir+id+".json",q);
+			if (Network.IsReachable(Case.case_svr)) {
+				try{
+					if (Directory.Exists(Case.case_dir)) {
+						try{
+							id=Case.genIDSvr();
+							File.WriteAllText(Case.case_dir+id+".json",q);
+						}catch{
+							id=Case.genID();
+							File.WriteAllText(dir+id+".json",q);
+						}
+					} else {
+						id=Case.genID();
+						File.WriteAllText(dir+id+".json",q);
+					}
+				}catch{
+					id=Case.genID();
+					File.WriteAllText(dir+id+".json",q);
+				}
+			} else {
+				id=Case.genID();
+				File.WriteAllText(dir+id+".json",q);
+			}
 			res=id;
 			return res;
 		}
 
+		// ID controller method. Checks if the generated ID does not exist on the database. If it does not, then the generated ID will be returned.
+		protected static string genIDSvr() {
+			string res="";
+			string id=Case.genRandID();
+			int i=0;
+			int lim=50;
+			string file_name=id;
+			while((!File.Exists(Case.case_dir+"log_"+file_name+".json")) && (i<lim)){
+				id=Case.genRandID();
+				file_name=id;
+				i++;
+			}
+			res=file_name;
+			return res;
+		}
 
 		// ID controller method. Checks if the generated ID does not exist on the database. If it does not, then the generated ID will be returned.
 		protected static string genID() {
