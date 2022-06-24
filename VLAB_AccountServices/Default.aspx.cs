@@ -34,7 +34,7 @@ namespace VLAB_AccountServices {
 		protected int cur_count=0;
 		public static Label st;
 		public static string id="";
-		public static byte mode=0x01;
+		public static byte mode=0x00;
 		protected static int ct=0;
 		private User obj;
 		private int pt=0;
@@ -92,6 +92,7 @@ namespace VLAB_AccountServices {
 				ins.SetAction(DatabasePrincipal.InsertPrincipal);
 				ins.AddColumn("id",Default.id);
 				ins.AddColumn("data",data);
+				/*
 				console.Info("COLUMNS:");
 				int i=0;
 				while(i<ins.cols.Count){
@@ -101,6 +102,7 @@ namespace VLAB_AccountServices {
 				console.Info("COLUMNS END");
 				console.Info("ID:\t\t"+Default.id);
 				console.Info("Data:\t\t"+data);
+				*/
 				console.Log("Attempting to submit database query...");
 				bool tmp=ins.Send();
 				if (tmp) {
@@ -227,7 +229,7 @@ namespace VLAB_AccountServices {
 						while(r.Read()){													// Iterates through all records containing the same record id (In the event there are multiple requests which should NOT happen).
 							tmp=r.GetString(1);												// Gets the record data.
 							if (tmp.IndexOf("status")!=-1) {								// Checks if the record was changed.
-								console.Error(tmp);
+								//console.Error(tmp);
 								pass=true;													// Sets the continuation variable to true once complete.
 								break;														// Breaks out of the loop since there is no need to continue.
 							}
@@ -256,11 +258,13 @@ namespace VLAB_AccountServices {
 							this.removeRecord(id);											// Removes the record from the database to clear up space.
 						}
 					} else {
-						console.Warn("RECORD FOUND!");
+						console.Success("RECORD FOUND!");
 						if (tmp.IndexOf("status\":true")!=-1) {								// Checks if the response returned true (Indicates that the user was found on the AD).
 							this.pt=1;														// Sets the status variable to indicate that the user was found.
+							console.Info("Record response indicated a successful process.");
 						} else {
 							this.pt=2;														// Sets the status variable to indicate that the user was not found.
+							console.Info("Record response indicates that an error has occurred or result successful result.");
 						}
 					}
 					res=1;

@@ -9,6 +9,9 @@ using System.Threading;
 using System.Web.UI.WebControls;
 //using VLAB_AccountServices.services.assets.svr;
 using VLAB_AccountServices.services.assets.sys;
+using VLAB_AccountServices.services.assets.classes.Database;
+using VLAB_AccountServices.services.assets.classes.Network;
+using VLAB_AccountServices.services.assets.classes.Str;
 
 namespace VLAB_AccountServices.services {
 
@@ -350,8 +353,8 @@ namespace VLAB_AccountServices.services {
 			string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"groups\":[\"VD-VLAB4\"]}";
 			this.queryRequest(str);
 			/*
-			DataBase ins=new DataBase();
-			ins.SetAction(DataBasePrincipal.InsertPrincipal);
+			Database ins=new Database();
+			ins.SetAction(DatabasePrincipal.InsertPrincipal);
 			ins.AddColumn("id",this.id);
 			ins.AddColumn("data",str);
 			ins.Send();
