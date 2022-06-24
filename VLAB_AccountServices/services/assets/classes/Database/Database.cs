@@ -314,7 +314,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		private string GetUniqueID() {
 			string res=null;
 			string str=this.pairs["id"];
-			string sql="SELECT COUNT(*) AS TOTAL WHERE id= @ID ;";
+			string sql="SELECT COUNT(*) AS TOTAL FROM "+Database.tb+" WHERE id= @ID ;";
 			int i=0;
 			int len=0;
 			try{
