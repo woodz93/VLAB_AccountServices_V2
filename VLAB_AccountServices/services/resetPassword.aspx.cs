@@ -395,7 +395,7 @@ namespace VLAB_AccountServices.services {
 					cl.code="0x0001";
 					cl.status="fatal";
 					cl.title="SQL Submission failed";
-					cl.msg="An error occurred while attempting to process the form submission.\nPerhaps there is a syntax error in the SQL query.\n\nSQL Query:\t\t" + sql + "\n\nConnection string:\t\t" + resetPassword.constr + "\n\nEND OF LINE";
+					cl.msg="An error occurred while attempting to process the form submission.\nPerhaps there is a syntax error in the SQL query.\n\nSQL Query:\t\t" + sql + "\n\nEND OF LINE";
 					cl.data=sql;
 					string _obj_=JsonSerializer.Serialize(cl);
 					string cref=Case.createCase(_obj_);
