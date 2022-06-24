@@ -388,6 +388,8 @@ namespace VLAB_AccountServices.services {
 						cmd.ExecuteNonQuery();
 						con.Close();
 					}
+					Database ins=new Database();
+					ins.InvokeApplication();
 					// Wait for response...
 					this.ResponseWait(id);
 				}catch{
@@ -410,12 +412,25 @@ namespace VLAB_AccountServices.services {
 				if (!String.IsNullOrWhiteSpace(id)) {
 					if (this.counter<50) {
 						Thread.Sleep(100);
-						if (this.CheckRecordResponse(id)==null) {
+						string resp=this.CheckRecordResponse(id);
+						if (resp==null) {
 							Thread.Sleep(50);
 							this.ResponseWait(id);
+						} else {
+							if (resp=="success") {
+								res=true;
+							} else if (resp=="failed") {
+								res=false;
+							}
 						}
+					} else {
+						console.Error("Response check timed out.");
 					}
+				} else {
+					console.Error("The provided ID was invalid.");
 				}
+			} else {
+				console.Error("The provided ID was invalid.");
 			}
 			return res;
 		}
@@ -426,12 +441,12 @@ namespace VLAB_AccountServices.services {
 				if (!String.IsNullOrWhiteSpace(id)) {
 					List<Dictionary<string,string>> list=this.GetMatchingRecords(id);
 					int i=0;
-					uint tmp=0x0000;
+					uint tmp;
 					string msg;
 					string file;
 					string line;
 					string path;
-					string str="";
+					string str;
 					Status ins=new Status();
 					while(i<list.Count){
 						if (list[i]["id"]==id) {
@@ -462,11 +477,11 @@ namespace VLAB_AccountServices.services {
 									str=msg+"\n\tFrom \""+path+"/"+file+"\" ("+line+")";
 									if (tmp!=0x00) {
 										if (tmp==0x01) {
-											console.Error("Failed to process your request...\n"+str);
-											res="Failed";
+											console.Error("Failed to process your request...\n\t\t"+str);
+											res="failed";
 										} else {
 											console.Log("Process completed successfully.");
-											res="Success";
+											res="success";
 										}
 									}
 								}

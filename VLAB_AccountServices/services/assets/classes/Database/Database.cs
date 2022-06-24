@@ -32,6 +32,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		private List<Dictionary<string,string>> error_buffer=new List<Dictionary<string,string>>();
 		public bool response_received=false;
 		public string ResponseMessage=null;
+		public List<string> ApplicationDebugOutput=new List<string>();
 
 		//
 		// Summary:
@@ -95,14 +96,12 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			bool res=false;
 			bool pass=false;
 			string sql="";
-			if (!String.IsNullOrEmpty(id)) {
-				if (!String.IsNullOrWhiteSpace(id)) {
-					this.AddColumn("id");
-					this.SetValue("id",id);
+			if (Database.CheckValue(id)) {
+				if (!(this.pairs.ContainsKey("id")) || !(this.cols.Contains("id"))) {
+					this.AddColumn("id",id);
 				}
 			}
 			if (this.cols.Count>0) {
-				int i=0;
 				string p=this.GeneratePairs();
 				sql="SELECT COUNT(*) AS TOTAL FROM "+Database.tb+" WHERE "+p+" ;";
 				pass=true;
@@ -137,7 +136,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 									}
 									con.Close();
 								}catch(Exception e){
-
+									this.Error("Failed to open database connection...\n\t\t"+e.Message);
 								}
 							}catch(Exception e){
 								this.Error("Failed to sanitize the id for SQL processing...\n"+e.Message);
@@ -165,8 +164,62 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						res=this.UpdateRecord();
 					} else if (this.action==DatabasePrincipal.ExistsPrincipal && this.pairs.ContainsKey("id")) {
 						res=this.RecordExists(this.pairs["id"]);
+					} else if (this.action==DatabasePrincipal.RemoveRecordPrincipal && this.pairs.ContainsKey("id")) {
+						res=this.RemoveRecord(this.pairs["id"]);
+					// Add more query conditions here...
+					} else {
+						console.Error("The provided database action to conduct is invalid, does not exist, or is missing required columns to be specified.");
 					}
+				} else {
+					console.Error("An error is currently present that would prevent further database execution.");
 				}
+			} else {
+				console.Error("Provided query is invalid.");
+			}
+			return res;
+		}
+		// Removes a record that matches the ID.
+		private bool RemoveRecord(string id=null) {
+			bool res=false;
+			if (Database.CheckValue(id)) {
+				if (this.RecordExists(id)) {
+					string sql="DELETE FROM "+Database.tb+" WHERE id= @ID ;";
+					int len=0;
+					try{
+						using(var con=new SqlConnection(this.constr)){
+							try{
+								SqlCommand cmd=new SqlCommand(sql, con);
+								try{
+									cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
+									try{
+										con.Open();
+										try{
+											len=cmd.ExecuteNonQuery();
+										}catch(Exception ex){
+											console.Error("Failed to process SQL query...\n\t\t"+ex.Message);
+										}
+										con.Close();
+									}catch(Exception ex){
+										console.Error("Failed to open a connection to the database.\n\t\t"+ex.Message);
+									}
+								}catch(Exception ex){
+									console.Error("Failed to prepare and sanitize input values.\n\t\t"+ex.Message);
+								}
+							}catch(Exception e){
+								console.Error("Failed to prepare SQL command.\n\t\t"+e.Message);
+							}
+						}
+					}catch(Exception e){
+						console.Error("Failed to establish a connection to the database.\n\t\t"+e.Message);
+					}
+					if (len>0) {
+						res=true;
+					}
+				} else {
+					console.Warn("Record does not exist.");
+				}
+			} else {
+				console.Error("The ID provided is invalid and cannot be used!");
 			}
 			return res;
 		}
@@ -238,12 +291,44 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					SqlCommand cmd=new SqlCommand("AccountServicesInvokeADApplication",con);	// Command that invokes the SQL stored procedure that invokes the AD script.
 					cmd.CommandType=CommandType.StoredProcedure;								// Specifies the type of SQL command being used.
 					con.Open();																	// Opens the database connection.
-					cmd.ExecuteNonQuery();														// Executes the SQL command.
+					try{
+						SqlDataReader dr=cmd.ExecuteReader();
+						try{
+							if (dr.HasRows) {
+								this.ApplicationDebugOutput.Add("---- INVOKATION START ----");
+								string tmp="";
+								while(dr.Read()){
+									tmp=dr.GetString(0);
+									if (Database.CheckValue(tmp)) {
+										this.ApplicationDebugOutput.Add(tmp);
+									} else {
+										this.ApplicationDebugOutput.Add("");
+									}
+								}
+								this.ApplicationDebugOutput.Add("---- INVOKATION END ----");
+							}
+						}catch(Exception ex){
+							console.Warn("An error has occurred while attempting to read the application's debugging output.\n\t\t"+ex.Message);
+						}
+					}catch{
+						console.Info("Attempting to invoke application normally...");
+						try{
+							cmd.ExecuteNonQuery();													// Executes the SQL command.
+						}catch(Exception ex){
+							console.Error("Failed to invoke AD application...\n\t\t"+ex.Message);
+						}
+					}
 					con.Close();																// Closes the database connection.
 				}
 				console.Success("Application successfully invoked.");
 			}catch(Exception e){
 				console.Error("Failed to invoke application...\n\t\t"+e.Message);
+			}
+		}
+		// Clears the application debug output buffer.
+		public void ClearAppDebug() {
+			if (this.ApplicationDebugOutput.Count>0) {
+				this.ApplicationDebugOutput.Clear();
 			}
 		}
 		// Selects a record.
