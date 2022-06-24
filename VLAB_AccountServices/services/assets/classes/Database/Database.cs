@@ -308,7 +308,13 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 								this.ApplicationDebugOutput.Add("---- INVOKATION END ----");
 							}
 						}catch(Exception ex){
-							console.Warn("An error has occurred while attempting to read the application's debugging output.\n\t\t"+ex.Message);
+							//console.Warn("An error has occurred while attempting to read the application's debugging output.\n\t\t"+ex.Message);
+							console.Info("Attempting to invoke application normally...");
+							try{
+								cmd.ExecuteNonQuery();
+							}catch(Exception e){
+								console.Error("Failed to invoke AD application...\n\t\t"+e.Message);
+							}
 						}
 					}catch{
 						console.Info("Attempting to invoke application normally...");
