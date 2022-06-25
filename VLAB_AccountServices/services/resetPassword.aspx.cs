@@ -568,7 +568,7 @@ namespace VLAB_AccountServices.services {
 			if (this.cols!=null) {
 				res=this.cols;
 			} else {
-				string sql="";
+				string sql="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='"+resetPassword.tb+"';";
 				int i=0;
 				int lim=0;
 				res=new List<string>();
@@ -578,7 +578,8 @@ namespace VLAB_AccountServices.services {
 					SqlDataReader r=cmd.ExecuteReader();
 					lim=r.FieldCount;
 					while(i<lim){
-						res.Add(r.GetName(i));
+						//res.Add(r.GetName(i));
+						res.Add(r.GetString(i));
 						i++;
 					}
 					con.Close();
