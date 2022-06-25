@@ -292,6 +292,12 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					cmd.CommandType=CommandType.StoredProcedure;								// Specifies the type of SQL command being used.
 					con.Open();																	// Opens the database connection.
 					try{
+						cmd.ExecuteNonQuery();
+					}catch(Exception e){
+						console.Error("Failed to invoke AD application...\n\t\t"+e.Message);
+					}
+					/*
+					try{
 						SqlDataReader dr=cmd.ExecuteReader();
 						try{
 							if (dr.HasRows) {
@@ -309,14 +315,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 							}
 						}catch(Exception ex){
 							console.Warn("An error has occurred while attempting to read the application's debugging output.\n\t\t"+ex.Message);
-							/*
-							console.Info("Attempting to invoke application normally...");
-							try{
-								cmd.ExecuteNonQuery();
-							}catch(Exception e){
-								console.Error("Failed to invoke AD application...\n\t\t"+e.Message);
-							}
-							*/
 						}
 					}catch{
 						console.Info("Attempting to invoke application normally...");
@@ -328,6 +326,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					}
 					con.Close();																// Closes the database connection.
 				}
+				*/
 				console.Success("Application successfully invoked.");
 			}catch(Exception e){
 				console.Error("Failed to invoke application...\n\t\t"+e.Message);
