@@ -324,9 +324,9 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 							console.Error("Failed to invoke AD application...\n\t\t"+ex.Message);
 						}
 					}
+					*/
 					con.Close();																// Closes the database connection.
 				}
-				*/
 				console.Success("Application successfully invoked.");
 			}catch(Exception e){
 				console.Error("Failed to invoke application...\n\t\t"+e.Message);
