@@ -592,17 +592,22 @@ namespace VLAB_AccountServices.services {
 			if (!String.IsNullOrEmpty(id)) {
 				if (!String.IsNullOrWhiteSpace(id)) {
 					string sql="SELECT COUNT(*) AS TOTAL FROM " + resetPassword.tb + " WHERE id= @ID ;";
-					using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
-						SqlCommand cmd=new SqlCommand(sql,con);
-						cmd.Parameters.AddWithValue("@ID",id);
-						con.Open();
-						SqlDataReader r=cmd.ExecuteReader();
-						if (r.HasRows) {
-							while(r.Read()){
-								res++;
+					try{
+						using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
+							SqlCommand cmd=new SqlCommand(sql,con);
+							cmd.Parameters.AddWithValue("@ID",id);
+							con.Open();
+							SqlDataReader r=cmd.ExecuteReader();
+							if (r.HasRows) {
+								while(r.Read()){
+									res=r.GetInt32(0);
+									break;
+								}
 							}
+							con.Close();
 						}
-						con.Close();
+					}catch(Exception ex){
+						console.Error("Failed to get number of matching records...\n\t\t"+ex.Message);
 					}
 				}
 			}
