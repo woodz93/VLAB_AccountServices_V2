@@ -396,8 +396,16 @@ namespace VLAB_AccountServices.services {
 					ins.AddColumn("data",q);
 					try{
 						if (ins.Send()) {
-							ins.InvokeApplication();
-							this.ResponseWait(id);
+							try {
+								ins.InvokeApplication();
+							}catch(Exception e){
+								console.Error("Failed to invoke application from queryRequest...\n\t\t"+e.Message);
+							}
+							try{
+								this.ResponseWait(id);
+							}catch(Exception ee){
+								console.Error("Failed to wait for response...\n\t\t"+ee.Message);
+							}
 						} else {
 							console.Error("An error occurred that prevented the query request from being executed...");
 						}
