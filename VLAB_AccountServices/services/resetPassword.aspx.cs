@@ -515,29 +515,33 @@ namespace VLAB_AccountServices.services {
 				if (!String.IsNullOrWhiteSpace(id)) {
 					int lim=this.GetMatchingRecordsCount(id);
 					if (lim>0) {
-						string sql="SELECT * AS TOTAL FROM " + resetPassword.tb + " WHERE id= @ID ;";
+						string sql="SELECT COUNT(*) AS TOTAL FROM " + resetPassword.tb + " WHERE id= @ID ;";
 						int i=0;
 						int o=0;
 						List<string> cols=this.GetColumns();
 						Dictionary<string,string> tmp=new Dictionary<string,string>();
-						using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
-							SqlCommand cmd=new SqlCommand(sql,con);
-							cmd.Parameters.AddWithValue("@ID",id);
-							con.Open();
-							SqlDataReader r=cmd.ExecuteReader();
-							while(i<lim){
-								o=0;
-								if (tmp.Count>0) {
-									tmp.Clear();
+						try{
+							using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
+								SqlCommand cmd=new SqlCommand(sql,con);
+								cmd.Parameters.AddWithValue("@ID",id);
+								con.Open();
+								SqlDataReader r=cmd.ExecuteReader();
+								while(i<lim){
+									o=0;
+									if (tmp.Count>0) {
+										tmp.Clear();
+									}
+									while(o<cols.Count){
+										tmp.Add(cols[o],r.GetString(o));
+										o++;
+									}
+									res.Add(tmp);
+									i++;
 								}
-								while(o<cols.Count){
-									tmp.Add(cols[o],r.GetString(o));
-									o++;
-								}
-								res.Add(tmp);
-								i++;
+								con.Close();
 							}
-							con.Close();
+						}catch(Exception ex){
+							console.Error("Failed to get matching records...\n\t\t"+ex.Message);
 						}
 					}
 				}
