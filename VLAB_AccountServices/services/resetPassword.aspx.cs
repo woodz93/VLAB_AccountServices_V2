@@ -440,6 +440,7 @@ namespace VLAB_AccountServices.services {
 							resp=this.CheckRecordResponse(id);
 						}catch(Exception e){
 							console.Error("Failed to check for record response...\n\t\t"+e.Message);
+							resp="failed";
 						}
 						if (resp==null) {
 							Thread.Sleep(50);
