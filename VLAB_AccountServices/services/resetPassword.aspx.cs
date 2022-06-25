@@ -568,20 +568,31 @@ namespace VLAB_AccountServices.services {
 			if (this.cols!=null) {
 				res=this.cols;
 			} else {
-				string sql="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='"+resetPassword.tb+"';";
+				string sql="SELECT * FROM "+resetPassword.tb+";";
 				int i=0;
 				int lim=0;
 				res=new List<string>();
 				using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
 					SqlCommand cmd=new SqlCommand(sql,con);
 					con.Open();
-					SqlDataReader r=cmd.ExecuteReader();
+					try{
+						SqlDataReader r=cmd.ExecuteReader();
+						lim=r.FieldCount;
+						while(i<lim){
+							res.Add(r.GetName(i));
+							i++;
+						}
+					}catch(Exception e){
+						console.Error("Failed to get column names...\n\t\t"+e.Message);
+					}
+					/*
 					lim=r.FieldCount;
 					while(i<lim){
 						//res.Add(r.GetName(i));
 						res.Add(r.GetString(i));
 						i++;
 					}
+					*/
 					con.Close();
 				}
 			}
