@@ -435,7 +435,12 @@ namespace VLAB_AccountServices.services {
 				if (!String.IsNullOrWhiteSpace(id)) {
 					if (this.counter<50) {
 						Thread.Sleep(100);
-						string resp=this.CheckRecordResponse(id);
+						string resp=null;
+						try{
+							resp=this.CheckRecordResponse(id);
+						}catch(Exception e){
+							console.Error("Failed to check for record response...\n\t\t"+e.Message);
+						}
 						if (resp==null) {
 							Thread.Sleep(50);
 							this.ResponseWait(id);
