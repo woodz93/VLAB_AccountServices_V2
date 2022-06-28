@@ -21,13 +21,13 @@
 			<label for="password-confirm">Confirm Password: </label><asp:textbox id="password_confirm" Text="" runat="server" name="password_confirm" type="password" value="" placeholder="Confirm password..."></asp:textbox>
 			<button type="button" class="peak" onclick="peak(this)" data-ref="password_confirm"></button>
 			<br />
-			<asp:Panel ID="group_container" Visible="true" runat="server">
+			<asp:Panel ID="group_container" Visible="false" runat="server">
 				<asp:Label ID="groups_label" for="groups" runat="server">Available Groups:</asp:Label>
 				<br />
 				<asp:CheckBoxList ID="groups" CssClass="list groups" name="groups" runat="server"></asp:CheckBoxList>
 			</asp:Panel>
 			<br />
-			<asp:Panel ID="dev" Visible="true" runat="server">
+			<asp:Panel ID="dev" Visible="false" runat="server">
 				<label for="debug">Debug:</label>
 				<asp:CheckBox ID="debug" name="debug" runat="server" />
 			</asp:Panel>
