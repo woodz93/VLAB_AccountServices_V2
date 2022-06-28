@@ -27,7 +27,7 @@ namespace VLAB_AccountServices.services.assets.svr {
 
 		private uint action=0x0000;
 
-		private List<Dictionary<string,string>> output=new List<Dictionary<string,string>>();
+		public List<Dictionary<string,string>> output=new List<Dictionary<string,string>>();
 		private List<Dictionary<string,string>> error_buffer=new List<Dictionary<string,string>>();
 
 		public bool response_received=false;

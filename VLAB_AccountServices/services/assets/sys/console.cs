@@ -21,6 +21,9 @@ namespace VLAB_AccountServices.services.assets.sys {
 		public static bool errored=false;
 		public static bool ini_complete=false;
 
+		//private static uint debugging_mode=0x111;								// Full debugging enabled
+		private static uint debugging_mode=0x011;								// All debugging disabled
+
 
 		// Initializes the console class for use with the Default class.
 		public static void ini(Default instance) {
@@ -57,26 +60,36 @@ namespace VLAB_AccountServices.services.assets.sys {
 
 		// Writes output to the client.
 		public static void Log(string message) {
-			console.Output("<font style='color:rgb(255,255,255);font-weight:bolder;'>[LOG]</font>:<font style='color:rgb(255,255,255);font-weight:bolder;'>\t\t"+message+"</font>");
+			if (console.debugging_mode>=0x111) {
+				console.Output("<font style='color:rgb(255,255,255);font-weight:bolder;'>[LOG]</font>:<font style='color:rgb(255,255,255);font-weight:bolder;'>\t\t"+message+"</font>");
+			}
 		}
 		// Writes output to the client.
 		public static void Warn(string message) {
-			console.Output("<font style='color:rgb(255,200,50);font-weight:bolder;'>[WARN]</font>:<font style='color:rgb(255,200,50);font-weight:bolder;'>\t\t"+message+"</font>");
+			if (console.debugging_mode>=0x100) {
+				console.Output("<font style='color:rgb(255,200,50);font-weight:bolder;'>[WARN]</font>:<font style='color:rgb(255,200,50);font-weight:bolder;'>\t\t"+message+"</font>");
+			}
 		}
 		// Writes output to the client.
 		public static void Error(string message) {
-			console.Output("<font style='color:red;font-weight:bolder;'>[ERROR]</font>:<font style='color:red;font-weight:bolder;'>\t\t"+message+"</font>");
-			if (!console.errored) {
-				console.errored=true;
+			if (console.debugging_mode>=0x011) {
+				console.Output("<font style='color:red;font-weight:bolder;'>[ERROR]</font>:<font style='color:red;font-weight:bolder;'>\t\t"+message+"</font>");
+				if (!console.errored) {
+					console.errored=true;
+				}
 			}
 		}
 		// Writes output to the client.
 		public static void Info(string message) {
-			console.Output("<font style='color:cyan;font-weight:bolder;'>[INFO]</font>:<font style='color:cyan;font-weight:bolder;'>\t"+message+"</font>");
+			if (console.debugging_mode>=0x110) {
+				console.Output("<font style='color:cyan;font-weight:bolder;'>[INFO]</font>:<font style='color:cyan;font-weight:bolder;'>\t"+message+"</font>");
+			}
 		}
 		// Writes output to the client.
 		public static void Success(string message) {
-			console.Output("<font style='color:rgb(100,255,100);font-weight:bolder;'>[SUCCESS]</font>:<font style='color:rgb(100,255,100);font-weight:bolder;'>\t"+message+"</font>");
+			if (console.debugging_mode>=0x101) {
+				console.Output("<font style='color:rgb(100,255,100);font-weight:bolder;'>[SUCCESS]</font>:<font style='color:rgb(100,255,100);font-weight:bolder;'>\t"+message+"</font>");
+			}
 		}
 
 		private static void Output(string q=null) {

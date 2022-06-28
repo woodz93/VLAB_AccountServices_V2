@@ -427,6 +427,7 @@ namespace VLAB_AccountServices.services {
 					console.Error("An error has occurred while attempting to query the request...\n\t\t"+e.Message);
 				}
 			}
+			
 		}
 		// Returns true on success, false otherwise. Repeats until a response was issued by the AD program.
 		protected bool ResponseWait(string id=null) {
@@ -451,6 +452,8 @@ namespace VLAB_AccountServices.services {
 							} else if (resp=="failed") {
 								res=false;
 							}
+							Database dbins=new Database();
+							dbins.RemoveRecord(id);
 						}
 					} else {
 						console.Error("Response check timed out.");
@@ -468,56 +471,65 @@ namespace VLAB_AccountServices.services {
 			string res=null;
 			if (!String.IsNullOrEmpty(id)) {
 				if (!String.IsNullOrWhiteSpace(id)) {
-					List<Dictionary<string,string>> list=this.GetMatchingRecords(id);
-					int i=0;
-					uint tmp;
-					string msg;
-					string file;
-					string line;
-					string path;
-					string str;
-					Status ins=new Status();
-					while(i<list.Count){
-						if (list[i]["id"]==id) {
-							if (!String.IsNullOrEmpty(list[i]["data"])) {
-								if (!String.IsNullOrWhiteSpace(list[i]["data"])) {
-									ins.id=list[i]["id"];
-									ins.data=list[i]["data"];
-									tmp=ins.GetStatus();
-									msg=ins.GetMessage();
-									file=ins.GetFileName();
-									line=ins.GetLine();
-									path=ins.GetSource();
-									if (msg==null) {
-										msg="[NULL]";
-									}
-									if (msg==null) {
-										msg="[NULL]";
-									}
-									if (file==null) {
-										file="[NULL]";
-									}
-									if (path==null) {
-										path="[NULL]";
-									}
-									if (line==null) {
-										line="[NULL]";
-									}
-									str=msg+"\n\tFrom \""+path+"/"+file+"\" ("+line+")";
-									if (tmp!=0x00) {
-										if (tmp==0x01) {
-											console.Error("Failed to process your request...\n\t\t"+str);
-											res="failed";
-										} else {
-											console.Log("Process completed successfully.");
-											res="success";
+					Database dbins=new Database();
+					if (dbins.RecordExists(id)) {
+						List<Dictionary<string,string>> list=this.GetMatchingRecords(id);
+						console.Info(list.Count.ToString());
+						int i=0;
+						uint tmp;
+						string msg;
+						string file;
+						string line;
+						string path;
+						string str;
+						Status ins=new Status();
+						while(i<list.Count){
+							if (list[i]["id"]==id) {
+								if (!String.IsNullOrEmpty(list[i]["data"])) {
+									if (!String.IsNullOrWhiteSpace(list[i]["data"])) {
+										ins.id=list[i]["id"];
+										ins.data=list[i]["data"];
+										ins.ToObject();
+										tmp=ins.GetStatus();
+										msg=ins.GetMessage();
+										file=ins.GetFileName();
+										line=ins.GetLine();
+										path=ins.GetSource();
+										if (msg==null) {
+											msg="[NULL]";
+										}
+										if (msg==null) {
+											msg="[NULL]";
+										}
+										if (file==null) {
+											file="[NULL]";
+										}
+										if (path==null) {
+											path="[NULL]";
+										}
+										if (line==null) {
+											line="[NULL]";
+										}
+										str=msg+"\n\tFrom \""+path+"/"+file+"\" ("+line+")";
+										if (tmp!=0x00) {
+											if (tmp==0x01) {
+												console.Error("Failed to process your request...\n\t\t"+str);
+												res="failed";
+											} else {
+												console.Log("Process completed successfully.");
+												res="success";
+											}
 										}
 									}
 								}
 							}
+							i++;
 						}
-						i++;
+					} else {
+						console.Error("Record does not exist!");
+						res="failed";
 					}
+
 				}
 			}
 			return res;
@@ -529,8 +541,8 @@ namespace VLAB_AccountServices.services {
 				if (!String.IsNullOrWhiteSpace(id)) {
 					int lim=this.GetMatchingRecordsCount(id);
 					if (lim>0) {
-						string sql="SELECT COUNT(*) AS TOTAL FROM " + resetPassword.tb + " WHERE id= @ID ;";
-						int i=0;
+						string sql="SELECT * FROM " + resetPassword.tb + " WHERE id= @ID ;";
+						//int i=0;
 						int o=0;
 						List<string> cols=this.GetColumns();
 						Dictionary<string,string> tmp=new Dictionary<string,string>();
@@ -540,7 +552,7 @@ namespace VLAB_AccountServices.services {
 								cmd.Parameters.AddWithValue("@ID",id);
 								con.Open();
 								SqlDataReader r=cmd.ExecuteReader();
-								while(i<lim){
+								while(r.Read()){
 									o=0;
 									if (tmp.Count>0) {
 										tmp.Clear();
@@ -550,7 +562,6 @@ namespace VLAB_AccountServices.services {
 										o++;
 									}
 									res.Add(tmp);
-									i++;
 								}
 								con.Close();
 							}
@@ -605,19 +616,29 @@ namespace VLAB_AccountServices.services {
 				if (!String.IsNullOrWhiteSpace(id)) {
 					string sql="SELECT COUNT(*) AS TOTAL FROM " + resetPassword.tb + " WHERE id= @ID ;";
 					try{
+						Database ins=new Database();
+						ins.SetAction(DatabasePrincipal.SelectPrincipal);
+						ins.AddColumn("id",id);
+						ins.Send();
+						res=ins.output.Count;
+						/*
 						using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
 							SqlCommand cmd=new SqlCommand(sql,con);
 							cmd.Parameters.AddWithValue("@ID",id);
 							con.Open();
 							SqlDataReader r=cmd.ExecuteReader();
 							if (r.HasRows) {
+								
 								while(r.Read()){
 									res=r.GetInt32(0);
 									break;
 								}
+								
+								//res=r["TOTAL"].;
 							}
 							con.Close();
 						}
+						*/
 					}catch(Exception ex){
 						console.Error("Failed to get number of matching records...\n\t\t"+ex.Message);
 					}

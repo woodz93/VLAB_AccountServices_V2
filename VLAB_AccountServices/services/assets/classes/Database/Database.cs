@@ -28,7 +28,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		private List<uint> action_list=new List<uint>();
 
 		private uint action=0x0000;
-		private List<Dictionary<string,string>> output=new List<Dictionary<string,string>>();
+		public List<Dictionary<string,string>> output=new List<Dictionary<string,string>>();
 		private List<Dictionary<string,string>> error_buffer=new List<Dictionary<string,string>>();
 		public bool response_received=false;
 		public string ResponseMessage=null;
@@ -164,7 +164,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						res=this.UpdateRecord();
 					} else if (this.action==DatabasePrincipal.ExistsPrincipal && this.pairs.ContainsKey("id")) {
 						res=this.RecordExists(this.pairs["id"]);
-					} else if (this.action==DatabasePrincipal.RemoveRecordPrincipal && this.pairs.ContainsKey("id")) {
+					} else if (this.action==DatabasePrincipal.RemoveRecordPrincipal) {
 						res=this.RemoveRecord(this.pairs["id"]);
 					// Add more query conditions here...
 					} else {
@@ -179,7 +179,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			return res;
 		}
 		// Removes a record that matches the ID.
-		private bool RemoveRecord(string id=null) {
+		public bool RemoveRecord(string id=null) {
 			bool res=false;
 			if (Database.CheckValue(id)) {
 				if (this.RecordExists(id)) {
@@ -517,6 +517,10 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						res=true;
 					}
 					*/
+				} else if (this.action==DatabasePrincipal.RemoveRecordPrincipal) {
+					if (this.CheckColumnID()) {
+						res=true;
+					}
 				} // END OF ACTION CHECKS.
 			} else {
 				this.Error("No action was specified.",0x0001);

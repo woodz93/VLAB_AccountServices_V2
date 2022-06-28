@@ -177,8 +177,6 @@
     <Compile Include="services\assets\classes\Network\Network.cs" />
     <Compile Include="services\assets\classes\Str\Str.cs" />
     <Compile Include="services\assets\classes\sys\sys.cs" />
-    <Compile Include="services\assets\svr\DataBasePrincipal.cs" />
-    <Compile Include="services\assets\svr\DataBase.cs" />
     <Compile Include="services\assets\svr\CookieCache.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
