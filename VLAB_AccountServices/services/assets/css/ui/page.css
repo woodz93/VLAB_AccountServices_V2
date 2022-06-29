@@ -1,0 +1,19 @@
+﻿
+html {
+	background: #FFF;
+	color:#000;
+	font-family:Arial;
+}
+
+body {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100vw;
+	height:100vh;
+	overflow:hidden;
+	overflow-y:auto;
+	background:#FFF;
+	margin:0;
+	padding:0;
+}

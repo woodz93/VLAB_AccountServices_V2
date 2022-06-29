@@ -1,0 +1,105 @@
+﻿.container {
+	position:relative;
+	top:50%;
+	left:50%;
+	transform:translateX(-50%) translateY(-50%);
+	width:75%;
+	height:auto;
+	padding:50px;
+	display:block;
+	overflow:hidden;
+	background-color:var(--container-bg-color-);
+	clip-path:polygon(
+		var(--b-) 0,
+		0 var(--b-),
+		0 calc(100% - var(--b-)),
+		var(--b-) 100%,
+		calc(100% - var(--b-)) 100%,
+		100% calc(100% - var(--b-)),
+		100% var(--b-),
+		calc(100% - var(--b-)) 0
+	);
+}
+.container:before {
+	clear:both;
+	content:"";
+	position:absolute;
+	top:calc(calc(var(--b-) / 2) * -1);
+	left:calc(calc(var(--b-) / 2) * -1);
+	/*background:linear-gradient(to bottom right, var(--container-lg-color-start-) 25%, var(--container-lg-color-end-));*/
+	background:var(--container-border-color-);
+	z-index:-100;
+	width:calc(100% + var(--b-));
+	height:calc(100% + var(--b-));
+	clip-path:polygon(
+		var(--b-) 0,
+		0 var(--b-),
+		0 calc(100% - var(--b-)),
+		var(--b-) 100%,
+		calc(100% - var(--b-)) 100%,
+		100% calc(100% - var(--b-)),
+		100% var(--b-),
+		calc(100% - var(--b-)) 0
+	);
+	/*animation:bgr 10s ease-in-out 0s infinite;*/
+}
+
+@keyframes bgr {
+	0% {
+		filter:hue-rotate(0deg);
+	}
+	50% {
+		filter: hue-rotate(180deg);
+	}
+	100% {
+		filter: hue-rotate(0deg);
+	}
+}
+
+.container:after {
+	clear:both;
+	content:"";
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translateX(-50%) translateY(-50%);
+	width:calc(100% - var(--b-));
+	height:calc(100% - var(--b-));
+	background-color:var(--container-bg-color-);
+	z-index:-10;
+	clip-path:polygon(
+		var(--b-) 0,
+		0 var(--b-),
+		0 calc(100% - var(--b-)),
+		var(--b-) 100%,
+		calc(100% - var(--b-)) 100%,
+		100% calc(100% - var(--b-)),
+		100% var(--b-),
+		calc(100% - var(--b-)) 0
+	);
+	display:block;
+}
+
+table.container {
+	position:relative;
+	top:0;
+	left:50%;
+	transform:translateX(-50%);
+	width:100%;
+	height:auto;
+	display:table;
+	margin:0;
+	background-color:rgba(0,0,0,0);
+}
+table.container td {
+	width:50%;
+}
+table.container td:nth-child(odd) {
+	text-align: right;
+}
+/*
+table.container:before, table.container:after {
+	clear:both;
+	content:"";
+}
+*/

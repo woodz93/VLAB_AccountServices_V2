@@ -1,0 +1,17 @@
+﻿
+h1.title {
+	text-align:center;
+	border:2px solid rgba(0,0,0,0);
+	border-bottom:2px solid var(--container-border-color-);
+	padding-bottom:20px;
+	text-transform:uppercase;
+	outline:none;
+	user-select:none;
+}
+label {
+	user-select:none;
+}
+
+* {
+	font-family:var(--font-family-) !important;
+}

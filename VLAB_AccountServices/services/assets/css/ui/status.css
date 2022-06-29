@@ -1,0 +1,33 @@
+﻿.status {
+	position:relative;
+	top:0;
+	left:50%;
+	transform:translateX(-50%);
+	display:block;
+	width:90%;
+	height:auto;
+	font-size:1.25em;
+	font-weight:bolder;
+	color:#FFF;
+	background-color:rgba(0,0,0,0.5);
+	padding:10px;
+	outline:none;
+	cursor:pointer;
+	text-align:center;
+	border-radius:10px;
+	border:2px solid #000;
+	margin-top:10px;
+	-webkit-transition-duration:var(--status-anim-dur-);
+	-moz-transition-duration:var(--status-anim-dur-);
+	-ms-transition-duration:var(--status-anim-dur-);
+	-o-transition-duration:var(--status-anim-dur-);
+	transition-duration:var(--status-anim-dur-);
+}
+.status[class~="error"] {
+	background-color:rgba(0,0,0,0.85);
+	color:rgb(255,0,0);
+	border:2px double rgb(255,0,100);
+}
+.error {
+	color:rgb(255,0,100);
+}

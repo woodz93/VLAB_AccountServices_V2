@@ -1,0 +1,83 @@
+﻿
+input {
+	position:relative;
+	top:0;
+	left:0;
+	width:50%;
+	height:auto;
+	font-size:1.75em;
+	border:none;
+	border-bottom:2px solid rgba(0,0,0,0.5);
+	cursor:text;
+	background-color:rgba(0,0,0,0);
+	color:#000;
+	outline:none;
+	display:inline-block;
+	-webkit-transition-duration:var(--inp-dur-);
+	-moz-transition-duration:var(--inp-dur-);
+	-ms-transition-duration:var(--inp-dur-);
+	-o-transition-duration:var(--inp-dur-);
+	transition-duration:var(--inp-dur-);
+}
+input:hover {
+	border-bottom:2px solid rgba(0,0,0,1);
+}
+
+
+/*
+input {
+	position: relative;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 75%;
+	height: 2.0em;
+	outline: none;
+	border: none;
+	border-bottom: 1px solid #FFF;
+	cursor: text;
+	background-color: rgba(0,0,0,0.0);
+	color: #FFF;
+	display:inline;
+	padding:4px;
+	font-size:1.5em;
+	text-align:center;
+	-webkit-transition-duration: var(--idur);
+	-moz-transition-duration: var(--idur);
+	-o-transition-duration: var(--idur);
+	transition-duration: var(--idur);
+}
+input:before {
+	clear:both;
+	content:"";
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:0%;
+	height:1px;
+	background-color:#FFF;
+	font-size:1.5em;
+	-webkit-transition-duration: var(--idurh);
+	-moz-transition-duration: var(--idurh);
+	-o-transition-duration: var(--idurh);
+	transition-duration: var(--idurh);
+}
+input:hover:before {
+	width:100%;
+}
+input.invalid:before {
+	clear:both;
+	content:"";
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:100%;
+	height:1px;
+	background-color:rgb(255,0,0);
+	font-size:1.5em;
+	-webkit-transition-duration: var(--idurh);
+	-moz-transition-duration: var(--idurh);
+	-o-transition-duration: var(--idurh);
+	transition-duration: var(--idurh);
+}
+*/

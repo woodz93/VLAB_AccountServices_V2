@@ -1,0 +1,48 @@
+﻿
+
+@media only screen and (max-width:600px) {
+	body {
+		overflow: hidden;
+		overflow-y: auto;
+	}
+	br {
+		line-height:10px;
+	}
+	form.container {
+		top:0;
+		left:0;
+		transform:unset;
+		width: 100%;
+		height:auto;
+		padding:4px;
+		line-height:4.0em;
+		max-height:100vh;
+		overflow:hidden;
+		overflow-y:auto;
+		padding-top:0;
+		padding-bottom:0;
+	}
+	.container label, .container input {
+		font-size:1.25em;
+	}
+	form.container input.submit_btn {
+		top:-50px;
+		width: auto;
+	}
+	table.container {
+		width:95%;
+		padding:0;
+		font-size:0.75em;
+		font-weight:bold;
+	}
+	.container button.peak {
+		left:10%;
+		padding:15px;
+	}
+	.status {
+		margin: 0;
+		padding: 0;
+		font-size:0.75em;
+	}
+	
+}

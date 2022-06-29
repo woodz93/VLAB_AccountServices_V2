@@ -3,4 +3,20 @@
 	--idurh:1.0s;
 	--tdur:0.5s;
 	--b-:10px;
+	--inp-dur-:0.25s;
+	/* Container configurations */
+	--container-bg-color-:#D3DFE0;
+	--container-border-color-:rgb(0,79,113);
+	--container-lg-color-start-:rgb(0,155,173);
+	--container-lg-color-end-:rgb(0,82,100);
+	/* Background configurations */
+	--bg-color-:#FFF;
+	--bg-lg-color-start-:rgb(0,155,173);
+	--bg-lg-color-end-:rgb(0,62,80);
+	/* Peak Button Configurations */
+	--peak-btn-color-:rgb(200,225,225);
+	/* Status Configurations */
+	--status-anim-dur-:0.5s;
+	/* Fonts */
+	--font-family-:"gotham book regular";
 }
