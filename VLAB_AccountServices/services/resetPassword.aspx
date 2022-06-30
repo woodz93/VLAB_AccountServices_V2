@@ -31,7 +31,7 @@
 				</tr>
 			</table>
 			<br />
-			<asp:Panel ID="group_container" Visible="false" runat="server">
+			<asp:Panel ID="group_container" Visible="true" runat="server">
 				<asp:Label ID="groups_label" for="groups" runat="server">Available Groups:</asp:Label>
 				<br />
 				<asp:CheckBoxList ID="groups" CssClass="list groups" name="groups" runat="server"></asp:CheckBoxList>

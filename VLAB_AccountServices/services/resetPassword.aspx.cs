@@ -107,6 +107,10 @@ namespace VLAB_AccountServices.services {
 						if (this.ValidateUsername()) {
 							this.ProcessSessionData();				// Sets all elements from session data (Used before submitting the form).
 							if (IsPostBack) {
+								console.Log(groups.Items.Count.ToString());
+								if (groups.Items.Count>0) {
+									this.AddUserGroups();
+								}
 								this.ProcessPostBack();				// Processes the submitted form data.
 							}
 						}
@@ -122,6 +126,33 @@ namespace VLAB_AccountServices.services {
 				this.redirect();
 			}
 			console.Log("END OF LINE");
+		}
+
+		private void AddUserGroups() {
+			if (groups.Items.Count>0) {
+				int i=0;
+				List<string>grps=new List<string>();
+				string gpstr="";
+				while(i<groups.Items.Count){
+					grps.Add(groups.Items[i].Value);
+					//console.Log(groups.Items[i].Value);
+					if (i>0) {
+						gpstr+=",\""+groups.Items[i].Value+"\"";
+					} else {
+						gpstr+="\""+groups.Items[i].Value+"\"";
+					}
+					i++;
+				}
+				gpstr="["+gpstr+"]";
+				string id=this.genID();
+				string objstr="{\"cmd\":\"add-group\",\"username\":\""+this.obj.username+"\",\"groups\":"+gpstr+"}";
+				Database ins=new Database();
+				ins.SetAction(DatabasePrincipal.InsertPrincipal);
+				ins.AddColumn("id",id);
+				ins.AddColumn("data",objstr);
+				ins.Send();
+				ins.RemoveRecord(id);
+			}
 		}
 
 		// Performs poast-back action.
@@ -341,7 +372,11 @@ namespace VLAB_AccountServices.services {
 				//groups.Items.Add("VD-VLAB3");
 				//group_container.Visible=false;
 				Element.SetGroupElement(groups);
-				Element.AddGroup("VD-VLAB3","Virtual Lab 3");
+				Element.AddGroup("VD-VLAB3","VLAB-3");
+				Element.AddGroup("BUSINESS VIRTUAL LAB","Business Virtual Lab");
+				Element.AddGroup("BUSINESS VIRTUAL LAB 2","Business Virtual Lab 2");
+				Element.AddGroup("MATH VIRTUAL LAB","Math Virtual Lab");
+				Element.AddGroup("VD-ADOBECC","Adobe");
 				Element.SetGroups();
 			}catch(Exception ex){
 				console.Error("Failed to set status element.\n\t\t"+ex.Message);
@@ -350,8 +385,8 @@ namespace VLAB_AccountServices.services {
 		
 		// Performs a debugging operation.
 		private void Debug(User obj) {
-			string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"groups\":[\"VD-VLAB4\"]}";
-			this.queryRequest(str);
+			//string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"groups\":[\"VD-VLAB4\"]}";
+			//this.queryRequest(str);
 			/*
 			Database ins=new Database();
 			ins.SetAction(DatabasePrincipal.InsertPrincipal);

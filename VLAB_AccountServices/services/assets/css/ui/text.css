@@ -12,6 +12,22 @@ label {
 	user-select:none;
 }
 
+table.groups#groups label {
+	/*
+	position:relative;
+	top:50%;
+	left:25px;
+	transform:translateY(-50%);
+	width:calc(100% - 30px);
+	font-size:1.25em;
+	outline: 1px solid red;
+	height:100%;
+	display:inline-block;
+	*/
+	vertical-align:top;
+}
+
+
 * {
 	font-family:var(--font-family-) !important;
 }

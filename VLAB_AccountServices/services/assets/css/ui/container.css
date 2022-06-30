@@ -5,9 +5,11 @@
 	transform:translateX(-50%) translateY(-50%);
 	width:75%;
 	height:auto;
+	max-height:80%;
 	padding:50px;
 	display:block;
 	overflow:hidden;
+	overflow-y:auto;
 	background-color:var(--container-bg-color-);
 	clip-path:polygon(
 		var(--b-) 0,
@@ -103,3 +105,33 @@ table.container:before, table.container:after {
 	content:"";
 }
 */
+
+table.groups#groups tbody {
+	position:relative;
+	top:0;
+	left:0;
+	width:200%;
+	display:table;
+}
+table.groups#groups tr {
+	width:auto;
+	max-width:100vw;
+}
+table.groups#groups tr:hover {
+	background-color:rgba(0,0,0,0.75);
+	color:#FFF;
+}
+table.groups#groups label, table.groups#groups input, table.groups#groups tr, table.groups#groups tr td {
+	cursor:pointer;
+	user-select:none;
+}
+table.groups#groups td input {
+	position:relative;
+	top:0;
+	left:0;
+	width:25px;
+	height:25px;
+	outline:none;
+	display:inline-block;
+}
+
