@@ -36,9 +36,9 @@ namespace VLAB_AccountServices.services.assets.sys {
 		// Adds a group to the collection.
 		public static void AddGroup(string name=null,string display_name=null) {
 			if (Element.CheckString(name)) {
-				if (!Element.groupList.ContainsKey(name)) {
+				if (!Element.groupList.ContainsKey(display_name)) {
 					if (Element.CheckString(display_name)) {
-						Element.groupList.Add(name, display_name);
+						Element.groupList.Add(display_name,name);
 					} else {
 						console.Error("Display name was not specified.");
 					}
@@ -51,8 +51,9 @@ namespace VLAB_AccountServices.services.assets.sys {
 				if (Element.group_element.Items.Count>0) {
 					Element.group_element.Items.Clear();
 				}
+				//console.Log(Element.groupList.ToString());
 				foreach(var item in Element.groupList){
-					Element.group_element.Items.Add(item.Value);
+					Element.group_element.Items.Add(item.Key);
 				}
 			} else {
 				console.Error("HTML group list element was not specified in the ini call to this class.");

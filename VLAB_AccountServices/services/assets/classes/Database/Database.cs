@@ -8,16 +8,17 @@ using System.Threading.Tasks;
 using VLAB_AccountServices.services.assets.sys;
 using VLAB_AccountServices.services.assets.classes.sys;
 using VLAB_AccountServices.services.assets.classes.Network;
+using System.Threading;
 
 namespace VLAB_AccountServices.services.assets.classes.Database {
 	public class Database {
 
-		private static string db="UHMC_VLab";
-		private static string tb="vlab_pendingusers";
-		private static string db_ip="172.20.0.142";
-		private static string db_port="1433";
-		private static string db_username="uhmcad_user";
-		private static string db_password="MauiC0LLegeAD2252!";
+		private string db="UHMC_VLab";
+		private string tb="vlab_pendingusers";
+		private string db_ip="172.20.0.142";
+		private string db_port="1433";
+		private string db_username="uhmcad_user";
+		private string db_password="MauiC0LLegeAD2252!";
 		private bool use_port=false;
 		private string constr=null;
 		private bool con_open=false;
@@ -25,6 +26,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		public List<string> cols=new List<string>();
 		//private List<string> vals=new List<string>();
 		private Dictionary<string,string> pairs=new Dictionary<string,string>();
+		private Dictionary<string,string> where_pairs=new Dictionary<string,string>();
 		private List<uint> action_list=new List<uint>();
 
 		private uint action=0x0000;
@@ -41,10 +43,48 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		// Returns:
 		//			Nothing.
 		public Database() {
-			this.constr=@"Data Source=" + Database.db_ip + ";Initial Catalog=" + Database.db + ";Persist Security Info=True;User ID=" + Database.db_username + ";Password=" + Database.db_password + ";";
+			this.constr=@"Data Source=" + this.db_ip + ";Initial Catalog=" + this.db + ";Persist Security Info=True;User ID=" + this.db_username + ";Password=" + this.db_password + ";";
 			this.IniPopulateActionList();
 		}
 		
+		// Sets the database server IP.
+		public bool SetServer(string ip=null) {
+			bool res=false;
+			if (Database.CheckValue(ip)) {
+				if (Network.Network.IsConnected()) {
+					if (Network.Network.IsReachable(ip)) {
+						this.db_ip=ip;
+					}
+				}
+			}
+			return res;
+		}
+		// Sets the database server username.
+		public void SetUsername(string username=null) {
+			if (Database.CheckValue(username)) {
+				this.db_username=username;
+			}
+		}
+		// Sets the database server password.
+		public void SetPassword(string password=null) {
+			if (Database.CheckValue(password)) {
+				this.db_password=password;
+			}
+		}
+		// Sets the database name.
+		public void SetDatabase(string db=null) {
+			if (Database.CheckValue(db)) {
+				this.db=db;
+			}
+		}
+		// Sets the database table name.
+		public void SetTable(string tb=null) {
+			if (Database.CheckValue(tb)) {
+				this.tb=tb;
+			}
+		}
+		
+
 
 		//
 		// Summary:
@@ -85,9 +125,134 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
+		// Returns a string consisting of id-value pairs (PRE-SANITIZED).
+		public string GenerateSQL(string cmd="normal", string condition_override=",") {
+			string res=null;
+			//string condition_override=",";
+			condition_override=this.parse(condition_override.ToUpper());
+			/*
+			if (cmd=="and") {
+				//condition_override=this.parse(",");
+				condition_override="AND";
+			} else if (cmd=="or") {
+				condition_override="OR";
+			} else if (cmd=="like") {
+				condition_override="LIKE";
+			}
+			*/
+			if (this.cols.Count>0) {
+				int i=0;
+				res="";
+				while(i<this.cols.Count){
+					if (i>0) {
+						res+=" "+condition_override+" "+this.cols[i]+"= @"+this.cols[i].ToUpper();
+					} else {
+						res+=""+this.cols[i]+"= @"+this.cols[i].ToUpper();
+					}
+					i++;
+				}
+			}
+			return res;
+		}
+		// Returns a string consisting of the column names.
+		private string GetCols() {
+			string res="";
+			if (this.cols.Count>0) {
+				int i=0;
+				while(i<this.cols.Count){
+					if (i>0) {
+						res+=" ,\""+this.cols[i]+"\"";
+					} else {
+						res+=" \""+this.cols[i]+"\"";
+					}
+					i++;
+				}
+			}
+			return res;
+		}
+		// Returns a string consisting of the column values.
+		private string GetValues() {
+			string res="";
+			if (this.cols.Count>0) {
+				int i=0;
+				while(i<this.pairs.Count){
+					if (i>0) {
+						res+=", @"+this.cols[i].ToUpper()+" ";
+					} else {
+						res+=" @"+this.cols[i].ToUpper()+" ";
+					}
+					i++;
+				}
+			}
+			return res;
+		}
+		// Returns a string consisting of the key value pairs formatted for update sql command.
+		private string PrepUpdate() {
+			string res="";
+			if (this.cols.Count>0) {
+				int i=0;
+				res="";
+				while(i<this.cols.Count){
+					if (i>0) {
+						res+=", "+this.cols[i]+"= @"+this.cols[i].ToUpper()+" ";
+					} else {
+						res+=""+this.cols[i]+"= @"+this.cols[i].ToUpper()+" ";
+					}
+					i++;
+				}
+			}
+			return res;
+		}
+
+		// Returns a string consisting of the where clause.
+		private string GetWhere(string cond="and") {
+			string res="";
+			if (this.where_pairs.Count>0) {
+				int i=0;
+				List<string> keys=new List<string>();
+				keys.AddRange(this.where_pairs.Keys);
+				string ovr="= ";
+				if (cond.Contains("like-")) {
+					ovr="LIKE ";
+					cond=cond.Replace("like-","");
+				}
+				string col="";
+				while(i<this.where_pairs.Count){
+					col=keys[i].Replace("WHERE_","");
+					if (i>0) {
+						res+=""+cond+" "+col+ovr+"@"+keys[i].ToUpper()+" ";
+					} else {
+						res+=" "+col+ovr+"@"+keys[i].ToUpper()+" ";
+					}
+					i++;
+				}
+				res=" WHERE"+res;
+			}
+			return res;
+		}
+		// Adds a where condition.
+		public void AddWhere(string col=null,string val=null) {
+			if (Database.CheckValue(col) && Database.CheckValue(val)) {
+				col="WHERE_"+this.parse(col);
+				val=this.parse(val);
+				if (!this.where_pairs.ContainsKey(col)) {
+					this.where_pairs.Add(col,val);
+				} else {
+					this.where_pairs[col]=val;
+				}
+			}
+		}
+		// Clears the where conditions.
+		public void ClearWhere() {
+			if (this.where_pairs.Count>0) {
+				this.where_pairs.Clear();
+			}
+		}
+
 		// Clears all pairs and columns.
 		public void Clear() {
 			this.pairs.Clear();
+			this.ClearWhere();
 			this.cols.Clear();
 			this.action=0x0000;
 		}
@@ -103,7 +268,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			if (this.cols.Count>0) {
 				string p=this.GeneratePairs();
-				sql="SELECT COUNT(*) AS TOTAL FROM "+Database.tb+" WHERE "+p+" ;";
+				sql="SELECT COUNT(*) AS TOTAL FROM "+this.tb+" WHERE "+p+" ;";
 				pass=true;
 			}
 			if (pass) {
@@ -156,13 +321,13 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			bool res=false;
 			if (this.CheckQuery()) {
 				if (!(this.error_buffer.Count>0)) {
-					if (this.action==DatabasePrincipal.InsertPrincipal && this.pairs.ContainsKey("data")) {
+					if (this.action==DatabasePrincipal.InsertPrincipal) {
 						res=this.InsertRecord();
 					} else if (this.action==DatabasePrincipal.SelectPrincipal && this.CheckColumnID()) {
 						res=this.SelectRecord();
-					} else if (this.action==DatabasePrincipal.UpdatePrincipal && this.pairs.ContainsKey("data")) {
+					} else if (this.action==DatabasePrincipal.UpdatePrincipal) {
 						res=this.UpdateRecord();
-					} else if (this.action==DatabasePrincipal.ExistsPrincipal && this.pairs.ContainsKey("id")) {
+					} else if (this.action==DatabasePrincipal.ExistsPrincipal) {
 						res=this.RecordExists(this.pairs["id"]);
 					} else if (this.action==DatabasePrincipal.RemoveRecordPrincipal) {
 						res=this.RemoveRecord(this.pairs["id"]);
@@ -183,7 +348,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			bool res=false;
 			if (Database.CheckValue(id)) {
 				if (this.RecordExists(id)) {
-					string sql="DELETE FROM "+Database.tb+" WHERE id= @ID ;";
+					string sql="DELETE FROM "+this.tb+" WHERE id= @ID ;";
 					int len=0;
 					try{
 						using(var con=new SqlConnection(this.constr)){
@@ -237,10 +402,48 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return 1;
 		}
+		public int ResponseWait() {
+			int res=this.CheckResponse();
+			int max=1000;
+			int i=0;
+			while(res==0 && i<max){
+				res=this.CheckResponse();
+				Thread.Sleep(100);
+			}
+			return res;
+		}
+		public int CheckResponse() {
+			int res=0;
+			string sql="SELECT * FROM "+this.tb+" WHERE id= @ID ;";
+			//SqlCommand cmd=new SqlCommand(sql,this.con);
+			//cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
+			//cmd.Parameters["@ID"].Value=this.pairs["id"];
+			Dictionary<string,string> tmp=new Dictionary<string, string>();
+			using(SqlConnection con=new SqlConnection(this.constr)) {
+				SqlCommand cmd=new SqlCommand(sql,con);
+				cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
+				con.Open();
+				SqlDataReader dr=cmd.ExecuteReader();
+				if (dr.HasRows) {
+					while(dr.Read()){
+						tmp["data"]=dr.GetString(1);
+						if (tmp["data"].Contains("status\":")) {
+							tmp["id"]=dr.GetString(0);
+							this.output.Add(tmp);
+							if (res!=1) {
+								res=1;
+							}
+						}
+					}
+				}
+				con.Close();
+			}
+			return res;
+		}
 		// Asynchronously selects data from the database.
 		private async Task<int> AsyncSelectRecord() {
 			int res=0;
-			string sql="SELECT * FROM "+Database.tb+" WHERE id='@ID';";
+			string sql="SELECT * FROM "+this.tb+" WHERE id='@ID';";
 			SqlCommand cmd=new SqlCommand(sql,this.con);
 			cmd.Parameters.Add("@ID",SqlDbType.VarChar);
 			cmd.Parameters["@ID"].Value=this.pairs["id"];
@@ -267,11 +470,27 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			bool res=false;
 			try{
 				int len=0;
-				string sql="UPDATE "+Database.tb+" SET data= @DATA WHERE id= @ID ;";
+				//string sql="UPDATE "+this.tb+" SET data= @DATA WHERE id= @ID ;";
+				string sql="UPDATE "+this.tb+" SET "+this.PrepUpdate()+this.GetWhere()+";";
+				
 				using(SqlConnection con=new SqlConnection(this.constr)) {
 					SqlCommand cmd=new SqlCommand(sql,con);
-					cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
-					cmd.Parameters.AddWithValue("@DATA",this.pairs["data"]);
+					//cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
+					//cmd.Parameters.AddWithValue("@DATA",this.pairs["data"]);
+					int i=0;
+					List<string> keys=new List<string>();
+					keys.AddRange(this.where_pairs.Keys);
+					while(i<this.where_pairs.Count){
+						cmd.Parameters.AddWithValue("@"+keys[i].ToUpper(),this.where_pairs[keys[i]]);
+						i++;
+					}
+					keys.Clear();
+					keys.AddRange(this.pairs.Keys);
+					i=0;
+					while(i<this.pairs.Count){
+						cmd.Parameters.AddWithValue("@"+keys[i].ToUpper(),this.pairs[keys[i]]);
+						i++;
+					}
 					con.Open();
 					len=cmd.ExecuteNonQuery();
 					con.Close();
@@ -341,27 +560,78 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		// Selects a record.
 		private bool SelectRecord() {
 			bool res=false;
-			string sql="SELECT * FROM "+Database.tb+" WHERE id= @ID ;";
+			//string sql="SELECT * FROM "+this.tb+" WHERE id= @ID ;";
+			string sql="SELECT * FROM "+this.tb+this.GetWhere()+";";
+			//console.Log(sql);
 			Dictionary<string,string> tmp=new Dictionary<string, string>();
 			try{
 				using(var con=new SqlConnection(this.constr)){
 					SqlCommand cmd=new SqlCommand(sql,con);
 					try{
-						cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
+						//cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
+						int i=0;
+						List<string> keys0=new List<string>();
+						keys0.AddRange(this.where_pairs.Keys);
+						string col="";
+						while(i<this.where_pairs.Count){
+							col=keys0[i].Replace("WHERE_","");
+							cmd.Parameters.AddWithValue("@"+keys0[i].ToUpper(),this.where_pairs[keys0[i]]);
+							i++;
+						}
+						keys0.Clear();
+						//console.Log(cmd.ToString());
 						try{
 							con.Open();
 							try{
-							SqlDataReader dr=cmd.ExecuteReader();
-							if (dr.HasRows) {
-								while(dr.Read()){
-									tmp.Clear();
-									tmp["id"]=dr.GetString(0);
-									tmp["data"]=dr.GetString(1);
-									this.output.Add(tmp);
+								SqlDataReader dr=cmd.ExecuteReader();
+								if (dr.HasRows) {
+									if (this.pairs.Count>0) {
+										i=0;
+										List<string> keys=new List<string>();
+										int lim=0;
+										/*
+										while(dr.Read()){
+											lim=dr.FieldCount;
+											while(i<lim){
+												keys.Add(dr.GetName(i));
+												i++;
+											}
+											break;
+										}
+										i=0;
+										*/
+										//keys.AddRange(this.pairs.Keys);
+										bool cp=true;
+										while(dr.Read()){
+											tmp.Clear();
+											i=0;
+											lim=dr.FieldCount;
+											if (cp) {
+												while(i<lim){
+													keys.Add(dr.GetName(i));
+													i++;
+												}
+												cp=false;
+											}
+											i=0;
+											while(i<lim){
+												tmp[keys[i]]=dr.GetString(i);
+												i++;
+											}
+											this.output.Add(tmp);
+										}
+										//console.Log(this.output.ToString());
+									} else {
+										while(dr.Read()){
+											tmp.Clear();
+											tmp["id"]=dr.GetString(0);
+											tmp["data"]=dr.GetString(1);
+											this.output.Add(tmp);
+										}
+									}
 								}
-							}
-							con.Close();
-							res=true;
+								con.Close();
+								res=true;
 							}catch(Exception e){
 								console.Error("Failed to process SQL query...\n\t\t"+e.Message);
 								con.Close();
@@ -383,13 +653,32 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			bool res=false;
 			string id=this.GetUniqueID();
 			if (!String.IsNullOrEmpty(id)) {
-				string sql="INSERT INTO "+Database.tb+" (\"id\",\"data\") VALUES('"+id+"', @DATA );";
+				//string sql="INSERT INTO "+this.tb+" (\"id\",\"data\") VALUES('"+id+"', @DATA );";
+				string sql="INSERT INTO "+this.tb+" ("+this.GetCols()+") VALUES("+this.GetValues()+");";
 				int len=0;
 				try{
 					using(var con=new SqlConnection(this.constr)){
 						SqlCommand cmd=new SqlCommand(sql,con);
 						//cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
-						cmd.Parameters.AddWithValue("@DATA",this.pairs["data"]);
+						//cmd.Parameters.AddWithValue("@DATA",this.pairs["data"]);
+
+						int i=0;
+						List<string> keys=new List<string>();
+						/*
+						keys.AddRange(this.where_pairs.Keys);
+						while(i<this.where_pairs.Count){
+							cmd.Parameters.AddWithValue("@"+keys[i],this.where_pairs[keys[i]]);
+							i++;
+						}
+						keys.Clear();
+						*/
+						keys.AddRange(this.pairs.Keys);
+						//i=0;
+						while(i<this.pairs.Count){
+							cmd.Parameters.AddWithValue("@"+keys[i].ToUpper(),this.pairs[keys[i]]);
+							i++;
+						}
+
 						con.Open();
 						len=cmd.ExecuteNonQuery();
 						con.Close();
@@ -407,7 +696,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		private string GetUniqueID() {
 			string res=null;
 			string str=this.pairs["id"];
-			string sql="SELECT COUNT(*) AS TOTAL FROM "+Database.tb+" WHERE id= @ID ;";
+			string sql="SELECT COUNT(*) AS TOTAL FROM "+this.tb+" WHERE id= @ID ;";
 			int i=0;
 			int len=0;
 			try{

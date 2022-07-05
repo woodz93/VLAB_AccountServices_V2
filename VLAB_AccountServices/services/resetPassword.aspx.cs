@@ -128,22 +128,59 @@ namespace VLAB_AccountServices.services {
 			console.Log("END OF LINE");
 		}
 
+		// Returns an array of selected groups.
+		private List<string> GetSelectedGroups() {
+			List<string> res=new List<string>();
+			int i=0;
+			while(i<Request.Params.AllKeys.Length){
+				if (Request.Params.AllKeys[i].IndexOf("groups")!=-1) {
+					res.Add(Request.Params.Get(Request.Params.AllKeys[i]));
+				}
+				i++;
+			}
+			return res;
+		}
+
 		private void AddUserGroups() {
 			if (groups.Items.Count>0) {
 				int i=0;
 				List<string>grps=new List<string>();
 				string gpstr="";
-				while(i<groups.Items.Count){
-					grps.Add(groups.Items[i].Value);
-					//console.Log(groups.Items[i].Value);
-					if (i>0) {
-						gpstr+=",\""+groups.Items[i].Value+"\"";
-					} else {
-						gpstr+="\""+groups.Items[i].Value+"\"";
+				List<string> list=this.GetSelectedGroups();
+				//console.Log(list.ToString());
+				//console.Log(Request.ToString());
+				while(i<list.Count){
+					//console.Info(groups.Items[i].Text);
+					//console.Log(Element.groupList.ToString());
+					//console.Log(groups.ToString());
+					if (Element.groupList.ContainsKey(groups.Items[i].Text)) {
+						if (list.Contains(groups.Items[i].Text)) {
+							if (gpstr.Length>0) {
+								gpstr+=",\""+Element.groupList[groups.Items[i].Text]+"\"";
+							} else {
+								gpstr+="\""+Element.groupList[groups.Items[i].Text]+"\"";
+							}
+						}
 					}
 					i++;
 				}
+				/*
+				i=0;
+				while(i<groups.Items.Count){
+					if (groups.Items[i].Selected) {
+						grps.Add(groups.Items[i].Value);
+						//console.Log(groups.Items[i].Value);
+						if (i>0) {
+							gpstr+=",\""+groups.Items[i].Value+"\"";
+						} else {
+							gpstr+="\""+groups.Items[i].Value+"\"";
+						}
+					}
+					i++;
+				}
+				*/
 				gpstr="["+gpstr+"]";
+				console.Info(gpstr);
 				string id=this.genID();
 				string objstr="{\"cmd\":\"add-group\",\"username\":\""+this.obj.username+"\",\"groups\":"+gpstr+"}";
 				Database ins=new Database();
@@ -151,6 +188,10 @@ namespace VLAB_AccountServices.services {
 				ins.AddColumn("id",id);
 				ins.AddColumn("data",objstr);
 				ins.Send();
+				ins.InvokeApplication();
+				console.Log("Request to add group was queried.");
+				console.Info(objstr);
+				ins.ResponseWait();
 				ins.RemoveRecord(id);
 			}
 		}
@@ -383,6 +424,11 @@ namespace VLAB_AccountServices.services {
 			}
 		}
 		
+		// Collects grouping information.
+		private void GetGroupings() {
+			Element.SetGroupElement(groups);
+		}
+
 		// Performs a debugging operation.
 		private void Debug(User obj) {
 			//string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"groups\":[\"VD-VLAB4\"]}";
@@ -654,6 +700,7 @@ namespace VLAB_AccountServices.services {
 						Database ins=new Database();
 						ins.SetAction(DatabasePrincipal.SelectPrincipal);
 						ins.AddColumn("id",id);
+						ins.AddWhere("id",id);
 						ins.Send();
 						res=ins.output.Count;
 						/*
