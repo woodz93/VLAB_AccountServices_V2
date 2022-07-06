@@ -229,16 +229,18 @@ namespace VLAB_AccountServices.services {
 						console.Error("Missing \"cmd\" property from \"User\" object.");
 					}
 					this.PasswordString=Request.Form.GetValues("password")[0];
-					if (this.validate(this.PasswordString)) {
-						data="{\"cmd\":\"" + this.ModeString + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\"}";
-						console.Info("Preparing to send regulated command.");
-						this.queryRequest(data);
-						status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
-					} else {
-						password.Text=this.sqlParse(this.PasswordString);
-						password_confirm.Text=this.sqlParse(this.PasswordString);
-						console.Info("Password has been modified.");
-						status.Text+="Your password has been modified for validation, please review the changed password and re-submit this form.";
+					if (this.PasswordString.Length>0) {
+						if (this.validate(this.PasswordString)) {
+							data="{\"cmd\":\"" + this.ModeString + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\"}";
+							console.Info("Preparing to send regulated command.");
+							this.queryRequest(data);
+							status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
+						} else {
+							password.Text=this.sqlParse(this.PasswordString);
+							password_confirm.Text=this.sqlParse(this.PasswordString);
+							console.Info("Password has been modified.");
+							status.Text+="Your password has been modified for validation, please review the changed password and re-submit this form.";
+						}
 					}
 				} else {
 					this.UsernameString="NULL";
@@ -410,6 +412,7 @@ namespace VLAB_AccountServices.services {
 			try{
 				resetPassword.StatusElm=status;
 				this.StatElm=status;
+				// ToDo: Implement group element event listener to occur when a group item is selected.
 				//groups.Items.Add("VD-VLAB3");
 				//group_container.Visible=false;
 				Element.SetGroupElement(groups);
@@ -422,6 +425,10 @@ namespace VLAB_AccountServices.services {
 			}catch(Exception ex){
 				console.Error("Failed to set status element.\n\t\t"+ex.Message);
 			}
+		}
+
+		public void EnableForm() {
+			submit_btn.Enabled=true;
 		}
 		
 		// Collects grouping information.
