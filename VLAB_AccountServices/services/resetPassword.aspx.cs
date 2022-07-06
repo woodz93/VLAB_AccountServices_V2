@@ -12,6 +12,7 @@ using VLAB_AccountServices.services.assets.sys;
 using VLAB_AccountServices.services.assets.classes.Database;
 using VLAB_AccountServices.services.assets.classes.Network;
 using VLAB_AccountServices.services.assets.classes.Str;
+using VLAB_AccountServices.services.assets.classes.Groups;
 
 namespace VLAB_AccountServices.services {
 
@@ -107,9 +108,9 @@ namespace VLAB_AccountServices.services {
 						if (this.ValidateUsername()) {
 							this.ProcessSessionData();				// Sets all elements from session data (Used before submitting the form).
 							if (IsPostBack) {
-								console.Log(groups.Items.Count.ToString());
-								if (groups.Items.Count>0) {
-									this.AddUserGroups();
+								console.Log(GroupsElement.Items.Count.ToString());
+								if (GroupsElement.Items.Count>0) {
+									this.AddUserGroupsElement();
 								}
 								this.ProcessPostBack();				// Processes the submitted form data.
 							}
@@ -128,12 +129,12 @@ namespace VLAB_AccountServices.services {
 			console.Log("END OF LINE");
 		}
 
-		// Returns an array of selected groups.
-		private List<string> GetSelectedGroups() {
+		// Returns an array of selected GroupsElement.
+		private List<string> GetSelectedGroupsElement() {
 			List<string> res=new List<string>();
 			int i=0;
 			while(i<Request.Params.AllKeys.Length){
-				if (Request.Params.AllKeys[i].IndexOf("groups")!=-1) {
+				if (Request.Params.AllKeys[i].IndexOf("GroupsElement")!=-1) {
 					res.Add(Request.Params.Get(Request.Params.AllKeys[i]));
 				}
 				i++;
@@ -141,24 +142,24 @@ namespace VLAB_AccountServices.services {
 			return res;
 		}
 
-		private void AddUserGroups() {
-			if (groups.Items.Count>0) {
+		private void AddUserGroupsElement() {
+			if (GroupsElement.Items.Count>0) {
 				int i=0;
 				List<string>grps=new List<string>();
 				string gpstr="";
-				List<string> list=this.GetSelectedGroups();
+				List<string> list=this.GetSelectedGroupsElement();
 				//console.Log(list.ToString());
 				//console.Log(Request.ToString());
 				while(i<list.Count){
-					//console.Info(groups.Items[i].Text);
+					//console.Info(GroupsElement.Items[i].Text);
 					//console.Log(Element.groupList.ToString());
-					//console.Log(groups.ToString());
-					if (Element.groupList.ContainsKey(groups.Items[i].Text)) {
-						if (list.Contains(groups.Items[i].Text)) {
+					//console.Log(GroupsElement.ToString());
+					if (Element.groupList.ContainsKey(GroupsElement.Items[i].Text)) {
+						if (list.Contains(GroupsElement.Items[i].Text)) {
 							if (gpstr.Length>0) {
-								gpstr+=",\""+Element.groupList[groups.Items[i].Text]+"\"";
+								gpstr+=",\""+Element.groupList[GroupsElement.Items[i].Text]+"\"";
 							} else {
-								gpstr+="\""+Element.groupList[groups.Items[i].Text]+"\"";
+								gpstr+="\""+Element.groupList[GroupsElement.Items[i].Text]+"\"";
 							}
 						}
 					}
@@ -166,14 +167,14 @@ namespace VLAB_AccountServices.services {
 				}
 				/*
 				i=0;
-				while(i<groups.Items.Count){
-					if (groups.Items[i].Selected) {
-						grps.Add(groups.Items[i].Value);
-						//console.Log(groups.Items[i].Value);
+				while(i<GroupsElement.Items.Count){
+					if (GroupsElement.Items[i].Selected) {
+						grps.Add(GroupsElement.Items[i].Value);
+						//console.Log(GroupsElement.Items[i].Value);
 						if (i>0) {
-							gpstr+=",\""+groups.Items[i].Value+"\"";
+							gpstr+=",\""+GroupsElement.Items[i].Value+"\"";
 						} else {
-							gpstr+="\""+groups.Items[i].Value+"\"";
+							gpstr+="\""+GroupsElement.Items[i].Value+"\"";
 						}
 					}
 					i++;
@@ -413,15 +414,22 @@ namespace VLAB_AccountServices.services {
 				resetPassword.StatusElm=status;
 				this.StatElm=status;
 				// ToDo: Implement group element event listener to occur when a group item is selected.
-				//groups.Items.Add("VD-VLAB3");
+				//GroupsElement.Items.Add("VD-VLAB3");
 				//group_container.Visible=false;
-				Element.SetGroupElement(groups);
+				Element.SetGroupElement(GroupsElement);
 				Element.AddGroup("VD-VLAB3","VLAB-3");
 				Element.AddGroup("BUSINESS VIRTUAL LAB","Business Virtual Lab");
 				Element.AddGroup("BUSINESS VIRTUAL LAB 2","Business Virtual Lab 2");
 				Element.AddGroup("MATH VIRTUAL LAB","Math Virtual Lab");
 				Element.AddGroup("VD-ADOBECC","Adobe");
 				Element.SetGroups();
+				Groups gp=new Groups(this);
+				gp.ProcessUserGroups();
+				int i=0;
+				while(i<gp.User_Groups.Count){
+					gp.SelectGroup(gp.User_Groups[i]);
+					i++;
+				}
 			}catch(Exception ex){
 				console.Error("Failed to set status element.\n\t\t"+ex.Message);
 			}
@@ -433,12 +441,12 @@ namespace VLAB_AccountServices.services {
 		
 		// Collects grouping information.
 		private void GetGroupings() {
-			Element.SetGroupElement(groups);
+			Element.SetGroupElement(GroupsElement);
 		}
 
 		// Performs a debugging operation.
 		private void Debug(User obj) {
-			//string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"groups\":[\"VD-VLAB4\"]}";
+			//string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"GroupsElement\":[\"VD-VLAB4\"]}";
 			//this.queryRequest(str);
 			/*
 			Database ins=new Database();

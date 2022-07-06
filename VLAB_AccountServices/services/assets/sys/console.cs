@@ -31,6 +31,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 				console.Default_Instance = instance;
 				console.mode=0x00;
 				console.ini_complete=true;
+				instance.StatElm.Text+="Begun on Default<br>";
 			}
 		}
 		// Initializes the console class for use with the resetPassword class.

@@ -183,8 +183,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="services\AD.cs" />
     <Compile Include="services\assets\Case.cs" />
+    <Compile Include="services\assets\classes\Coder\Coder.cs" />
+    <Compile Include="services\assets\classes\Database\Records.cs" />
     <Compile Include="services\assets\classes\Database\DatabasePrincipal.cs" />
     <Compile Include="services\assets\classes\Database\Database.cs" />
+    <Compile Include="services\assets\classes\Groups\GroupInfo.cs" />
+    <Compile Include="services\assets\classes\Groups\GroupData.cs" />
+    <Compile Include="services\assets\classes\Groups\GroupMeta.cs" />
+    <Compile Include="services\assets\classes\Groups\Groups.cs" />
     <Compile Include="services\assets\classes\Network\Network.cs" />
     <Compile Include="services\assets\classes\Str\Str.cs" />
     <Compile Include="services\assets\classes\sys\sys.cs" />

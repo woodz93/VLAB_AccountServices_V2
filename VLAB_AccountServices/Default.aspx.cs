@@ -34,7 +34,7 @@ namespace VLAB_AccountServices {
 		protected int cur_count=0;
 		public static Label st;
 		public static string id="";
-		public static byte mode=0x00;
+		public static byte mode=0x01;
 		protected static int ct=0;
 		private User obj;
 		private int pt=0;
@@ -43,10 +43,11 @@ namespace VLAB_AccountServices {
 		// Performs checks to see if the 
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			console.ini(this);
+			
 			Default.StatusElm=status;
 			Default.st=status;
 			this.StatElm=status;
+			console.ini(this);
 			console.Log("Page loaded successfully!");
 			
 			Default.constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";

@@ -34,7 +34,8 @@
 			<asp:Panel ID="group_container" Visible="true" runat="server">
 				<asp:Label ID="groups_label" for="groups" runat="server">Available Groups:</asp:Label>
 				<br />
-				<asp:CheckBoxList ID="groups" CssClass="list groups" name="groups" runat="server"></asp:CheckBoxList>
+				
+				<asp:CheckBoxList ID="GroupsElement" CssClass="list groups" name="groups" runat="server"></asp:CheckBoxList>
 			</asp:Panel>
 			<asp:Panel ID="dev" Visible="false" runat="server">
 				<label for="debug">Debug:</label>

@@ -35,6 +35,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		public bool response_received=false;
 		public string ResponseMessage=null;
 		public List<string> ApplicationDebugOutput=new List<string>();
+		public Records Results=null;
 
 		//
 		// Summary:
@@ -255,6 +256,12 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			this.ClearWhere();
 			this.cols.Clear();
 			this.action=0x0000;
+			if (this.output!=null) {
+				this.output.Clear();
+			}
+			if (this.Results!=null) {
+				this.Results.Clear();
+			}
 		}
 		// Returns true if the record matching the specified id is found.
 		public bool RecordExists(string id=null) {
@@ -323,7 +330,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				if (!(this.error_buffer.Count>0)) {
 					if (this.action==DatabasePrincipal.InsertPrincipal) {
 						res=this.InsertRecord();
-					} else if (this.action==DatabasePrincipal.SelectPrincipal && this.CheckColumnID()) {
+					} else if (this.action==DatabasePrincipal.SelectPrincipal) {
 						res=this.SelectRecord();
 					} else if (this.action==DatabasePrincipal.UpdatePrincipal) {
 						res=this.UpdateRecord();
@@ -631,6 +638,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 									}
 								}
 								con.Close();
+								this.Results=new Records(this.output);
 								res=true;
 							}catch(Exception e){
 								console.Error("Failed to process SQL query...\n\t\t"+e.Message);
@@ -693,8 +701,11 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			return res;
 		}
 		// Returns a unique ID string.
-		private string GetUniqueID() {
+		public string GetUniqueID() {
 			string res=null;
+			if (!this.pairs.ContainsKey("id")) {
+				this.AddColumn("id",Database.GenerateRandomString());
+			}
 			string str=this.pairs["id"];
 			string sql="SELECT COUNT(*) AS TOTAL FROM "+this.tb+" WHERE id= @ID ;";
 			int i=0;
@@ -768,6 +779,8 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			bool res=false;
 			if (this.action!=DatabasePrincipal.NullPrincipal) {
 				if (this.action==DatabasePrincipal.SelectPrincipal) {
+					res=true;
+					/*
 					if (this.cols.Count>0) {
 						res=true;
 					} else {
@@ -775,6 +788,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
 						this.ShowColumns();
 					}
+					*/
 				} else if (this.action==DatabasePrincipal.InsertPrincipal) {
 					if (this.cols.Count>0) {
 						if (this.CheckColumnID()) {
