@@ -7,7 +7,7 @@
 	/*background:linear-gradient(to bottom right, var(--bg-lg-color-start-) 25%, var(--bg-lg-color-end-));*/
 	background-image:url("../../graphics/uhmc_bg.png");
 	background-size:200% auto;
-	background-position:50% 50%;
+	background-position:0 0;
 	background-repeat:repeat;
 	display:block;
 	animation:bg 60s ease-in-out 0s infinite;
