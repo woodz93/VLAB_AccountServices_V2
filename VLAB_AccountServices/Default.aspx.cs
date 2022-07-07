@@ -34,7 +34,7 @@ namespace VLAB_AccountServices {
 		protected int cur_count=0;
 		public static Label st;
 		public static string id="";
-		public static byte mode=0x01;
+		public static byte mode=0x00;
 		protected static int ct=0;
 		private User obj;
 		private int pt=0;
@@ -48,8 +48,9 @@ namespace VLAB_AccountServices {
 			Default.st=status;
 			this.StatElm=status;
 			console.ini(this);
+			console.errored=false;
 			console.Log("Page loaded successfully!");
-			
+			status.Text+="<br>"+console.errored.ToString()+"<br>";
 			Default.constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
 			//Default.constr=@"Data Source=" + Default.db_ip_alt + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username_alt + ";Password=" + Default.db_password_alt + ";";
 
@@ -70,8 +71,6 @@ namespace VLAB_AccountServices {
 				//sys.Write("Username has been collected from the CAS system with it's value as &quot;"+username+"&quot;.");
 				this.obj.username=username;													// Stores the username within the User object.
 				console.Log("Checking username...");
-				
-				
 				//this.checkUser(username);													// Sends the request to the db and waits for the response.
 				this.CheckUsername(username);
 
@@ -176,12 +175,19 @@ namespace VLAB_AccountServices {
 		}
 		// Performs a redirect.
 		protected void Redirect() {
-			if (!(console.errored) && !(sys.errored) && Default.mode==0x00) {
-				console.Warn(Session["data"].ToString());
+			if (!(console.errored) && Default.mode==0x00) {
+				Response.Redirect("services/resetPassword.aspx");
+			} else {
+				console.Info("Unable to redirect... either a debugging or error was thrown...");
+			}
+			/*
+			if (!(console.errored) && Default.mode==0x00) {
+				//console.Warn(Session["data"].ToString());
 				Response.Redirect("services/resetPassword.aspx");								// Redirects the user to the form page.
 			} else {
 				console.Info("Unable to redirect... An error has been thrown.");
 			}
+			*/
 		}
 		// Asynchronously removes the record that matches the record id specified.
 		protected void removeRecord(string id) {

@@ -69,6 +69,7 @@ namespace VLAB_AccountServices.services {
 		// Performs a first-time initialization of all variables and data.
 		protected void ini() {
 			console.ini(this);
+			console.errored=false;
 			this.SetConnectionString();
 			this.SetElements();
 		}
@@ -77,7 +78,7 @@ namespace VLAB_AccountServices.services {
 		{
 			this.ini();
 			this.obj=new User();
-			if (this.post_isset("data") || CasAuthentication.CurrentPrincipal!=null) {
+			if (this.post_isset("data") && CasAuthentication.CurrentPrincipal!=null) {
 				/*
 				ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
 				user=System.Web.HttpContext.Current.User.Identity.Name;
@@ -124,6 +125,7 @@ namespace VLAB_AccountServices.services {
 				}
 			} else {
 				console.Error("Could not discover parameter data... POST or CAS not initialized.");
+				Response.Redirect("../Default.aspx");
 				this.redirect();
 			}
 			console.Log("END OF LINE");
@@ -416,6 +418,7 @@ namespace VLAB_AccountServices.services {
 				// ToDo: Implement group element event listener to occur when a group item is selected.
 				//GroupsElement.Items.Add("VD-VLAB3");
 				//group_container.Visible=false;
+				Element.groupList.Clear();
 				Element.SetGroupElement(GroupsElement);
 				Element.AddGroup("VD-VLAB3","VLAB-3");
 				Element.AddGroup("BUSINESS VIRTUAL LAB","Business Virtual Lab");

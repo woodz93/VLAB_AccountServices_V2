@@ -1051,11 +1051,15 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			if (!String.IsNullOrEmpty(column_name)) {
 				if (!String.IsNullOrWhiteSpace(column_name)) {
 					if (!this.cols.Contains(column_name)) {
-						this.cols.Add(column_name);
-						if (!this.pairs.ContainsKey(column_name)) {
-							this.pairs.Add(column_name,null);
-						} else {
-							this.pairs[column_name]=null;
+						try{
+							this.cols.Add(column_name);
+							if (!this.pairs.ContainsKey(column_name)) {
+								this.pairs.Add(column_name,null);
+							} else {
+								this.pairs[column_name]=null;
+							}
+						}catch(Exception ex){
+
 						}
 						res=true;
 					} else {

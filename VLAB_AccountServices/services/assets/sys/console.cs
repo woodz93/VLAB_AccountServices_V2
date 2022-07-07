@@ -31,6 +31,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 				console.Default_Instance = instance;
 				console.mode=0x00;
 				console.ini_complete=true;
+				console.errored=false;
 				instance.StatElm.Text+="Begun on Default<br>";
 			}
 		}
@@ -40,6 +41,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 				console.resetPassword_Instance = instance;
 				console.mode=0x01;
 				console.ini_complete=true;
+				console.errored=false;
 			}
 		}
 		// Initializes the console class for use with the Network class.
@@ -48,6 +50,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 				console.Network_Instance = instance;
 				console.mode=0x0F;
 				console.ini_complete=true;
+				console.errored=false;
 			}
 		}
 		// Initializes the console class for use with the sys class.
@@ -56,6 +59,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 				console.sys_Instance = instance;
 				console.mode=0x0F;
 				console.ini_complete=true;
+				console.errored=false;
 			}
 		}
 
