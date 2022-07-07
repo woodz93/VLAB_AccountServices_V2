@@ -86,22 +86,34 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 				string json="{\"cmd\":\"get-groups\",\"username\":\""+username+"\"}";
 				Database.Database ins=new Database.Database();
 				string id=ins.GetUniqueID();
-				// Sends a request to the AD program...
-				ins.SetAction(Database.DatabasePrincipal.InsertPrincipal);
-				ins.AddColumn("id",id);
-				ins.AddColumn("data",json);
-				ins.Send();
-				ins.InvokeApplication();
-				ins.ResponseWait();
-				ins.Clear();
-				// Attempts to get the results from the record...
-				Database.Database ins0=new Database.Database();
-				ins0.SetAction(Database.DatabasePrincipal.SelectPrincipal);
-				ins0.AddWhere("id",id);
-				ins0.Send();
-				res=ins0.Results;
-				Database.Database ins1=new Database.Database();
-				ins1.RemoveRecord(id);
+				try{
+					// Sends a request to the AD program...
+					ins.SetAction(Database.DatabasePrincipal.InsertPrincipal);
+					ins.AddColumn("id",id);
+					ins.AddColumn("data",json);
+					ins.Send();
+					ins.InvokeApplication();
+					ins.ResponseWait();
+					ins.Clear();
+				}catch(Exception e){
+					console.Warn("Group erroring...\n\t\t"+e.Message);
+				}
+				try{
+					// Attempts to get the results from the record...
+					Database.Database ins0=new Database.Database();
+					ins0.SetAction(Database.DatabasePrincipal.SelectPrincipal);
+					ins0.AddWhere("id",id);
+					ins0.Send();
+					res=ins0.Results;
+				}catch(Exception e){
+					console.Warn("Fail-\n\t\t"+e.Message);
+				}
+				try{
+					Database.Database ins1=new Database.Database();
+					ins1.RemoveRecord(id);
+				}catch(Exception e){
+					console.Warn("Warned...\n\t\t"+e.Message);
+				}
 			}
 			return res;
 		}

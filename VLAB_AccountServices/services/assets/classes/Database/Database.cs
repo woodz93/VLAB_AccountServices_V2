@@ -1052,18 +1052,20 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				if (!String.IsNullOrWhiteSpace(column_name)) {
 					if (!this.cols.Contains(column_name)) {
 						try{
-							this.cols.Add(column_name);
+							if (!this.cols.Contains(column_name)) {
+								this.cols.Add(column_name);
+							}
 							if (!this.pairs.ContainsKey(column_name)) {
 								this.pairs.Add(column_name,null);
 							} else {
 								this.pairs[column_name]=null;
 							}
 						}catch(Exception ex){
-
+							console.Warn("Failed to add column...\n\t\t"+ex.Message);
 						}
 						res=true;
 					} else {
-						console.Error("Column name already exists.\n\t\tColumn Name:\t\t\""+column_name+"\"");
+						//console.Error("Column name already exists.\n\t\tColumn Name:\t\t\""+column_name+"\"");
 					}
 				} else {
 					console.Error("Column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
@@ -1077,12 +1079,20 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		public bool AddColumn(string column_name=null, string value=null) {
 			bool res=false;
 			if (Database.CheckValue(column_name)) {
-				res=this.AddColumn(column_name);
+				try{
+					res=this.AddColumn(column_name);
+				}catch(Exception e){
+					console.Warn("Failed to add column from double param...\n\t\t"+e.Message);
+				}
 				if (Database.CheckValue(value)&&res) {
-					res=this.SetValue(column_name, value);
+					try{
+						res=this.SetValue(column_name, value);
+					}catch(Exception e){
+						console.Warn("Failed to set column value...\n\t\t"+e.Message);
+					}
 					console.Success("Column added...");
 				} else {
-					console.Error("Failed to create column... Column name failed to pass validation...\n\t\tColumn Name:\t\t\""+column_name+"\"");
+					//console.Error("Failed to create column... Column name failed to pass validation...\n\t\tColumn Name:\t\t\""+column_name+"\"");
 				}
 			} else {
 				console.Error("Specified column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");

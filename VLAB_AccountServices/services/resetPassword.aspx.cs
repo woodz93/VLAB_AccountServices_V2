@@ -418,14 +418,18 @@ namespace VLAB_AccountServices.services {
 				// ToDo: Implement group element event listener to occur when a group item is selected.
 				//GroupsElement.Items.Add("VD-VLAB3");
 				//group_container.Visible=false;
-				Element.groupList.Clear();
-				Element.SetGroupElement(GroupsElement);
-				Element.AddGroup("VD-VLAB3","VLAB-3");
-				Element.AddGroup("BUSINESS VIRTUAL LAB","Business Virtual Lab");
-				Element.AddGroup("BUSINESS VIRTUAL LAB 2","Business Virtual Lab 2");
-				Element.AddGroup("MATH VIRTUAL LAB","Math Virtual Lab");
-				Element.AddGroup("VD-ADOBECC","Adobe");
-				Element.SetGroups();
+				try{
+					Element.groupList.Clear();
+					Element.SetGroupElement(GroupsElement);
+					Element.AddGroup("VD-VLAB3","VLAB-3");
+					Element.AddGroup("BUSINESS VIRTUAL LAB","Business Virtual Lab");
+					Element.AddGroup("BUSINESS VIRTUAL LAB 2","Business Virtual Lab 2");
+					Element.AddGroup("MATH VIRTUAL LAB","Math Virtual Lab");
+					Element.AddGroup("VD-ADOBECC","Adobe");
+					Element.SetGroups();
+				}catch(Exception e){
+					console.Warn("Failure at...\n\t\t"+e.Message);
+				}
 				Groups gp=new Groups(this);
 				gp.ProcessUserGroups();
 				int i=0;
