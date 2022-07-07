@@ -128,9 +128,18 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 				//console.Warn(name);
 				//resetPassword.StatusElm.Text+="<br>"+name+"<br>";
 				while(i<con.Items.Count){
-					if (Element.groupList.ContainsKey(name)) {
-						resetPassword.StatusElm.Text+="<br>&nbsp;&nbsp;&nbsp;&nbsp;"+con.Items[i]+" === "+name+"<br>";
-						if (con.Items[i].Value==Element.groupList[name]) {
+					//console.Log(Element.groupList.ToString());
+					if (Element.groupList.ContainsKey(name) || Element.groupList.ContainsValue(name)) {
+						//resetPassword.StatusElm.Text+="<br>&nbsp;&nbsp;&nbsp;&nbsp;"+con.Items[i]+" === "+name+"<br>";
+						if (!Element.groupList.ContainsKey(name)) {
+							name=this.GetKey(name);
+						}
+						//console.Log(Element.groupList.ToString());
+						//console.Log(name);
+						//console.Log(con.Items.ToString());
+						//console.Log(Element.groupList.ToString());
+						//console.Log(i.ToString());
+						if (con.Items[i].Value==name) {
 							con.Items[i].Selected=true;
 							con.Items[i].Enabled=false;
 							break;
@@ -158,6 +167,25 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 				*/
 			}
 		}
+
+		// Returns the key based on the value.
+		public string GetKey(string val=null) {
+			string res=null;
+			if (val!=null) {
+				if (Element.groupList.ContainsValue(val)) {
+					int i=0;
+					foreach(var item in Element.groupList){
+						if (item.Value==val) {
+							res=item.Key;
+							break;
+						}
+						i++;
+					}
+				}
+			}
+			return res;
+		}
+
 		// Loads the groups into an HTML element.
 		public bool LoadGroups(CheckBoxList elm=null) {
 			bool res=false;

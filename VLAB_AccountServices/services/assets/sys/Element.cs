@@ -38,7 +38,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 			if (Element.CheckString(name)) {
 				if (!Element.groupList.ContainsKey(display_name)) {
 					if (Element.CheckString(display_name)) {
-						Element.groupList.Add(display_name.ToUpper(),name);
+						Element.groupList.Add(display_name,name);
 					} else {
 						console.Error("Display name was not specified.");
 					}
