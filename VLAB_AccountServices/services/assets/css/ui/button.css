@@ -106,6 +106,16 @@ button:hover:before, .submit_btn:hover:before {
 	*/
 }
 
+.submit_btn[disabled] {
+	background-color:rgba(100,100,100,0.85);
+	color:rgb(150,150,150);
+	cursor:not-allowed;
+}
+.submit_btn[disabled]:hover {
+	width:25%;
+	border-radius:10px;
+}
+
 .peak {
 	position:relative;
 	top:0;
