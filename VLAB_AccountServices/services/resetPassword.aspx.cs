@@ -13,6 +13,8 @@ using VLAB_AccountServices.services.assets.classes.Database;
 using VLAB_AccountServices.services.assets.classes.Network;
 using VLAB_AccountServices.services.assets.classes.Str;
 using VLAB_AccountServices.services.assets.classes.Groups;
+using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
 
 namespace VLAB_AccountServices.services {
 
@@ -44,6 +46,17 @@ namespace VLAB_AccountServices.services {
 		private string ModeString="";
 
 
+		protected void Page_Unload(object sender, EventArgs e) {
+			this.CleanUp();
+		}
+		// Cleans up the database.
+		protected async Task<int> CleanUp() {
+			Database ins=new Database();
+			await Task.Delay(1000);
+			ins.AsyncRemoveAllRecords();
+			return 1;
+		}
+
 		// Processes the password.
 		public void processPassword(Object sender, EventArgs e) {
 			string u=username.Text;
@@ -51,6 +64,13 @@ namespace VLAB_AccountServices.services {
 			string pc=password_confirm.Text;
 			status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + resetPassword.ending;
 			submit_btn.Enabled=false;
+			password.Enabled=false;
+			password_confirm.Enabled=false;
+		}
+		public void EndingSuccess() {
+			status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + resetPassword.ending;
+			//submit_btn.Enabled=false;
+			this.DisableSubmitButton();
 			password.Enabled=false;
 			password_confirm.Enabled=false;
 		}
@@ -68,11 +88,21 @@ namespace VLAB_AccountServices.services {
 
 		// Performs a first-time initialization of all variables and data.
 		protected void ini() {
+			//this.SetConnectionTimeout();
+			console.ini_complete=false;
 			console.ini(this);
 			console.errored=false;
 			this.SetConnectionString();
 			this.SetElements();
+			console.Clear();
 		}
+
+		protected void SetConnectionTimeout() {
+			GlobalHost.Configuration.ConnectionTimeout=TimeSpan.FromSeconds(110);
+			GlobalHost.Configuration.DisconnectTimeout=TimeSpan.FromSeconds(30);
+			GlobalHost.Configuration.KeepAlive=TimeSpan.FromSeconds(10);
+		}
+
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
@@ -103,7 +133,7 @@ namespace VLAB_AccountServices.services {
 				}
 				*/
 				if (Session.Count>0) {
-					console.Log("Number of session variables that exist are ("+Session.Count.ToString()+")");
+					//console.Log("Number of session variables that exist are ("+Session.Count.ToString()+")");
 					this.GetSessionData();
 					if (this.pass) {
 						if (this.ValidateUsername()) {
@@ -128,8 +158,25 @@ namespace VLAB_AccountServices.services {
 				Response.Redirect("../Default.aspx");
 				this.redirect();
 			}
-			console.Log("END OF LINE");
+			//console.Log("END OF LINE");
+			if (Database.ExistingRecords.Count>0) {
+				console.Log("Attempting to remove unused records...");
+				Thread.Sleep(1000);
+				Database dins=new Database();
+				dins.AsyncRemoveAllRecords();
+				this.ShowRecords();
+			}
 		}
+
+		private void ShowRecords() {
+			int i=0;
+			var list=Database.GetExistingRecords();
+			while(i<list.Count){
+				console.Info(list[i]);
+				i++;
+			}
+		}
+
 
 		// Returns an array of selected GroupsElement.
 		private List<string> GetSelectedGroupsElement() {
@@ -138,6 +185,8 @@ namespace VLAB_AccountServices.services {
 			while(i<Request.Params.AllKeys.Length){
 				if (Request.Params.AllKeys[i].IndexOf("GroupsElement")!=-1) {
 					res.Add(Request.Params.Get(Request.Params.AllKeys[i]));
+					//console.Warn(Request.Params.AllKeys[i]);
+					//console.Info(Request.Params.Get(Request.Params.AllKeys[i]));
 				}
 				i++;
 			}
@@ -152,7 +201,7 @@ namespace VLAB_AccountServices.services {
 				List<string> list=this.GetSelectedGroupsElement();
 				//console.Log(list.ToString());
 				//console.Log(Request.ToString());
-				while(i<list.Count){
+				while(i<GroupsElement.Items.Count){
 					//console.Info(GroupsElement.Items[i].Text);
 					//console.Log(Element.groupList.ToString());
 					//console.Log(GroupsElement.ToString());
@@ -160,6 +209,7 @@ namespace VLAB_AccountServices.services {
 						if (list.Contains(GroupsElement.Items[i].Text)) {
 							//if (GroupsElement.Items[i].Selected) {
 								if (GroupsElement.Items[i].Enabled) {
+									//console.Success(GroupsElement.Items[i].Text);
 									if (gpstr.Length>0) {
 										gpstr+=",\""+Element.groupList[GroupsElement.Items[i].Text]+"\"";
 									} else {
@@ -190,18 +240,29 @@ namespace VLAB_AccountServices.services {
 				console.Info(gpstr);
 				string id=this.genID();
 				string objstr="{\"cmd\":\"add-group\",\"username\":\""+this.obj.username+"\",\"groups\":"+gpstr+"}";
-				Database ins=new Database();
-				ins.SetAction(DatabasePrincipal.InsertPrincipal);
-				ins.AddColumn("id",id);
-				ins.AddColumn("data",objstr);
-				ins.Send();
-				ins.InvokeApplication();
+				console.Info("ID for add group query: \""+id+"\"");
+				Database sins=new Database();
+				sins.SetAction(DatabasePrincipal.InsertPrincipal);
+				sins.AddColumn("id",id);
+				sins.AddColumn("data",objstr);
+				sins.Send();
+				sins.InvokeApplication();
 				console.Log("Request to add group was queried.");
 				console.Info(objstr);
+				sins.ResponseWait();
+				Thread.Sleep(1000);
+				sins.Clear();
+				/*
 				ins.ResponseWait();
 				ins.AddWhere("id",id);
 				ins.RemoveRecord(id);
 				console.Info(id);
+				*/
+				Database dbins=new Database();
+				dbins.SetAction(DatabasePrincipal.SelectPrincipal);
+				dbins.AddColumn("id",id);
+				dbins.AddWhere("id",id);
+				dbins.AsyncRemoveRecordFromId(3,id);
 			}
 		}
 
@@ -246,7 +307,8 @@ namespace VLAB_AccountServices.services {
 							data="{\"cmd\":\"" + this.ModeString + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\"}";
 							console.Info("Preparing to send regulated command.");
 							this.queryRequest(data);
-							status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
+							//status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
+							this.EndingSuccess();
 						} else {
 							password.Text=this.sqlParse(this.PasswordString);
 							password_confirm.Text=this.sqlParse(this.PasswordString);
@@ -277,6 +339,8 @@ namespace VLAB_AccountServices.services {
 				//this.Debug(this.obj);
 			}
 		}
+
+		
 
 		// Checks object for valid username.
 		private bool CheckString(string q=null) {
@@ -442,6 +506,7 @@ namespace VLAB_AccountServices.services {
 				Groups gp=new Groups(this);
 				gp.ProcessUserGroups();
 				int i=0;
+				// Iterate through the group names...
 				while(i<gp.User_Groups.Count){
 					gp.SelectGroup(gp.User_Groups[i]);
 					i++;

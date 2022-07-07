@@ -40,7 +40,20 @@ namespace VLAB_AccountServices {
 		private int pt=0;
 		public static Label StatusElm;
 		public Label StatElm;
-		// Performs checks to see if the 
+		
+
+		protected void Page_Unload(object sender, EventArgs e) {
+			this.CleanUp();
+		}
+		// Cleans up the database.
+		protected async Task<int> CleanUp() {
+			Database ins=new Database();
+			await Task.Delay(1000);
+			ins.AsyncRemoveAllRecords();
+			return 1;
+		}
+
+
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			
@@ -49,8 +62,9 @@ namespace VLAB_AccountServices {
 			this.StatElm=status;
 			console.ini(this);
 			console.errored=false;
+			console.Clear();
 			console.Log("Page loaded successfully!");
-			status.Text+="<br>"+console.errored.ToString()+"<br>";
+			//status.Text+="<br>"+console.errored.ToString()+"<br>";
 			Default.constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
 			//Default.constr=@"Data Source=" + Default.db_ip_alt + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username_alt + ";Password=" + Default.db_password_alt + ";";
 
@@ -255,8 +269,8 @@ namespace VLAB_AccountServices {
 					}
 					con.Close();															// Closes the database connection.
 					if (!pass) {															// Checks if the continuation variable is false...
-						if (Default.ct<100) {												// If the counter is less than 10...
-							Thread.Sleep(100);												// Wait for 1 second...
+						if (Default.ct<1000) {												// If the counter is less than 10...
+							Thread.Sleep(10);												// Wait for 1 second...
 							Default.ct++;
 							this.db_check(id);												// Repeats the check again.
 						} else {

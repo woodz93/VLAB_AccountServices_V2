@@ -74,7 +74,7 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 		public void ProcessUserGroups() {
 			Records list=this.GetUserGroups();
 			int i=0;
-			console.Log(list.ToString());
+			//console.Log(list.ToString());
 			var tmp=JsonSerializer.Deserialize<GroupInfo>(list.GetRow(0)["data"]);
 			this.User_Groups=tmp.data;
 		}
@@ -95,29 +95,31 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 					ins.Send();
 					ins.InvokeApplication();
 					ins.ResponseWait();
-					ins.Clear();
+					try{
+						// Attempts to get the results from the record...
+						Thread.Sleep(4000);
+						Database.Database ins0=new Database.Database();
+						ins0.SetAction(Database.DatabasePrincipal.SelectPrincipal);
+						ins0.AddWhere("id",id);
+						ins0.Send();
+						res=ins0.Results;
+						//Thread.Sleep(1000);
+					}catch(Exception ex){
+						console.Warn("Failed to query selection of group collection...\n\t\t"+ex.Message);
+					}
+					try{
+						// Removes the record from the database...
+						Database.Database ins1=new Database.Database();
+						ins1.AddColumn("id",id);
+						ins1.AddWhere("id",id);
+						Thread.Sleep(1000);
+						ins1.RemoveRecord(id);
+						//console.Info("Removed Record \""+id+"\"");
+					}catch(Exception exc){
+						console.Warn("Failed to remove record with id of \""+id+"\"\n\t\t"+exc.Message);
+					}
 				}catch(Exception e){
-					console.Warn("Group erroring...\n\t\t"+e.Message);
-				}
-				try{
-					// Attempts to get the results from the record...
-					Database.Database ins0=new Database.Database();
-					ins0.SetAction(Database.DatabasePrincipal.SelectPrincipal);
-					ins0.AddWhere("id",id);
-					ins0.Send();
-					res=ins0.Results;
-					Thread.Sleep(1000);
-				}catch(Exception e){
-					console.Warn("Fail-\n\t\t"+e.Message);
-				}
-				try{
-					Database.Database ins1=new Database.Database();
-					ins1.AddColumn("id",id);
-					ins1.AddWhere("id",id);
-					ins1.RemoveRecord(id);
-					console.Info(id);
-				}catch(Exception e){
-					console.Warn("Warned...\n\t\t"+e.Message);
+					console.Warn("Failed to query request for group collection...\n\t\t"+e.Message);
 				}
 			}
 			return res;
@@ -136,14 +138,47 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 			}
 			return res;
 		}
+		// Returns the display name from the AD name.
+		private string GetDisplayName(string name=null) {
+			string res=null;
+			if (Str.Str.CheckStr(name)) {
+				if (Element.groupList.ContainsValue(name)) {
+					int i=0;
+					var list=Element.groupList.Values;
+					var keys=Element.groupList.Keys;
+					while(i<Element.groupList.Count){
+						if (list.ElementAt(i)==name) {
+							res=keys.ElementAt(i);
+							break;
+						}
+						i++;
+					}
+				}
+			}
+			return res;
+		}
 		// Selects the groups...
 		public void SelectGroup(string name=null) {
+			// NOTE: The parameter "name" is the actual AD group name, NOT the display name.
 			if (Str.Str.CheckStr(name)) {
 				int i=0;
 				var con=(CheckBoxList)RPObj.FindControl("GroupsElement");
-				//console.Warn(con.Items.Count.ToString());
-				//console.Warn(name);
-				//resetPassword.StatusElm.Text+="<br>"+name+"<br>";
+				string dn;										// Display name.
+				// NOTE: The values within the "GroupElement" only contain the "display_name" value, NOT the actual AD group name(s).
+				if (Element.groupList.ContainsValue(name)) {
+					dn=this.GetDisplayName(name);				// Gets the display name from the given AD reference name.
+					while(i<con.Items.Count){					// Iterates through the group elements to check if the values match the display name.
+						if (con.Items[i].Text==dn) {
+							con.Items[i].Selected=true;
+							con.Items[i].Enabled=false;
+							break;								// Does not need to continue iteration because the group was found.
+						}
+						i++;
+					}
+				}
+
+
+				/*
 				while(i<con.Items.Count){
 					//console.Log(Element.groupList.ToString());
 					if (Element.groupList.ContainsKey(name) || Element.groupList.ContainsValue(name)) {
@@ -164,6 +199,7 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 					}
 					i++;
 				}
+				*/
 				/*
 				while(i<this.Refs.Count){
 					item=this.Refs[i];
@@ -229,13 +265,14 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 		// Updates the group data.
 		public void UpdateGroups() {
 			List<GroupData> res=new List<GroupData>();
-			Database.Database ins=new Database.Database();
-			ins.SetTable("vlab_groups");
-			ins.SetAction(Database.DatabasePrincipal.SelectPrincipal);
-			ins.AddColumn("id","*");
-			ins.Send();
-			//List<Dictionary<string,string>>
-			Records list=new Records();
+			Database.Database ddins=new Database.Database();
+			ddins.SetTable("vlab_groups");
+			ddins.SetAction(Database.DatabasePrincipal.SelectPrincipal);
+			ddins.AddWhere("id","*");
+			//ddins.AddColumn("id","*");
+			ddins.Send();
+			Records list=ddins.Results;
+			ddins.Clear();
 			int i=0;
 			//Dictionary<string,string>sel=null;
 			GroupData gd=null;

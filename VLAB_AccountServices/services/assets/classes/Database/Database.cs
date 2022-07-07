@@ -36,6 +36,10 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		public string ResponseMessage=null;
 		public List<string> ApplicationDebugOutput=new List<string>();
 		public Records Results=null;
+		// Data...
+		public static List<string> ExistingRecords=new List<string>();
+
+		private long LastTime=0;
 
 		//
 		// Summary:
@@ -85,6 +89,172 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 		}
 		
+		// Returns the list of existing records created (IDs).
+		public static List<string>GetExistingRecords() {
+			return Database.ExistingRecords;
+		}
+		// Returns true if a record matching a given ID was created, false otherwise.
+		public static bool InRecords(string id=null) {
+			bool res=false;
+			if (Database.CheckValue(id)) {
+				if (Database.ExistingRecords.Contains(id)) {
+					res=true;
+				}
+			}
+			return res;
+		}
+
+		// Asynchronously removes all records that currently exist and were not yet removed from the database...
+		public async Task<int> AsyncRemoveAllRecords() {
+			int i=0;
+			while(i<Database.ExistingRecords.Count){									// Iterates through all of the currently existing records...
+				this.AsyncRemoveRecordFromId(3,Database.ExistingRecords[i]);			// Shouldn't need to return anything since it will not be used later on (No await).
+				i++;
+			}
+			return i;
+		}
+
+		// Asynchronously attempts to remove the record with a given id from the database for specified duration.
+		public async Task<int> AsyncRemoveRecordFromId(int duration=1, string id=null) {
+			int res=0;
+			bool p=true;
+			if (duration>-1 && duration<60) {
+				if (!Database.CheckValue(id)) {
+					if (!this.CheckColumnID()) {
+						p=false;
+						console.Error("Column ID is missing...");
+					} else {
+						id=this.pairs["id"];
+					}
+				}
+				if (p) {
+					this.LastTime=Database.GetCurrentTimestamp();
+					res=await this.AsyncRecordRemoval(duration,id);
+				} else {
+					console.Error("Cannot remove record... Checks failed...");
+				}
+			}
+			return res;
+		}
+
+		// Returns the timestamp.
+		private static long GetCurrentTimestamp() {
+			long res=DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
+			return res;
+		}
+		// Returns true if the time differences exceed the given number of seconds.
+		private static bool IsOverTime(int seconds=-1,long last_time=-1) {
+			bool res=false;
+			if (seconds>-1) {
+				if (last_time>-1) {
+					long cur=Database.GetCurrentTimestamp();
+					if ((cur-last_time)>seconds) {
+						res=true;
+					}
+				}
+			}
+			return res;
+		}
+
+		// An asynchronous underlying task to remove the record from the database.
+		private async Task<int> AsyncRecordRemoval(int dur,string id) {
+			int res=0;
+			int len=-1;
+			len=await this.AsyncCheckRecordExists(id);
+			if (len>0) {
+				this.AsyncDeleteRecord(id);
+				res=1;
+				if (Database.InRecords(id)) {
+					Database.ExistingRecords.Remove(id);
+				}
+			} else {
+				if (!Database.IsOverTime(dur,this.LastTime)) {
+					await Task.Delay(100);
+					res=await this.AsyncRecordRemoval(dur,id);
+				}
+			}
+			return res;
+		}
+
+		// Asynchronously removes the record from the database.
+		private async Task<int> AsyncDeleteRecord(string id=null) {
+			int res=0;
+			if (Database.CheckValue(id)) {
+				if (this.RemoveRecord(id)) {
+					res=1;
+				}
+				/*
+				string sql="DELETE FROM "+this.tb+" WHERE id= @ID ;";
+				string sql="DELETE FROM "+this.tb+" WHERE id= @ID ;";
+				try{
+					using(SqlConnection con = new SqlConnection(sql)) {
+						SqlCommand cmd=new SqlCommand(sql, con);
+						try{
+							cmd.Parameters.AddWithValue("@ID",id);
+							try{
+								con.Open();
+								try{
+									res=await cmd.ExecuteNonQueryAsync();
+								}catch(Exception e){
+									console.Error("Failed to asynchronously remove the record from the database...\n\t\t"+e.Message);
+								}
+								con.Close();
+							}catch(Exception ex){
+								console.Error("Failed to asynchronously open a database connection for record removal...\n\t\t"+ex.Message);
+							}
+						}catch(Exception e){
+							console.Error("Failed to initialize a new SqlCommand type...\n\t\t"+e.Message);
+						}
+					}
+				}catch(Exception e){
+					console.Error("Failed to delete record asynchronously...\n\t\t"+e.Message);
+				}
+				*/
+			} else {
+				console.Error("ID cannot be null for record deletion...\n\t\tID:\t\t\""+id+"\"");
+			}
+			return res;
+		}
+
+
+
+		// Performs a check to determine if a database record with the given id exists within the database.
+		private async Task<int> AsyncCheckRecordExists(string id) {
+			int res=0;
+			string sql="SELECT COUNT(*) AS TOTAL FROM "+this.tb+" WHERE id= @ID ;";
+			try{
+				using(SqlConnection con=new SqlConnection(this.constr)) {
+					try{
+						SqlCommand cmd=new SqlCommand(sql,con);
+						cmd.Parameters.AddWithValue("@ID",id);
+						try{
+							con.Open();
+							try{
+								//res=await cmd.ExecuteNonQueryAsync();
+								SqlDataReader dr=await cmd.ExecuteReaderAsync();
+								if (dr.HasRows) {
+									while(dr.Read()){
+										res=dr.GetInt32(0);
+										break;
+									}
+								}
+							}catch(Exception e){
+								console.Error("Failed to execute SQL query...\n\t\t"+e.Message);
+							}
+							con.Close();
+						}catch(Exception e){
+							console.Error("Failed to open a connection to the database...\n\t\t"+e.Message);
+						}
+					}catch(Exception ex){
+						console.Error("Failed to complete variable sanitation...\n\t\t"+ex.Message);
+					}
+				}
+			}catch(Exception e){
+				console.Error("Failed to initialize a database connection...\n\t\t"+e.Message);
+			}
+			return res;
+		}
+
 
 
 		//
@@ -334,6 +504,11 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						res=this.SelectRecord();
 					} else if (this.action==DatabasePrincipal.UpdatePrincipal) {
 						res=this.UpdateRecord();
+						/*
+						if (this.CheckColumnID()) {
+							console.Error(this.pairs["id"]);
+						}
+						*/
 					} else if (this.action==DatabasePrincipal.ExistsPrincipal) {
 						res=this.RecordExists(this.pairs["id"]);
 					} else if (this.action==DatabasePrincipal.RemoveRecordPrincipal) {
@@ -386,6 +561,18 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					}
 					if (len>0) {
 						res=true;
+						if (id==null) {
+							if (this.CheckColumnID()) {
+								if (this.pairs.ContainsKey("id")) {
+									id=this.pairs["id"];
+								}
+							}
+						}
+						if (id!=null) {
+							if (Database.ExistingRecords.Contains(id)) {
+								Database.ExistingRecords.Remove(id);
+							}
+						}
 					}
 				} else {
 					console.Warn("Record does not exist.");
@@ -479,7 +666,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				int len=0;
 				//string sql="UPDATE "+this.tb+" SET data= @DATA WHERE id= @ID ;";
 				string sql="UPDATE "+this.tb+" SET "+this.PrepUpdate()+this.GetWhere()+";";
-				
+				//console.Warn(sql);
 				using(SqlConnection con=new SqlConnection(this.constr)) {
 					SqlCommand cmd=new SqlCommand(sql,con);
 					//cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
@@ -686,16 +873,21 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 							cmd.Parameters.AddWithValue("@"+keys[i].ToUpper(),this.pairs[keys[i]]);
 							i++;
 						}
-
 						con.Open();
 						len=cmd.ExecuteNonQuery();
 						con.Close();
+						//console.Warn(sql);
 					}
 				}catch(Exception e){
 					console.Error("Failed to insert record into database...\n\t\t"+e.Message);
 				}
 				if (len>0) {
 					res=true;
+					if (id!=null) {
+						if (!Database.ExistingRecords.Contains(id)) {
+							Database.ExistingRecords.Add(id);
+						}
+					}
 				}
 			}
 			return res;
@@ -1090,7 +1282,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					}catch(Exception e){
 						console.Warn("Failed to set column value...\n\t\t"+e.Message);
 					}
-					console.Success("Column added...");
+					//console.Success("Column added...");
 				} else {
 					//console.Error("Failed to create column... Column name failed to pass validation...\n\t\tColumn Name:\t\t\""+column_name+"\"");
 				}

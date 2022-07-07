@@ -164,6 +164,37 @@ namespace VLAB_AccountServices.services.assets.sys {
 			}
 			return q;
 		}
+		// Clears the console output.
+		public static void Clear() {
+			if (console.mode==0x00) {
+				try{
+					Default.StatusElm.Text="";
+				}catch(Exception e){
+					try{
+						console.Default_Instance.StatElm.Text="";
+					}catch{
+						console.mode=0x01;
+					}
+				}
+			} else if (console.mode==0x01) {
+				try{
+					resetPassword.StatusElm.Text="";
+				}catch(Exception e){
+					try{
+						console.resetPassword_Instance.StatElm.Text="";
+					}catch{
+						console.mode=0x10;
+					}
+				}
+			} else if (console.mode==0x10) {
+				console.resetPassword_Instance.StatElm.Text="";
+				try{
+					// Write to IIS event logs.
+				}catch(Exception e){
+							
+				}
+			}
+		}
 		// Returns a string representing the calling function.
 		private static string GetCallingFunction() {
 			string res="";
