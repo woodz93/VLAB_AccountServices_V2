@@ -46,6 +46,27 @@
 	/*animation:bgr 10s ease-in-out 0s infinite;*/
 }
 
+form.container {
+	overflow-y:hidden;
+}
+
+div.container {
+	position:relative;
+	top:-40px;
+	left:50%;
+	transform:translateX(-50%);
+	overflow-y:auto;
+	height:500px;
+	max-height:calc(80% - 100px);
+	clip-path:unset;
+}
+div.container:before {
+	clear:both;
+	content:"";
+	clip-path:unset;
+	background:transparent;
+}
+
 @keyframes bgr {
 	0% {
 		filter:hue-rotate(0deg);

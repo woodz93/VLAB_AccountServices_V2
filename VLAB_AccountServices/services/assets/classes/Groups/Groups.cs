@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -105,12 +106,16 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 					ins0.AddWhere("id",id);
 					ins0.Send();
 					res=ins0.Results;
+					Thread.Sleep(1000);
 				}catch(Exception e){
 					console.Warn("Fail-\n\t\t"+e.Message);
 				}
 				try{
 					Database.Database ins1=new Database.Database();
+					ins1.AddColumn("id",id);
+					ins1.AddWhere("id",id);
 					ins1.RemoveRecord(id);
+					console.Info(id);
 				}catch(Exception e){
 					console.Warn("Warned...\n\t\t"+e.Message);
 				}

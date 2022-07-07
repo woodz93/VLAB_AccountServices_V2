@@ -158,11 +158,15 @@ namespace VLAB_AccountServices.services {
 					//console.Log(GroupsElement.ToString());
 					if (Element.groupList.ContainsKey(GroupsElement.Items[i].Text)) {
 						if (list.Contains(GroupsElement.Items[i].Text)) {
-							if (gpstr.Length>0) {
-								gpstr+=",\""+Element.groupList[GroupsElement.Items[i].Text]+"\"";
-							} else {
-								gpstr+="\""+Element.groupList[GroupsElement.Items[i].Text]+"\"";
-							}
+							//if (GroupsElement.Items[i].Selected) {
+								if (GroupsElement.Items[i].Enabled) {
+									if (gpstr.Length>0) {
+										gpstr+=",\""+Element.groupList[GroupsElement.Items[i].Text]+"\"";
+									} else {
+										gpstr+="\""+Element.groupList[GroupsElement.Items[i].Text]+"\"";
+									}
+								}
+							//}
 						}
 					}
 					i++;
@@ -195,7 +199,9 @@ namespace VLAB_AccountServices.services {
 				console.Log("Request to add group was queried.");
 				console.Info(objstr);
 				ins.ResponseWait();
+				ins.AddWhere("id",id);
 				ins.RemoveRecord(id);
+				console.Info(id);
 			}
 		}
 
@@ -206,6 +212,9 @@ namespace VLAB_AccountServices.services {
 			if (debug.Checked) {
 				p=false;
 				console.Info("Debug mode has been enabled.");
+			}
+			if (!(password.Text.Length>0 && password_confirm.Text.Length>0)) {
+				p=false;
 			}
 			//this.UsernameString="PASS";
 			if (p) {
@@ -264,8 +273,8 @@ namespace VLAB_AccountServices.services {
 					console.Error("Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + resetPassword.ending);
 				}
 			} else {
-				console.Info("Preparing to send debug command.");
-				this.Debug(this.obj);
+				//console.Info("Preparing to send debug command.");
+				//this.Debug(this.obj);
 			}
 		}
 
