@@ -12,12 +12,12 @@
 </head>
 <body>
 	<div id="bg" class="bg"></div>
-	<form id="form_main" class="container" runat="server" method="post">
-		<div class="container">
+	<form id="form_main" class="container beval" runat="server" method="post">
+		<div class="container content">
 			<h1 class="title">Account Services</h1>
 			<br>
 			<div>
-				<table class="container">
+				<table class="container beval">
 					<tr>
 						<td><label for="username">Username: </label></td>
 						<td><asp:textbox id="username" Text="" runat="server" name="username" type="text" value="" placeholder="UH Username..."></asp:textbox></td>
@@ -32,12 +32,15 @@
 					</tr>
 				</table>
 				<br />
-				<asp:Panel ID="group_container" Visible="true" runat="server">
-					<asp:Label ID="groups_label" for="groups" runat="server">Available Groups:</asp:Label>
-					<br />
+
 				
+				<asp:Panel ID="group_container" CssClass="groups container beval" Visible="true" runat="server">
+					<asp:Label ID="groups_label" for="groups title" runat="server">Available Groups:</asp:Label>
+					<br />
 					<asp:CheckBoxList ID="GroupsElement" CssClass="list groups" name="groups" runat="server"></asp:CheckBoxList>
 				</asp:Panel>
+
+
 				<asp:Panel ID="dev" Visible="false" runat="server">
 					<label for="debug">Debug:</label>
 					<asp:CheckBox ID="debug" name="debug" runat="server" />

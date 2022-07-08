@@ -16,13 +16,9 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		private string db="UHMC_VLab";
 		private string tb="vlab_pendingusers";
 		private string db_ip="172.20.0.142";
-		private string db_port="1433";
 		private string db_username="uhmcad_user";
 		private string db_password="MauiC0LLegeAD2252!";
-		private bool use_port=false;
 		private string constr=null;
-		private bool con_open=false;
-		private SqlConnection con=null;
 		public List<string> cols=new List<string>();
 		//private List<string> vals=new List<string>();
 		private Dictionary<string,string> pairs=new Dictionary<string,string>();
@@ -38,7 +34,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		public Records Results=null;
 		// Data...
 		public static List<string> ExistingRecords=new List<string>();
-
 		private long LastTime=0;
 
 		//
@@ -51,7 +46,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			this.constr=@"Data Source=" + this.db_ip + ";Initial Catalog=" + this.db + ";Persist Security Info=True;User ID=" + this.db_username + ";Password=" + this.db_password + ";";
 			this.IniPopulateActionList();
 		}
-		
 		// Sets the database server IP.
 		public bool SetServer(string ip=null) {
 			bool res=false;
@@ -88,7 +82,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				this.tb=tb;
 			}
 		}
-		
 		// Returns the list of existing records created (IDs).
 		public static List<string>GetExistingRecords() {
 			return Database.ExistingRecords;
@@ -103,7 +96,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
-
 		// Asynchronously removes all records that currently exist and were not yet removed from the database...
 		public async Task<int> AsyncRemoveAllRecords() {
 			int i=0;
@@ -113,7 +105,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return i;
 		}
-
 		// Asynchronously attempts to remove the record with a given id from the database for specified duration.
 		public async Task<int> AsyncRemoveRecordFromId(int duration=1, string id=null) {
 			int res=0;
@@ -136,7 +127,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
-
 		// Returns the timestamp.
 		private static long GetCurrentTimestamp() {
 			long res=DateTime.Now.Ticks / TimeSpan.TicksPerSecond;
@@ -155,7 +145,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
-
 		// An asynchronous underlying task to remove the record from the database.
 		private async Task<int> AsyncRecordRemoval(int dur,string id) {
 			int res=0;
@@ -175,7 +164,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
-
 		// Asynchronously removes the record from the database.
 		private async Task<int> AsyncDeleteRecord(string id=null) {
 			int res=0;
@@ -215,9 +203,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
-
-
-
 		// Performs a check to determine if a database record with the given id exists within the database.
 		private async Task<int> AsyncCheckRecordExists(string id) {
 			int res=0;
@@ -254,19 +239,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
-
-
-
-		//
-		// Summary:
-		//	Gets the value from a specified key name from the key-value pairs list.
-		//
-		// Parameters:
-		//	key:
-		//		A string representing the key that exists within the key-value pair list.
-		//
-		// Returns:
-		//	The value of the value-pair.
+		// Returns the value of a specified key.
 		public string GetValue(string key=null) {
 			string res=null;
 			if (!String.IsNullOrEmpty(key)) {
@@ -374,7 +347,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
-
 		// Returns a string consisting of the where clause.
 		private string GetWhere(string cond="and") {
 			string res="";
@@ -419,7 +391,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				this.where_pairs.Clear();
 			}
 		}
-
 		// Clears all pairs and columns.
 		public void Clear() {
 			this.pairs.Clear();
@@ -474,21 +445,21 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 											res=true;
 										}
 									}catch(Exception e){
-										this.Error("Failed to process SQL query... The database connection will be closed...\n"+e.Message+"\n\n"+sql);
+										console.Error("Failed to process SQL query... The database connection will be closed...\n"+e.Message+"\n\n"+sql);
 									}
 									con.Close();
 								}catch(Exception e){
-									this.Error("Failed to open database connection...\n\t\t"+e.Message);
+									console.Error("Failed to open database connection...\n\t\t"+e.Message);
 								}
 							}catch(Exception e){
-								this.Error("Failed to sanitize the id for SQL processing...\n"+e.Message);
+								console.Error("Failed to sanitize the id for SQL processing...\n"+e.Message);
 							}
 						}catch(Exception e){
-							this.Error("Failed to process sql query...\n"+e.Message);
+							console.Error("Failed to process sql query...\n"+e.Message);
 						}
 					}
 				}catch(Exception e){
-					this.Error("Failed to establish a connection to the database...\n"+e.Message);
+					console.Error("Failed to establish a connection to the database...\n"+e.Message);
 				}
 			}
 			return res;
@@ -582,30 +553,18 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
-		// Asynchronously waits for a response from the AD.
-		public async Task<int> WaitForResponse() {
-			await Task.Delay(500);
-			int tmp=await this.AsyncSelectRecord();
-			if (tmp==0) {
-				await Task.Delay(500);
-				this.WaitForResponse();
-			} else {
-				if (this.response_received==false) {
-					this.response_received=true;
-				}
-			}
-			return 1;
-		}
+		// Waits until the records is updated as a response.
 		public int ResponseWait() {
 			int res=this.CheckResponse();
-			int max=1000;
+			int max=10000;
 			int i=0;
 			while(res==0 && i<max){
 				res=this.CheckResponse();
-				Thread.Sleep(100);
+				Thread.Sleep(10);
 			}
 			return res;
 		}
+		// Checks if the record is a response or a query/request.
 		public int CheckResponse() {
 			int res=0;
 			string sql="SELECT * FROM "+this.tb+" WHERE id= @ID ;";
@@ -632,31 +591,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				}
 				con.Close();
 			}
-			return res;
-		}
-		// Asynchronously selects data from the database.
-		private async Task<int> AsyncSelectRecord() {
-			int res=0;
-			string sql="SELECT * FROM "+this.tb+" WHERE id='@ID';";
-			SqlCommand cmd=new SqlCommand(sql,this.con);
-			cmd.Parameters.Add("@ID",SqlDbType.VarChar);
-			cmd.Parameters["@ID"].Value=this.pairs["id"];
-			Dictionary<string,string> tmp=new Dictionary<string, string>();
-			this.Open();
-			SqlDataReader dr=cmd.ExecuteReader();
-			if (dr.HasRows) {
-				while(dr.Read()){
-					tmp["data"]=dr.GetString(1);
-					if (tmp["data"].Contains("status\":")) {
-						tmp["id"]=dr.GetString(0);
-						this.output.Add(tmp);
-						if (res!=1) {
-							res=1;
-						}
-					}
-				}
-			}
-			this.Close();
 			return res;
 		}
 		// Returns true if one or more records were updated, false otherwise.
@@ -693,7 +627,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					res=true;
 				}
 			}catch(Exception e){
-				this.Error("Failed to update record...\n"+e.Message);
+				console.Error("Failed to update record...\n"+e.Message);
 			}
 			return res;
 		}
@@ -709,35 +643,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					}catch(Exception ex){
 						console.Error("Failed to invoke AD application...\n\t\t"+ex.Message);
 					}
-					/*
-					try{
-						SqlDataReader dr=cmd.ExecuteReader();
-						try{
-							if (dr.HasRows) {
-								this.ApplicationDebugOutput.Add("---- INVOKATION START ----");
-								string tmp="";
-								while(dr.Read()){
-									tmp=dr.GetString(0);
-									if (Database.CheckValue(tmp)) {
-										this.ApplicationDebugOutput.Add(tmp);
-									} else {
-										this.ApplicationDebugOutput.Add("");
-									}
-								}
-								this.ApplicationDebugOutput.Add("---- INVOKATION END ----");
-							}
-						}catch(Exception ex){
-							console.Warn("An error has occurred while attempting to read the application's debugging output.\n\t\t"+ex.Message);
-						}
-					}catch{
-						console.Info("Attempting to invoke application normally...");
-						try{
-							cmd.ExecuteNonQuery();													// Executes the SQL command.
-						}catch(Exception ex){
-							console.Error("Failed to invoke AD application...\n\t\t"+ex.Message);
-						}
-					}
-					*/
 					con.Close();																// Closes the database connection.
 				}
 				console.Success("Application successfully invoked.");
@@ -757,7 +662,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			//string sql="SELECT * FROM "+this.tb+" WHERE id= @ID ;";
 			string sql="SELECT * FROM "+this.tb+this.GetWhere()+";";
 			//console.Log(sql);
-			Dictionary<string,string> tmp=new Dictionary<string, string>();
+			
 			try{
 				using(var con=new SqlConnection(this.constr)){
 					SqlCommand cmd=new SqlCommand(sql,con);
@@ -795,31 +700,54 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 										i=0;
 										*/
 										//keys.AddRange(this.pairs.Keys);
-										bool cp=true;
+										//var columns=dr.GetSchemaTable().Columns;
+										//var tmp0=dr["id"];
+										//console.Log(tmp0.ToString());
+										//this.output.Clear();
+										List<Dictionary<string,string>>tmp0=new List<Dictionary<string,string>>();
 										while(dr.Read()){
-											tmp.Clear();
+											Dictionary<string,string> tmp=new Dictionary<string, string>();
 											i=0;
-											lim=dr.FieldCount;
-											if (cp) {
-												while(i<lim){
-													keys.Add(dr.GetName(i));
-													i++;
-												}
-												cp=false;
-											}
-											i=0;
-											while(i<lim){
-												tmp[keys[i]]=dr.GetString(i);
+											while(i<this.cols.Count){
+												try{
+													tmp.Add(this.cols[i],dr[this.cols[i]].ToString());
+												}catch{}
 												i++;
 											}
-											this.output.Add(tmp);
+											//this.output.Add(tmp);
+											tmp0.Add(tmp);
 										}
+										this.output=tmp0;
+										//console.Log(tmp0.ToString());
+										//console.Log(this.output.ToString());
+										//bool cp=true;
+										//while(dr.Read()){
+										//	tmp.Clear();
+										//	i=0;
+										//	lim=dr.FieldCount;
+										//	if (cp) {
+										//		while(i<lim){
+										//			keys.Add(dr.GetName(i));
+										//			i++;
+										//		}
+										//		cp=false;
+										//	}
+										//	i=0;
+										//	while(i<lim){
+										//		tmp[keys[i]]=dr.GetString(i);
+										//		i++;
+										//	}
+										//	this.output.Add(tmp);
+										//}
 										//console.Log(this.output.ToString());
 									} else {
+										//console.Info(dr.ToString());
 										while(dr.Read()){
-											tmp.Clear();
-											tmp["id"]=dr.GetString(0);
-											tmp["data"]=dr.GetString(1);
+											Dictionary<string,string> tmp=new Dictionary<string, string>();
+											//tmp["id"]=dr.GetString(0);
+											//tmp["data"]=dr.GetString(1);
+											tmp["id"]=dr["id"].ToString();
+											tmp["data"]=dr["data"].ToString();
 											this.output.Add(tmp);
 										}
 									}
@@ -976,7 +904,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					if (this.cols.Count>0) {
 						res=true;
 					} else {
-						this.Error("No columns specified while attempting to select records.",0x000A);
+						console.Error("No columns specified while attempting to select records.",0x000A);
 						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
 						this.ShowColumns();
 					}
@@ -987,7 +915,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 							res=true;
 						}
 					} else {
-						this.Error("No columns specified while attempting to insert new record.",0x000A);
+						console.Error("No columns specified while attempting to insert new record.");
 						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
 						this.ShowColumns();
 					}
@@ -995,7 +923,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					if (this.cols.Count>0) {
 						res=true;
 					} else {
-						this.Error("No columns specified while attempting to check record existence.",0x000A);
+						console.Error("No columns specified while attempting to check record existence.");
 						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
 						this.ShowColumns();
 					}
@@ -1018,11 +946,10 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					}
 				} // END OF ACTION CHECKS.
 			} else {
-				this.Error("No action was specified.",0x0001);
+				console.Error("No action was specified.");
 			}
 			return res;
 		}
-
 		// Returns true if the column ID was populated, false otherwise.
 		private bool CheckColumnID() {
 			bool res=false;
@@ -1040,125 +967,22 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 								if (!String.IsNullOrWhiteSpace(this.pairs[this.cols[sel]])) {
 									res=true;
 								} else {
-									this.Error("The column \""+this.cols[sel]+"\" value is null or consists of only whitespace.",0x00AA);
+									console.Error("The column \""+this.cols[sel]+"\" value is null or consists of only whitespace.");
 								}
 							} else {
-								this.Error("The column \""+this.cols[sel]+"\" value is null or empty.",0x00AA);
+								console.Error("The column \""+this.cols[sel]+"\" value is null or empty.");
 							}
 						} else {
-							this.Error("The column \""+this.cols[sel]+"\" was not prepared properly.",0x0A00);
+							console.Error("The column \""+this.cols[sel]+"\" was not prepared properly.");
 						}
 					} else {
-						this.Error("No column was found...",0x00AA);
+						console.Error("No column was found...");
 					}
 				} else {
-					this.Error("Specified column(s) are invalid or do not specify the record identification.",0x00A0);
+					console.Error("Specified column(s) are invalid or do not specify the record identification.");
 				}
 			} else {
-				this.Error("No columns specified.",0x000A);
-			}
-			return res;
-		}
-
-		// Adds an error message to the output buffer.
-		private void Error(string msg=null,uint code=0x0000) {
-			string code_out="0x0000";
-			try{
-				code_out="0x"+String.Format(code.ToString("x"),"{0:x}");
-				if (!String.IsNullOrEmpty(msg)) {
-					if (!String.IsNullOrWhiteSpace(msg)) {
-						Dictionary<string,string> res=new Dictionary<string,string>();
-						string source="UNKNOWN";
-						try{
-							StackTrace trace=new StackTrace();
-							source=trace.GetFrame(2).GetMethod().Name;
-						}catch{
-							if (source!="UNKNOWN") {
-								source="UNKNOWN";
-							}
-						}
-						res.Add("timestamp",Database.GetTimestamp());
-						res.Add("code",code_out);
-						res.Add("msg",msg);
-						res.Add("source",source);
-						this.error_buffer.Add(res);
-						this.ErrorOut(msg);
-						//AD.error(msg);
-					}
-				}
-			}catch(Exception e){
-
-			}
-		}
-		private void ErrorOut(string msg) {
-			//msg=console.sanitize(msg);
-			console.Error(msg);
-			/*
-			string time=console.getTime();
-			Console.Write("\n["+time+"] Database ERROR:\t");
-			Console.ForegroundColor=ConsoleColor.Red;
-			Console.Write(msg+"\n");
-			Console.ForegroundColor=ConsoleColor.White;
-			*/
-		}
-		// Returns a string representing the current date and time.
-		private static string GetTimestamp() {
-			string res="";
-			DateTime dt=new DateTime(DateTime.Now.Ticks);
-			string hour="";
-			string minute="";
-			string second="";
-			string month="";
-			string day="";
-			string year=dt.Year.ToString();
-			string sym="AM";
-			if (dt.Month<10) {
-				month="0"+dt.Month;
-			} else {
-				month=dt.Month.ToString();
-			}
-			if (dt.Day<10) {
-				day="0"+dt.Day;
-			} else {
-				day=dt.Day.ToString();
-			}
-			if (dt.Hour<10) {
-				hour="0"+dt.Hour;
-			} else {
-				if (dt.Hour>12) {
-					int temp=((dt.Hour)-12);
-					if (temp<10) {
-						hour="0"+temp.ToString();
-					} else {
-						hour=temp.ToString();
-					}
-					sym="PM";
-				} else {
-					hour=dt.Hour.ToString();
-				}
-			}
-			if (dt.Minute<10) {
-				minute="0"+dt.Minute;
-			} else {
-				minute=dt.Minute.ToString();
-			}
-			if (dt.Second<10) {
-				second="0"+dt.Second;
-			} else {
-				second=dt.Second.ToString();
-			}
-			res=month+"-"+day+"-"+year+" | "+hour+":"+minute+":"+second+" "+sym;
-			return res;
-		}
-		// Returns what's in the error buffer.
-		public string GetError() {
-			string res="";
-			int i=0;
-			while(i<this.error_buffer.Count){
-				if (this.error_buffer[i].ContainsKey("code") && this.error_buffer[i].ContainsKey("msg") && this.error_buffer[i].ContainsKey("timestamp") && this.error_buffer[i].ContainsKey("source")) {
-					res+="ERROR (Database) ("+this.error_buffer[i]["source"]+") ["+this.error_buffer[i]["code"]+"] ["+this.error_buffer[i]["timestamp"]+"]:\t"+this.error_buffer[i]["msg"]+"\n";
-				}
-				i++;
+				console.Error("No columns specified.");
 			}
 			return res;
 		}
@@ -1202,7 +1026,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				}
 			}
 		}
-
 		// Clears the value of a key/for a column.
 		public bool ClearValue(string key=null) {
 			bool res=false;
@@ -1320,50 +1143,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return res;
 		}
-		// Opens a connection to the database.
-		private bool Open() {
-			bool res=false;
-			if (this.CheckCon()) {
-				if (!this.con_open) {
-					try{
-						using(this.con=new SqlConnection(this.constr)) {
-							try{
-								this.con.Open();
-								this.con_open=true;
-								res=true;
-								//AD.warn("A connection was created!");
-								console.Warn("A connection was created!");
-							}catch(Exception ex){
-								this.Error("Failed to open a connection to the database.\n"+ex.Message);
-							}
-						}
-					}catch(Exception e){
-						this.Error("Failed to open a connection to the database.\n"+e.Message);
-					}
-				} else {
-					this.Error("A database connection is already open!");
-				}
-			} else {
-				this.Error("Constring check failed!");
-			}
-			return res;
-		}
-		// Closes the connection to the database.
-		private bool Close() {
-			bool res=false;
-			if (this.CheckCon()) {
-				if (this.con_open) {
-					try{
-						this.con.Close();
-						this.con_open=false;
-						res=true;
-					}catch(Exception e){
-
-					}
-				}
-			}
-			return res;
-		}
 		// Returns a sanitized string safe for SQL injection and C# processing.
 		private string parse(string q=null) {
 			if (!String.IsNullOrEmpty(q)) {
@@ -1384,14 +1163,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return q;
 		}
-		// Returns true if the constring was set.
-		private bool CheckCon() {
-			bool res=false;
-			if (!String.IsNullOrEmpty(this.constr)) {
-				res=true;
-			}
-			return res;
-		}
+		
 
 
 	}

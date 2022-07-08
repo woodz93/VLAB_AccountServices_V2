@@ -8,8 +8,17 @@ h1.title {
 	outline:none;
 	user-select:none;
 }
-label {
+label, h1, label, font, span, p, section, article, li {
 	user-select:none;
+}
+.title {
+	position:relative;
+	top:0;
+	left:50%;
+	transform:translateX(-50%);
+	font-weight:bolder;
+	font-size:1.5em;
+	display:block;
 }
 
 table.groups#groups label {

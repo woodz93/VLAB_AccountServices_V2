@@ -45,6 +45,11 @@ namespace VLAB_AccountServices.services {
 		protected string PasswordString=null;
 		private string ModeString="";
 
+		public UserCheck UC=null;
+		
+		
+
+
 
 		protected void Page_Unload(object sender, EventArgs e) {
 			this.CleanUp();
@@ -105,25 +110,24 @@ namespace VLAB_AccountServices.services {
 		}
 
 		protected void InitialChecks() {
-			UserCheck uc=new UserCheck();
+			this.UC=new UserCheck();
 		}
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			this.ini();
 			this.obj=new User();
-			if (this.post_isset("data") && CasAuthentication.CurrentPrincipal!=null) {
-				/*
-				ICasPrincipal sp=CasAuthentication.CurrentPrincipal;
-				user=System.Web.HttpContext.Current.User.Identity.Name;
-				username.Text=user;
-				*/
+			//if (this.post_isset("data") && CasAuthentication.CurrentPrincipal!=null) {
+			if (this.UC.IsChecked()) {
+				bool pcheck=true;
 				try{
-					this.casp=CasAuthentication.CurrentPrincipal;
-					this.UsernameString=System.Web.HttpContext.Current.User.Identity.Name;
-					username.Text=this.UsernameString;
+					//this.casp=CasAuthentication.CurrentPrincipal;
+					//this.UsernameString=System.Web.HttpContext.Current.User.Identity.Name;
+					this.UsernameString=this.UC.GetUsername();										// Gets and stores the CAS/UH username.
+					username.Text=this.UsernameString;												// Sets the username input element value to the UH username collected from the CAS system.
 				}catch(Exception ex){
 					console.Error("Failed to collect CAS client information.\n\t\t"+ex.Message);
+					pcheck=false;
 				}
 				/*
 				string campus="";
@@ -136,7 +140,7 @@ namespace VLAB_AccountServices.services {
 					console.Error(ec.Message);
 				}
 				*/
-				if (Session.Count>0) {
+				if (Session.Count>0 && pcheck) {
 					//console.Log("Number of session variables that exist are ("+Session.Count.ToString()+")");
 					this.GetSessionData();
 					if (this.pass) {
@@ -154,7 +158,8 @@ namespace VLAB_AccountServices.services {
 						console.Error("Failed to pass previous check (CHECK CONDUCTED BEFORE USERNAME CHECKING)");
 					}
 				} else {
-					console.Warn("Attempting to perform a redirect...");
+					console.Error("Session failed checks...");
+					console.Info("Attempting to perform a redirect...");
 					this.redirect();
 				}
 			} else {
@@ -181,6 +186,12 @@ namespace VLAB_AccountServices.services {
 			}
 		}
 
+		// Sets the textual value of the submit button.
+		public void SetSubmitText(string value=null) {
+			if (Str.CheckStr(value)) {
+				submit_btn.Text=value;
+			}
+		}
 
 		// Returns an array of selected GroupsElement.
 		private List<string> GetSelectedGroupsElement() {
@@ -345,7 +356,6 @@ namespace VLAB_AccountServices.services {
 		}
 
 		
-
 		// Checks object for valid username.
 		private bool CheckString(string q=null) {
 			bool res=false;
@@ -397,10 +407,10 @@ namespace VLAB_AccountServices.services {
 				if (AD.isset(this.obj,"cmd")) {
 					if (!String.IsNullOrEmpty(this.obj.cmd)) {
 						if (this.obj.cmd=="new-user") {
-							submit_btn.Text="Create Account";
+							//submit_btn.Text="Create Account";
 							this.ModeString="new-user";
 						} else if (this.obj.cmd=="set-password") {
-							submit_btn.Text="Reset Password";
+							//submit_btn.Text="Reset Password";
 							this.ModeString="set-password";
 						} else {
 							this.DisableSubmitButton();
@@ -508,7 +518,7 @@ namespace VLAB_AccountServices.services {
 					console.Warn("Failure at...\n\t\t"+e.Message);
 				}
 				Groups gp=new Groups(this);
-				gp.ProcessUserGroups();
+				gp.ProcessUserGroups();					// Takes about 2 seconds.
 				int i=0;
 				// Iterate through the group names...
 				while(i<gp.User_Groups.Count){

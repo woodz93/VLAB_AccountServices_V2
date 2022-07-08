@@ -9,18 +9,20 @@
 		line-height:10px;
 	}
 	form.container {
+		position:relative;
 		top:0;
-		left:0;
-		transform:unset;
-		width: 100%;
+		left:50%;
+		transform:translateX(-50%);
+		width:auto;
 		height:auto;
 		padding:4px;
+		margin:0;
 		line-height:4.0em;
-		max-height:100vh;
 		overflow:hidden;
 		overflow-y:auto;
 		padding-top:0;
 		padding-bottom:0;
+		display:flex;
 	}
 	.container label, .container input {
 		font-size:1.25em;
@@ -44,5 +46,10 @@
 		padding: 0;
 		font-size:0.75em;
 	}
+	div.container.flex {
+		display:flex;
+	}
+	
+
 	
 }

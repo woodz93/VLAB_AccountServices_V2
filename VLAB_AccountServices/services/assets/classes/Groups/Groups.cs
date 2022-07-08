@@ -93,11 +93,11 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 					ins.AddColumn("id",id);
 					ins.AddColumn("data",json);
 					ins.Send();
-					ins.InvokeApplication();
+					ins.InvokeApplication();		// Takes about 2 seconds to complete.
 					ins.ResponseWait();
 					try{
 						// Attempts to get the results from the record...
-						Thread.Sleep(4000);
+						//Thread.Sleep(100);
 						Database.Database ins0=new Database.Database();
 						ins0.SetAction(Database.DatabasePrincipal.SelectPrincipal);
 						ins0.AddWhere("id",id);
@@ -112,7 +112,7 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 						Database.Database ins1=new Database.Database();
 						ins1.AddColumn("id",id);
 						ins1.AddWhere("id",id);
-						Thread.Sleep(1000);
+						//Thread.Sleep(100);
 						ins1.RemoveRecord(id);
 						//console.Info("Removed Record \""+id+"\"");
 					}catch(Exception exc){

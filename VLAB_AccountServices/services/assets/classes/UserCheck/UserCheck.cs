@@ -10,6 +10,7 @@ namespace VLAB_AccountServices {
 	public class UserCheck : System.Web.UI.Page {
 
 		private string id=null;
+		private bool _IsChecked=false;
 
 		public UserCheck() {
 			this.ini();
@@ -20,7 +21,10 @@ namespace VLAB_AccountServices {
 			Database ins=new Database();
 			ins.AsyncRemoveAllRecords();
 		}
-
+		// Returns true if the client checks are good to go, false otherwise.
+		public bool IsChecked() {
+			return this._IsChecked;
+		}
 		// Performs a username check with the AD server.
 		private void ini() {
 			if (!this.CheckSession("data")) {
@@ -39,9 +43,12 @@ namespace VLAB_AccountServices {
 							string json="{\"id\":\""+this.id+"\",\"cmd\":\""+cmd+"\",\"username\":\""+un+"\"}";
 							this.ClearSession();
 							this.SetSession("data",json);
+							this._IsChecked=true;
 						}
 					}
 				}
+			} else {
+				this._IsChecked=true;
 			}
 		}
 		// Clears the session.
