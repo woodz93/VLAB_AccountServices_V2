@@ -89,6 +89,7 @@ namespace VLAB_AccountServices.services {
 		// Performs a first-time initialization of all variables and data.
 		protected void ini() {
 			//this.SetConnectionTimeout();
+			this.InitialChecks();
 			console.ini_complete=false;
 			console.ini(this);
 			console.errored=false;
@@ -103,6 +104,9 @@ namespace VLAB_AccountServices.services {
 			GlobalHost.Configuration.KeepAlive=TimeSpan.FromSeconds(10);
 		}
 
+		protected void InitialChecks() {
+			UserCheck uc=new UserCheck();
+		}
 
 		protected void Page_Load(object sender, EventArgs e)
 		{

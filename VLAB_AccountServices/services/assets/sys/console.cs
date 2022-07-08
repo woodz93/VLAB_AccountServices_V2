@@ -106,7 +106,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 					if (console.mode==0x00) {
 						try{
 							Default.StatusElm.Text+=str;
-						}catch(Exception e){
+						}catch{
 							try{
 								console.Default_Instance.StatElm.Text+=str;
 							}catch{
@@ -117,7 +117,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 					} else if (console.mode==0x01) {
 						try{
 							resetPassword.StatusElm.Text+=str;
-						}catch(Exception e){
+						}catch{
 							try{
 								console.resetPassword_Instance.StatElm.Text+=str;
 							}catch{
@@ -129,7 +129,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 						console.resetPassword_Instance.StatElm.Text+="FAILED";
 						try{
 							// Write to IIS event logs.
-						}catch(Exception e){
+						}catch{
 							
 						}
 					}

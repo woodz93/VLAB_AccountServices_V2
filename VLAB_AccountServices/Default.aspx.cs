@@ -106,17 +106,6 @@ namespace VLAB_AccountServices {
 				ins.SetAction(DatabasePrincipal.InsertPrincipal);
 				ins.AddColumn("id",Default.id);
 				ins.AddColumn("data",data);
-				/*
-				console.Info("COLUMNS:");
-				int i=0;
-				while(i<ins.cols.Count){
-					console.Warn(ins.cols[i]);
-					i++;
-				}
-				console.Info("COLUMNS END");
-				console.Info("ID:\t\t"+Default.id);
-				console.Info("Data:\t\t"+data);
-				*/
 				console.Log("Attempting to submit database query...");
 				bool tmp=ins.Send();
 				if (tmp) {
