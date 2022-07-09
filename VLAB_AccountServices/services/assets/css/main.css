@@ -1,5 +1,6 @@
 
 @import url("vars.css");
+@import url("ui/scrollbar.css");
 @import url("resources/fonts.css");
 @import url("ui/page.css");
 @import url("ui/container.css");

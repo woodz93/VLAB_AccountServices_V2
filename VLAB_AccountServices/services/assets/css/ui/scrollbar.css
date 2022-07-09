@@ -1,0 +1,109 @@
+﻿
+/* Chrome Compatability */
+::-webkit-scrollbar {
+	position:absolute;
+	width:10px;
+}
+::-webkit-scrollbar-thumb:vertical {
+	position:absolute;
+	top:0;
+	right:0;
+	width:10px;
+}
+::-webkit-scrollbar-thumb:horizontal {
+	position:absolute;
+	bottom:0;
+	left:0;
+	height:10px;
+}
+::-webkit-scrollbar-track {
+	background-color:rgba(200,200,200,1.0);
+}
+::-webkit-scrollbar-thumb {
+	background-color:rgba(50,50,50,1.0);
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color:var(--scrb-color-);
+}
+
+/* MS Edge Compatability */
+::-ms-scrollbar {
+	position:absolute;
+	width:10px;
+}
+::-ms-thumb:vertical {
+	position:absolute;
+	top:0;
+	right:0;
+	width:10px;
+}
+::-ms-thumb:horizontal {
+	position:absolute;
+	bottom:0;
+	left:0;
+	height:10px;
+}
+::-ms-track {
+	background-color:rgba(200,200,200,1.0);
+}
+::-ms-thumb {
+	background-color:rgba(50,50,50,1.0);
+}
+::-ms-thumb:hover {
+	background-color:var(--scrb-color-);
+}
+
+/* Firefox Compatability */
+::-moz-scrollbar {
+	position:absolute;
+	width:10px;
+}
+::-moz-scrollbar-thumb:vertical, ::-moz-thumb:vertical {
+	position:absolute;
+	top:0;
+	right:0;
+	width:10px;
+}
+::-moz-scrollbar-thumb:horizontal, ::-moz-thumb:horizontal {
+	position:absolute;
+	bottom:0;
+	left:0;
+	height:10px;
+}
+::-moz-scrollbar-track, ::-moz-track {
+	background-color:rgba(200,200,200,1.0);
+}
+::-moz-thumb, ::-moz-scrollbar-thumb {
+	background-color:rgba(50,50,50,1.0);
+}
+::-moz-thumb:hover, ::-moz-scrollbar-thumb:hover {
+	background-color:var(--scrb-color-);
+}
+
+/* Opera Compatability */
+::-o-scrollbar {
+	position:absolute;
+	width:10px;
+}
+::-o-scrollbar-thumb:vertical, ::-o-thumb:vertical {
+	position:absolute;
+	top:0;
+	right:0;
+	width:10px;
+}
+::-o-scrollbar-thumb:horizontal, ::-o-thumb:horizontal {
+	position:absolute;
+	bottom:0;
+	left:0;
+	height:10px;
+}
+::-o-scrollbar-track, ::-o-track {
+	background-color:rgba(200,200,200,1.0);
+}
+::-o-thumb, ::-o-scrollbar-thumb {
+	background-color:rgba(50,50,50,1.0);
+}
+::-o-thumb:hover, ::-o-scrollbar-thumb:hover {
+	background-color:var(--scrb-color-);
+}
+

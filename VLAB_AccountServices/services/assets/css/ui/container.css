@@ -184,6 +184,8 @@ table {
 	padding:4px;
 }
 
+
+
 table.groups {
 	position:relative;
 	top:0;
@@ -230,6 +232,19 @@ table.groups tr td label {
 	vertical-align:top;
 }
 
+table.container tr td {
+	/*border-bottom:2px solid #000;*/
+}
+table.container tr:last-child td {
+	border:none;
+}
+
+table.container tr td:nth-child(even) {
+	text-align:left;
+	padding-right:30px;
+}
+
+
 div.groups.container {
 	position:relative;
 	top:0;
@@ -251,6 +266,10 @@ div.groups.container {
 	display:none;
 	opacity:0;
 }
+span.aspNetDisabled label {
+	text-decoration:line-through;
+	color:var(--disabled-color-);
+}
 
 .content {
 	position:relative;
@@ -260,4 +279,11 @@ div.groups.container {
 	height:auto;
 	display:block;
 	background:transparent;
+}
+
+div.large {
+	position:relative;
+	top:0;
+	width:85vw;
+	display:block;
 }

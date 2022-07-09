@@ -16,7 +16,7 @@
 		<div class="container content">
 			<h1 class="title">Account Services</h1>
 			<br>
-			<div>
+			<div class="container large">
 				<font class="title">Reset Password</font>
 				<table class="container beval">
 					<tr>

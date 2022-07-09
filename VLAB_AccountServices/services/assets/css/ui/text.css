@@ -23,12 +23,21 @@ label, h1, label, font, span, p, section, article, li {
 	display:inline-block;
 }
 
+font.title {
+	font-size:1.75em;
+}
+
 .sub_title {
 	font-size:1.25em;
 }
 
 label {
 	text-align:left;
+}
+
+table.container tr td label {
+	text-align:right;
+	width:100%;
 }
 
 table.groups#groups label {
@@ -44,6 +53,9 @@ table.groups#groups label {
 	display:inline-block;
 	*/
 	vertical-align:top;
+}
+table.list.groups tr td span label {
+	cursor:pointer;
 }
 
 

@@ -176,6 +176,7 @@
     <Content Include="services\assets\css\ui\label.css" />
     <Content Include="services\assets\css\ui\button.css" />
     <Content Include="services\assets\css\ui\status.css" />
+    <Content Include="services\assets\css\ui\scrollbar.css" />
     <Content Include="services\assets\css\ui\text.css" />
     <Content Include="services\assets\css\vars.css" />
     <Content Include="services\assets\eye.png" />
@@ -185,6 +186,7 @@
     <Content Include="services\assets\js\server.js" />
     <Content Include="services\createAccount.aspx" />
     <Content Include="favicon.png" />
+    <Content Include="services\favicon.png" />
     <Content Include="services\resetPassword.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>

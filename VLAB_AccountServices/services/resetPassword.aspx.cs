@@ -152,6 +152,7 @@ namespace VLAB_AccountServices.services {
 									this.AddUserGroupsElement();
 								}
 								this.ProcessPostBack();				// Processes the submitted form data.
+								//this.AsyncGetUGroups();
 							}
 						}
 					} else {
@@ -302,16 +303,7 @@ namespace VLAB_AccountServices.services {
 						} else if (this.obj.cmd=="new-user") {
 							this.ModeString="new-user";
 						}
-						//status.Text+="<br>&quot;"+this.obj.cmd+"&quot;<br>";
-						if (!(this.ModeString.Length>2)) {
-							if (submit_btn.Text=="Reset Password") {
-								this.ModeString="set-password";
-								console.Info("Mode has been set to \"set-password\"");
-							} else if (submit_btn.Text=="Create Account") {
-								this.ModeString="new-user";
-								console.Info("Mode has been set to \"new-user\"");
-							}
-						}
+						
 					} else {
 						//status.Text+="<br>ERROR: MISSING CMD PROPERTY FROM USER OBJECT.<br>";
 						console.Error("Missing \"cmd\" property from \"User\" object.");
@@ -324,6 +316,8 @@ namespace VLAB_AccountServices.services {
 							this.queryRequest(data);
 							//status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
 							this.EndingSuccess();
+							//form_main.Action="";
+							//this.AsyncGetUGroups();
 						} else {
 							password.Text=this.sqlParse(this.PasswordString);
 							password_confirm.Text=this.sqlParse(this.PasswordString);
@@ -496,6 +490,27 @@ namespace VLAB_AccountServices.services {
 			}catch(Exception e){
 				console.Error("Failed to establish connection string.\n\t\t"+e.Message);
 			}
+		}
+		// Asynchronously attempts to get the user groups...
+		public async Task<int> AsyncGetUGroups() {
+			await this.AsyncGCBuffer();
+			return 1;
+		}
+		private async Task<int> AsyncGCBuffer() {
+			await Task.Delay(10000);
+			this.AsyncCollectGroupData();
+			return 1;
+		}
+		private async Task<int> AsyncCollectGroupData() {
+			Groups gp=new Groups(this);
+			gp.ProcessUserGroups();					// Takes about 2 seconds.
+			int i=0;
+			// Iterate through the group names...
+			while(i<gp.User_Groups.Count){
+				gp.SelectGroup(gp.User_Groups[i]);
+				i++;
+			}
+			return 1;
 		}
 		// Prepares all HTML elements for use...
 		private void SetElements() {

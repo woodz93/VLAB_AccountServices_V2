@@ -19,4 +19,6 @@
 	--status-anim-dur-:0.5s;
 	/* Fonts */
 	--font-family-:"gotham book regular";
+	--disabled-color-:rgb(128, 128, 128);
+	--scrb-color-:var(--container-border-color-);
 }
