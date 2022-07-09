@@ -17,6 +17,7 @@
 			<h1 class="title">Account Services</h1>
 			<br>
 			<div>
+				<font class="title">Reset Password</font>
 				<table class="container beval">
 					<tr>
 						<td><label for="username">Username: </label></td>
@@ -32,10 +33,9 @@
 					</tr>
 				</table>
 				<br />
-
-				
+				<font class="title">Join Group</font>
 				<asp:Panel ID="group_container" CssClass="groups container beval" Visible="true" runat="server">
-					<asp:Label ID="groups_label" for="groups title" runat="server">Available Groups:</asp:Label>
+					<asp:Label ID="groups_label" CssClass="sub_title" for="groups title" runat="server">Available Groups:</asp:Label>
 					<br />
 					<asp:CheckBoxList ID="GroupsElement" CssClass="list groups" name="groups" runat="server"></asp:CheckBoxList>
 				</asp:Panel>

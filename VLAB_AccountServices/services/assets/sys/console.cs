@@ -105,7 +105,8 @@ namespace VLAB_AccountServices.services.assets.sys {
 					str="<style>.debug{font-family:monospace;font-size:1.0em;background-color:rgba(0,0,0,0.85);color:#FFF;}</style><div class=\"debug\">"+str+"</div>";
 					if (console.mode==0x00) {
 						try{
-							Default.StatusElm.Text+=str;
+							//Default.StatusElm.Text+=str;
+							console.Default_Instance.StatElm.Text+=str;
 						}catch{
 							try{
 								console.Default_Instance.StatElm.Text+=str;

@@ -11,14 +11,24 @@ h1.title {
 label, h1, label, font, span, p, section, article, li {
 	user-select:none;
 }
-.title {
+.title, .sub_title {
 	position:relative;
 	top:0;
 	left:50%;
 	transform:translateX(-50%);
 	font-weight:bolder;
 	font-size:1.5em;
-	display:block;
+	width:auto;
+	max-width:100%;
+	display:inline-block;
+}
+
+.sub_title {
+	font-size:1.25em;
+}
+
+label {
+	text-align:left;
 }
 
 table.groups#groups label {

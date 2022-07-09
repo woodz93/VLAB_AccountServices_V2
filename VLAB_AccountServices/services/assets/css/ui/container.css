@@ -144,9 +144,6 @@ table.container {
 table.container td {
 	width:50%;
 }
-table.container td:nth-child(odd) {
-	text-align: right;
-}
 /*
 table.container:before, table.container:after {
 	clear:both;
@@ -183,6 +180,9 @@ table.groups#groups td input {
 	display:inline-block;
 }
 
+table {
+	padding:4px;
+}
 
 table.groups {
 	position:relative;
@@ -243,7 +243,8 @@ div.groups.container {
 	display:block;
 	overflow:hidden;
 	overflow-y:hidden;
-	padding:0;
+	padding:10px;
+	margin-bottom:10px;
 }
 
 .aspNetHidden {

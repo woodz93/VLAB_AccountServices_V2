@@ -508,11 +508,11 @@ namespace VLAB_AccountServices.services {
 				try{
 					Element.groupList.Clear();
 					Element.SetGroupElement(GroupsElement);
-					Element.AddGroup("VD-VLAB3","VLAB-3");
+					Element.AddGroup("VD-ADOBECC","Adobe");
 					Element.AddGroup("BUSINESS VIRTUAL LAB","Business Virtual Lab");
 					Element.AddGroup("BUSINESS VIRTUAL LAB 2","Business Virtual Lab 2");
 					Element.AddGroup("MATH VIRTUAL LAB","Math Virtual Lab");
-					Element.AddGroup("VD-ADOBECC","Adobe");
+					Element.AddGroup("VD-VLAB3","VLAB-3");
 					Element.SetGroups();
 				}catch(Exception e){
 					console.Warn("Failure at...\n\t\t"+e.Message);
@@ -525,6 +525,7 @@ namespace VLAB_AccountServices.services {
 					gp.SelectGroup(gp.User_Groups[i]);
 					i++;
 				}
+				this.SetSubmitText("Save Changes");
 			}catch(Exception ex){
 				console.Error("Failed to set status element.\n\t\t"+ex.Message);
 			}
