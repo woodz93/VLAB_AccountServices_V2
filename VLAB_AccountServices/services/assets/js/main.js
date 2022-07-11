@@ -110,7 +110,7 @@ function checkPasswordValue() {
 			output("Password must be longer than 4 characters long.");
 		}
 		if (!res) {
-			output("Example: Password_000");
+			//output("Example: Password_000");
 		}
 	}
 	return res;
@@ -186,11 +186,17 @@ function peak(elm = false) {
 		if (t === "element" || t === "object") {
 			let tar=elm.getAttribute("data-ref");
 			if (document.getElementById(tar)) {
-				let elm = document.getElementById(tar);
-				if (elm.type === "password") {
-					elm.type = "text";
+				let elm0 = document.getElementById(tar);
+				if (elm0.type === "password") {
+					elm0.type = "text";
+					if (!elm.classList.contains("crossout")) {
+						elm.classList.add("crossout");
+					}
 				} else {
-					elm.type = "password";
+					if (elm.classList.contains("crossout")) {
+						elm.classList.remove("crossout");
+					}
+					elm0.type = "password";
 				}
 			}
 		}

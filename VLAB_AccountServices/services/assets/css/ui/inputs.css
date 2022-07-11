@@ -24,9 +24,53 @@ input:hover {
 }
 
 input[type="checkbox"] {
+	position:relative;
 	cursor:pointer;
+	border-radius:2px;
+	border:2px solid #000;
+	appearance:unset;
+}
+input[type="checkbox"]:checked {
+	background:radial-gradient(var(--container-border-color-),rgb(90,169,203));
+	border:4px solid rgb(90,169,203);
+	border-radius:50%;
 }
 
+input[type="checkbox"]:disabled {
+	background:radial-gradient(rgb(100,100,100),rgb(150,150,150));
+	border:5px solid rgb(150,150,150);
+}
+
+
+/*
+input[type="checkbox"]:checked:after, input[type="checkbox"]:after:checked {
+	clear:both;
+	cotnent:'\u2713';
+	appearance:unset;
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translateX(-50%) translateY(-50%);
+	color:rgb(50,200,50);
+	font-weight:bolder;
+	font-size:1.5em;
+	
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background-color:rgb(150,150,150);
+	clip-path:polygon(
+		10% 40%,
+		50% 80%,
+		90% 15%,
+		100% 20%,
+		50% 100%,
+		0 50%
+	);
+	
+}
+*/
 
 /*
 input {

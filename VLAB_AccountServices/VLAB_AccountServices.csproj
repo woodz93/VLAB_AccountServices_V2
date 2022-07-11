@@ -180,6 +180,7 @@
     <Content Include="services\assets\css\ui\text.css" />
     <Content Include="services\assets\css\vars.css" />
     <Content Include="services\assets\eye.png" />
+    <Content Include="services\assets\eye_crossout.png" />
     <Content Include="services\assets\graphics\uhmc_bg.png" />
     <Content Include="services\assets\js\default.js" />
     <Content Include="services\assets\js\main.js" />

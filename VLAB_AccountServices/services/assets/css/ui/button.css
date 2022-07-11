@@ -143,3 +143,8 @@ button:hover:before, .submit_btn:hover:before {
 	background-position:0 0;
 	/*background-color:rgba(255,255,255,0.85);*/
 }
+
+
+.peak.crossout:after {
+	background-image:url("../../eye_crossout.png");
+}
