@@ -51,6 +51,7 @@ function prepSubmitBtn() {
 		});
 	} else {
 		setTimeout(function () { prepSubmitBtn(); }, 100);
+	}
 }
 
 function checkPassword() {
