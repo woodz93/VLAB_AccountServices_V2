@@ -45,10 +45,16 @@
 	border:2px solid #000;
 	margin-top:0px;
 }
+
 .submit_btn:hover {
 	padding-left:27px;
 	padding-right:27px;
 	border-radius:5px;
+	box-shadow:
+		var(--submit-btn-hov-shadow-size-) var(--submit-btn-hov-shadow-size-) var(--submit-btn-hov-shadow-depth-) 2px var(--container-border-color-),
+		calc(var(--submit-btn-hov-shadow-size-) * -1) calc(var(--submit-btn-hov-shadow-size-) * -1) var(--submit-btn-hov-shadow-depth-) 2px var(--container-border-color-),
+		calc(var(--submit-btn-hov-shadow-size-) * -1) var(--submit-btn-hov-shadow-size-) var(--submit-btn-hov-shadow-depth-) 2px var(--container-border-color-),
+		var(--submit-btn-hov-shadow-size-) calc(var(--submit-btn-hov-shadow-size-) * -1) var(--submit-btn-hov-shadow-depth-) 2px var(--container-border-color-);
 }
 
 button:before, .submit_btn:before {
@@ -82,29 +88,6 @@ button:hover:before, .submit_btn:hover:before {
 	clear:both;
 	content:"";
 	background-color:rgba(0,0,0,0.25);
-	/*
-	clear: both;
-	content: "";
-	appearance:button;
-	top: 0%;
-	left: 0%;
-	transform:translateX(-50%) translateY(-50%);
-	clip-path:polygon(
-		var(--b-) 0,
-		0 var(--b-),
-		0 calc(100% - var(--b-)),
-		var(--b-) 100%,
-		calc(100% - var(--b-)) 100%,
-		100% calc(100% - var(--b-)),
-		100% var(--b-),
-		calc(100% - var(--b-)) 0
-	);
-	background: linear-gradient(to bottom right,rgba(0,0,0,0.5) 25%,rgba(50,100,255,1));
-	-webkit-transition-duration: var(--tdur);
-	-moz-transition-duration: var(--tdur);
-	-o-transition-duration: var(--tdur);
-	transition-duration: var(--tdur);
-	*/
 }
 
 .submit_btn[disabled], input[type="text"][disabled] {

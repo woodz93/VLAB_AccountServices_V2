@@ -21,4 +21,6 @@
 	--font-family-:"gotham book regular";
 	--disabled-color-:rgb(128, 128, 128);
 	--scrb-color-:var(--container-border-color-);
+	--submit-btn-hov-shadow-size-:2px;
+	--submit-btn-hov-shadow-depth-:5px;
 }
