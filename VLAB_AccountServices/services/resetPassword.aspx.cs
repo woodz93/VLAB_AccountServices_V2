@@ -484,7 +484,7 @@ namespace VLAB_AccountServices.services {
 			if (!String.IsNullOrEmpty(pstr)) {
 				if (pstr.Trim().Length>0) {
 					if (this.validate(pstr)) {
-						string r="([\~\`\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\[\}\]\|\:\;\"\?\.\,\<\>\'\\/\\\\]+|[\\u200B \n\t]+|[\\u00A1\\uFFEE]+)";
+						string r="([\\~\\`\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\-\\+\\=\\{\\[\\}\\]\\|\\:\\;\"\\?\\.\\,\\<\\>\\'\\/\\\\]+|[\\u200B \n\t]+|[\\u00A1\\uFFEE]+)";
 						if (Regex.IsMatch(pstr,"[A-z]+")) {
 							if (Regex.IsMatch(pstr,"[0-9]+")) {
 								if (Regex.IsMatch(pstr,r)) {
