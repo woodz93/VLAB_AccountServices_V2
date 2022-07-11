@@ -112,6 +112,8 @@ function checkPasswordValue() {
 		if (!res) {
 			//output("Example: Password_000");
 		}
+	} else {
+		dismiss();
 	}
 	return res;
 }
