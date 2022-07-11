@@ -303,7 +303,6 @@ namespace VLAB_AccountServices.services {
 						} else if (this.obj.cmd=="new-user") {
 							this.ModeString="new-user";
 						}
-						
 					} else {
 						//status.Text+="<br>ERROR: MISSING CMD PROPERTY FROM USER OBJECT.<br>";
 						console.Error("Missing \"cmd\" property from \"User\" object.");
