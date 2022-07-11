@@ -95,12 +95,7 @@ function checkPasswordValue() {
 			//if (pass.value.match(/[A-Z]{1,}[a-z]{1,}[0-9]{1,}([_!@#\$%\^&\*\(\)\-\{\}\[\]\.\,\`\~`\n\t:"'\?\<\>\|\/\\]{1,}|[\u200b]{1,})/g)) {
 			if (pass.value.match(/[A-Z]{1,}/g) && pass.value.match(/[a-z]{1,}/g) && pass.value.match(/[0-9]{1,}/g) && pass.value.match(/([_!@#\$%\^&\*\(\)\-\{\}\[\]\.\,\`\~`\n\t:"'\?\<\>\|\/\\]{1,}|[\u200b]{1,})/g)) {
 				if (pass.value === passc.value) {
-					try {
-						if (!pass.value.match(/^(apple[s]*[_\-\s]*[0-9]*|password[s]*[_\-\s]*[0-9]*|orange[s]*[_\-\s]*[0-9]*)/i)) {
-							dismiss();
-							res = true;
-						}
-					} catch {
+					if (!pass.value.match(/^(apple[s]*[_\-\s]*[0-9]*|password[s]*[_\-\s]*[0-9]*|orange[s]*[_\-\s]*[0-9]*)/i)) {
 						dismiss();
 						res = true;
 					}
