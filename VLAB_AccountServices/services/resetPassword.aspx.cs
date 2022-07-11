@@ -293,7 +293,6 @@ namespace VLAB_AccountServices.services {
 			if (!(password.Text.Length>0 && password_confirm.Text.Length>0)) {
 				p=false;
 			}
-			//this.UsernameString="PASS";
 			if (p) {
 				console.Info("Performing normal tasks...");
 				if (AD.isset(this.obj,"username")) {
@@ -304,7 +303,6 @@ namespace VLAB_AccountServices.services {
 							this.ModeString="new-user";
 						}
 					} else {
-						//status.Text+="<br>ERROR: MISSING CMD PROPERTY FROM USER OBJECT.<br>";
 						console.Error("Missing \"cmd\" property from \"User\" object.");
 					}
 					this.PasswordString=Request.Form.GetValues("password")[0];
@@ -313,10 +311,7 @@ namespace VLAB_AccountServices.services {
 							data="{\"cmd\":\"" + this.ModeString + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\"}";
 							console.Info("Preparing to send regulated command.");
 							this.queryRequest(data);
-							//status.Text+="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br>ALPHA<br>"+data+"<br><br>" + resetPassword.ending;
 							this.EndingSuccess();
-							//form_main.Action="";
-							//this.AsyncGetUGroups();
 						} else {
 							password.Text=this.sqlParse(this.PasswordString);
 							password_confirm.Text=this.sqlParse(this.PasswordString);
@@ -345,6 +340,7 @@ namespace VLAB_AccountServices.services {
 			} else {
 				//console.Info("Preparing to send debug command.");
 				//this.Debug(this.obj);
+				console.Error("Failed to process your request. Password does not meet the requirements.");
 			}
 		}
 
@@ -480,6 +476,26 @@ namespace VLAB_AccountServices.services {
 					this.redirect();
 				}
 			}
+		}
+
+		// Returns true if the password passes validation checks, false otherwise.
+		private bool ValidatePassword(string pstr=null) {
+			bool res=false;
+			if (!String.IsNullOrEmpty(pstr)) {
+				if (pstr.Trim().Length>0) {
+					if (this.validate(pstr)) {
+						string r="([\~\`\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\[\}\]\|\:\;\"\?\.\,\<\>\'\\/\\\\]+|[\\u200B \n\t]+|[\\u00A1\\uFFEE]+)";
+						if (Regex.IsMatch(pstr,"[A-z]+")) {
+							if (Regex.IsMatch(pstr,"[0-9]+")) {
+								if (Regex.IsMatch(pstr,r)) {
+									res=true;
+								}
+							}
+						}
+					}
+				}
+			}
+			return res;
 		}
 
 		// Sets the connection string for the SQL database.
