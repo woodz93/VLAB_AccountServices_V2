@@ -95,16 +95,26 @@ function checkPasswordValue() {
 			//if (pass.value.match(/[A-Z]{1,}[a-z]{1,}[0-9]{1,}([_!@#\$%\^&\*\(\)\-\{\}\[\]\.\,\`\~`\n\t:"'\?\<\>\|\/\\]{1,}|[\u200b]{1,})/g)) {
 			if (pass.value.match(/[A-Z]{1,}/g) && pass.value.match(/[a-z]{1,}/g) && pass.value.match(/[0-9]{1,}/g) && pass.value.match(/([_!@#\$%\^&\*\(\)\-\{\}\[\]\.\,\`\~`\n\t:"'\?\<\>\|\/\\]{1,}|[\u200b]{1,})/g)) {
 				if (pass.value === passc.value) {
-					dismiss();
-					res = true;
+					try {
+						if (!pass.value.match(/^(apple[s]*[_\-\s]*[0-9]*|password[s]*[_\-\s]*[0-9]*|orange[s]*[_\-\s]*[0-9]*)/i)) {
+							dismiss();
+							res = true;
+						}
+					} catch {
+						dismiss();
+						res = true;
+					}
 				} else {
 					output("Passwords do not match.");
 				}
 			} else {
-				output("Password must contain at least one capital letter, one lowercase letter, one number, and one special character (Keyboard-based and some whitespace characters are valid... As well as the zero-width character).");
+				output("Password must contain at least one capital letter, one lowercase letter, one number, and one special character.");
 			}
 		} else {
 			output("Password must be longer than 4 characters long.");
+		}
+		if (!res) {
+			output("Example: Password_000");
 		}
 	}
 	return res;
