@@ -107,13 +107,15 @@ function checkPasswordValue() {
 				output("Password must contain at least one capital letter, one lowercase letter, one number, and one special character.");
 			}
 		} else {
-			output("Password must be longer than 4 characters long.");
+			if (pass.value.length === 0) {
+				dismiss();
+			} else {
+				output("Password must be longer than 4 characters long.");
+			}
 		}
 		if (!res) {
 			//output("Example: Password_000");
 		}
-	} else {
-		dismiss();
 	}
 	return res;
 }
