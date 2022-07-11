@@ -12,6 +12,7 @@ function ini() {
 	}
 }
 function setup() {
+	prepSubmitBtn();
 	if (document.getElementById("password_confirm")) {
 		document.getElementById("password").addEventListener("keyup", function (e) {
 			checkPassword();
@@ -38,6 +39,18 @@ function setup() {
 	} else {
 		setTimeout(function () { ini(); }, 100);
 	}
+}
+
+function prepSubmitBtn() {
+	if (document.getElementById("submit_btn")) {
+		document.getElementById("form_main").addEventListener("submit", function () {
+			document.getElementById("submit_btn").disabled = true;
+		});
+		document.getElementById("submit_btn").addEventListener("click", function () {
+			document.getElementById("submit_btn").disabled = true;
+		});
+	} else {
+		setTimeout(function () { prepSubmitBtn(); }, 100);
 }
 
 function checkPassword() {
