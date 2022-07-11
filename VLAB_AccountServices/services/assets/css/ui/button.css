@@ -113,7 +113,6 @@ button:hover:before, .submit_btn:hover:before {
 	cursor:not-allowed;
 }
 .submit_btn[disabled]:hover {
-	width:25%;
 	border-radius:10px;
 }
 
