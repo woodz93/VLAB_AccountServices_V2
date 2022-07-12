@@ -1,25 +1,20 @@
 ﻿using DotNetCasClient;
 using DotNetCasClient.Security;
+using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Web.UI.WebControls;
-//using VLAB_AccountServices.services.assets.svr;
-using VLAB_AccountServices.services.assets.sys;
-using VLAB_AccountServices.services.assets.classes.Database;
-using VLAB_AccountServices.services.assets.classes.Network;
-using VLAB_AccountServices.services.assets.classes.Str;
-using VLAB_AccountServices.services.assets.classes.Groups;
 using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR;
-
+using System.Web.UI.WebControls;
+using VLAB_AccountServices.services.assets.classes.Database;
+using VLAB_AccountServices.services.assets.classes.Groups;
+using VLAB_AccountServices.services.assets.classes.Str;
+using VLAB_AccountServices.services.assets.sys;
 namespace VLAB_AccountServices.services {
-
-	public partial class resetPassword : System.Web.UI.Page
-	{
+	public partial class resetPassword : System.Web.UI.Page {
 		protected byte mode=0x00;
 		protected static string db="UHMC_VLab";
 		protected static string tb="vlab_pendingusers";
@@ -30,22 +25,18 @@ namespace VLAB_AccountServices.services {
 		protected static string ending="<br><br>You may contact <a href=\"tel:+18089843283\" target=\"_blank\">(808) 984-3283</a>, email <a href=\"mailto:uhmchelp@hawaii.edu\" target=\"_blank\">uhmchelp@hawaii.edu</a>, or submit a ticket at <a href=\"https://maui.hawaii.edu/helpdesk/#gform_7\" target=\"_blank\">https://maui.hawaii.edu/helpdesk/#gform_7</a> for further assistance.";
 		protected bool pass=false;
 		protected int counter=0;
-
 		protected string id=null;
-
 		protected List<string>cols=null;
-
 		private static string constr=null;
 		public static Label StatusElm;
 		public Label StatElm;
-
 		private User obj;
 		protected ICasPrincipal casp;
 		protected string UsernameString=null;
 		protected string PasswordString=null;
 		private string ModeString="";
-
 		public UserCheck UC=null;
+		// Performs a clean on page unload.
 		protected void Page_Unload(object sender, EventArgs e) {
 			this.CleanUp();
 		}
@@ -56,7 +47,6 @@ namespace VLAB_AccountServices.services {
 			ins.AsyncRemoveAllRecords();
 			return 1;
 		}
-
 		// Processes the password.
 		public void processPassword(Object sender, EventArgs e) {
 			string u=username.Text;
@@ -67,6 +57,7 @@ namespace VLAB_AccountServices.services {
 			password.Enabled=false;
 			password_confirm.Enabled=false;
 		}
+		// Returns the ending string for the user/client to see.
 		public void EndingSuccess() {
 			status.Text="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + resetPassword.ending;
 			//submit_btn.Enabled=false;
@@ -85,7 +76,6 @@ namespace VLAB_AccountServices.services {
 				status.Text+=sys.buffer;
 			}
 		}
-
 		// Performs a first-time initialization of all variables and data.
 		protected void ini() {
 			//this.SetConnectionTimeout();
@@ -97,19 +87,18 @@ namespace VLAB_AccountServices.services {
 			this.SetElements();
 			console.Clear();
 		}
-
+		// Sets the connection timeout settings...
 		protected void SetConnectionTimeout() {
 			GlobalHost.Configuration.ConnectionTimeout=TimeSpan.FromSeconds(110);
 			GlobalHost.Configuration.DisconnectTimeout=TimeSpan.FromSeconds(30);
 			GlobalHost.Configuration.KeepAlive=TimeSpan.FromSeconds(10);
 		}
-
+		// Performs initialization of user checks.
 		protected void InitialChecks() {
 			this.UC=new UserCheck();
 		}
-
-		protected void Page_Load(object sender, EventArgs e)
-		{
+		// Prepares the page for use.
+		protected void Page_Load(object sender, EventArgs e) {
 			this.ini();
 			this.obj=new User();
 			if (this.UC.IsChecked()) {
@@ -156,7 +145,7 @@ namespace VLAB_AccountServices.services {
 				this.ShowRecords();
 			}
 		}
-
+		// A debugging function used to output the records that currently exist in the database.
 		private void ShowRecords() {
 			int i=0;
 			var list=Database.GetExistingRecords();
@@ -165,14 +154,12 @@ namespace VLAB_AccountServices.services {
 				i++;
 			}
 		}
-
 		// Sets the textual value of the submit button.
 		public void SetSubmitText(string value=null) {
 			if (Str.CheckStr(value)) {
 				submit_btn.Text=value;
 			}
 		}
-
 		// Returns an array of selected GroupsElement.
 		private List<string> GetSelectedGroupsElement() {
 			List<string> res=new List<string>();
@@ -187,7 +174,6 @@ namespace VLAB_AccountServices.services {
 			}
 			return res;
 		}
-
 		private void AddUserGroupsElement() {
 			if (GroupsElement.Items.Count>0) {
 				int i=0;
@@ -260,7 +246,6 @@ namespace VLAB_AccountServices.services {
 				dbins.AsyncRemoveRecordFromId(3,id);
 			}
 		}
-
 		// Performs poast-back action.
 		private void ProcessPostBack() {
 			bool p=true;
@@ -320,8 +305,6 @@ namespace VLAB_AccountServices.services {
 				console.Error("Failed to process your request. Password does not meet the requirements.");
 			}
 		}
-
-		
 		// Checks object for valid username.
 		private bool CheckString(string q=null) {
 			bool res=false;
@@ -397,13 +380,11 @@ namespace VLAB_AccountServices.services {
 				this.redirect();
 			}
 		}
-
 		// Disables the submit button.
 		private void DisableSubmitButton() {
 			submit_btn.Text="[DISABLED]";
 			submit_btn.Enabled=false;
 		}
-
 		// Prepares and validates the username.
 		private bool ValidateUsername() {
 			bool res=true;
@@ -416,7 +397,6 @@ namespace VLAB_AccountServices.services {
 			}
 			return res;
 		}
-
 		// Gets the session data.
 		private void GetSessionData() {
 			string d="{}";
@@ -454,7 +434,6 @@ namespace VLAB_AccountServices.services {
 				}
 			}
 		}
-
 		// Returns true if the password passes validation checks, false otherwise.
 		private bool ValidatePassword(string pstr=null) {
 			bool res=false;
@@ -474,7 +453,6 @@ namespace VLAB_AccountServices.services {
 			}
 			return res;
 		}
-
 		// Sets the connection string for the SQL database.
 		private void SetConnectionString() {
 			try{
@@ -488,6 +466,7 @@ namespace VLAB_AccountServices.services {
 			await this.AsyncGCBuffer();
 			return 1;
 		}
+		// Asynchronously Collects user group data.
 		private async Task<int> AsyncGCBuffer() {
 			await Task.Delay(10000);
 			this.AsyncCollectGroupData();
@@ -541,12 +520,10 @@ namespace VLAB_AccountServices.services {
 		public void EnableForm() {
 			submit_btn.Enabled=true;
 		}
-		
 		// Collects grouping information.
 		private void GetGroupings() {
 			Element.SetGroupElement(GroupsElement);
 		}
-
 		// Performs a debugging operation.
 		private void Debug(User obj) {
 			//string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"GroupsElement\":[\"VD-VLAB4\"]}";
@@ -693,6 +670,5 @@ namespace VLAB_AccountServices.services {
 			}
 			return res;
 		}
-
 	}
 }

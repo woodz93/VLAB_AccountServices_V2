@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.UI.WebControls;
-
 namespace VLAB_AccountServices.services.assets.sys {
 	public class Element : resetPassword {
 		public static Dictionary<string,string> groupList=new Dictionary<string,string>();

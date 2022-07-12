@@ -1,20 +1,15 @@
 ﻿using DotNetCasClient;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using VLAB_AccountServices.services.assets.classes.Database;
 using VLAB_AccountServices.services.assets.sys;
-
 namespace VLAB_AccountServices {
 	public class UserCheck : System.Web.UI.Page {
-
 		private string id=null;
 		private bool _IsChecked=false;
-
 		public UserCheck() {
 			this.ini();
-			
 		}
 		// Performs a database cleanup.
 		private void CleanUp() {
@@ -125,7 +120,5 @@ namespace VLAB_AccountServices {
 			}
 			return res;
 		}
-
-
 	}
 }

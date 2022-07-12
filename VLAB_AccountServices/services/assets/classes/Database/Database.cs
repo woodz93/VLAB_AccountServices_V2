@@ -6,10 +6,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using VLAB_AccountServices.services.assets.sys;
-
 namespace VLAB_AccountServices.services.assets.classes.Database {
 	public class Database {
-
 		private string db="UHMC_VLab";
 		private string tb="vlab_pendingusers";
 		private string db_ip="172.20.0.142";
@@ -565,9 +563,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		public int CheckResponse() {
 			int res=0;
 			string sql="SELECT * FROM "+this.tb+" WHERE id= @ID ;";
-			//SqlCommand cmd=new SqlCommand(sql,this.con);
-			//cmd.Parameters.AddWithValue("@ID",this.pairs["id"]);
-			//cmd.Parameters["@ID"].Value=this.pairs["id"];
 			Dictionary<string,string> tmp=new Dictionary<string, string>();
 			using(SqlConnection con=new SqlConnection(this.constr)) {
 				SqlCommand cmd=new SqlCommand(sql,con);

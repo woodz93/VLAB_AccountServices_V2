@@ -3,19 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using VLAB_AccountServices.services.assets.classes.Database;
 using VLAB_AccountServices.services.assets.sys;
-
 namespace VLAB_AccountServices.services.assets.classes.Groups {
 	public class Groups {
-
 		public List<Dictionary<string,string>>Group_List=new List<Dictionary<string,string>>();			// Contains all of the groups collected from the database.
-
 		// Flow control properties...
 		// Class object management...
 		private string Mode				=null;
@@ -25,22 +18,23 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 		private GroupMeta Elm			=null;
 		public List<GroupData> Data		=null;
 		private List<string> CheckedIn	=new List<string>();
-
-		public List<string> User_Groups=new List<string>();
-		public List<ListItem> Refs=new List<ListItem>();
-
+		public List<string> User_Groups	=new List<string>();
+		public List<ListItem> Refs		=new List<ListItem>();
+		// Groups class initialization.
 		public Groups() {
 			this.ini();
 		}
+		// Groups class initialization under the resetPassword class object.
 		public Groups(resetPassword obj) {
 			this.RPObj=obj;
 			this.ini();
 		}
+		// Groups class initialization for Default page.
 		public Groups(Default obj) {
 			this.DObj=obj;
 			this.ini();
 		}
-
+		// General initialization method.
 		private void ini() {
 			this.Elm=new GroupMeta();
 			this.Data=this.GetGroups();
@@ -71,7 +65,6 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 			var tmp=JsonSerializer.Deserialize<GroupInfo>(list.GetRow(0)["data"]);
 			this.User_Groups=tmp.data;
 		}
-
 		// Sends a query request to the AD program to get the groups associated with the current user.
 		public Records GetUserGroups() {
 			Records res=null;
@@ -113,7 +106,6 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 			}
 			return res;
 		}
-
 		// Returns the current user's username.
 		private string GetUsername() {
 			string res=null;
@@ -165,51 +157,8 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 						i++;
 					}
 				}
-
-
-				/*
-				while(i<con.Items.Count){
-					//console.Log(Element.groupList.ToString());
-					if (Element.groupList.ContainsKey(name) || Element.groupList.ContainsValue(name)) {
-						//resetPassword.StatusElm.Text+="<br>&nbsp;&nbsp;&nbsp;&nbsp;"+con.Items[i]+" === "+name+"<br>";
-						if (!Element.groupList.ContainsKey(name)) {
-							name=this.GetKey(name);
-						}
-						//console.Log(Element.groupList.ToString());
-						//console.Log(name);
-						//console.Log(con.Items.ToString());
-						//console.Log(Element.groupList.ToString());
-						//console.Log(i.ToString());
-						if (con.Items[i].Value==name) {
-							con.Items[i].Selected=true;
-							con.Items[i].Enabled=false;
-							break;
-						}
-					}
-					i++;
-				}
-				*/
-				/*
-				while(i<this.Refs.Count){
-					item=this.Refs[i];
-					if (item.Value==name) {
-						var con=(CheckBoxList)RPObj.FindControl("groups");
-						con.ClearSelection();
-						//con.SelectedValue="group_item_"+name;
-						int o=0;
-						while(o<con.Items.Count){
-							if (con.Items[o].Value==name) {
-
-							}
-							o++;
-						}
-					}
-					i++;
-				}
-				*/
 			}
 		}
-
 		// Returns the key based on the value.
 		public string GetKey(string val=null) {
 			string res=null;
@@ -227,19 +176,19 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 			}
 			return res;
 		}
-
 		// Loads the groups into an HTML element.
 		public bool LoadGroups(CheckBoxList elm=null) {
 			bool res=false;
 			if (elm!=null) {
 				if (this.Data.Count>0) {
 					int i=0;
-					ListItem item=null;
+					ListItem item;
 					this.Refs.Clear();
 					while(i<this.Data.Count){
-						item=new ListItem();
-						item.Text=this.Data[i].Name;
-						item.Value=this.Data[i].Reference;
+						item=new ListItem {
+							Text=this.Data[i].Name,
+							Value=this.Data[i].Reference
+						};
 						item.Attributes.Add("id","group_item_"+this.Data[i].Reference);
 						this.Refs.Add(item);
 						elm.Items.Add(item);
@@ -250,7 +199,6 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 			}
 			return res;
 		}
-
 		// Updates the group data.
 		public void UpdateGroups() {
 			List<GroupData> res=new List<GroupData>();
@@ -258,25 +206,17 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 			ddins.SetTable("vlab_groups");
 			ddins.SetAction(Database.DatabasePrincipal.SelectPrincipal);
 			ddins.AddWhere("id","*");
-			//ddins.AddColumn("id","*");
 			ddins.Send();
 			Records list=ddins.Results;
 			ddins.Clear();
 			int i=0;
-			//Dictionary<string,string>sel=null;
 			GroupData gd=null;
 			while(list.Read()){
-				//sel=list.GetRow(i);
 				gd=new GroupData(list.GetRow(i));
 				res.Add(gd);
 				i++;
 			}
 			this.Data=res;
 		}
-		
-
-
-
-
 	}
 }

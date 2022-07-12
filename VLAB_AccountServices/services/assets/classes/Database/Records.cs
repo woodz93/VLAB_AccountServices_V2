@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 namespace VLAB_AccountServices.services.assets.classes.Database {
 	public class Records {
 		public List<Dictionary<string,string>> Raw=null;

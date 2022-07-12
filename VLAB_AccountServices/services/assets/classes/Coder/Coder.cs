@@ -1,31 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
 namespace VLAB_AccountServices {
 	public class Coder {
-
 		private Dictionary<int,string> Decode_Table=new Dictionary<int,string>();
 		private Dictionary<string,int> Encode_Table=new Dictionary<string,int>();
-
 		private string Value=null;
 		private bool ini_complete=false;
-
-
 		public Coder() {
 			this.ini();
 		}
-
 		public Coder(string str=null) {
 			this.SetValue(str);
 			this.ini();
 		}
-
 		private void ini() {
 			this.SetupCodeTable();
 		}
-
 		private void SetupCodeTable() {
 			if (!this.ini_complete) {
 				string[] list={
@@ -43,8 +33,6 @@ namespace VLAB_AccountServices {
 				this.ini_complete=true;
 			}
 		}
-
-
 		// Sets the value.
 		public void SetValue(string str=null) {
 			if (this.CheckString(str)) {
@@ -55,7 +43,6 @@ namespace VLAB_AccountServices {
 		private static int GetCode(int i=0,string v=null) {
 			return (Convert.ToInt32(v)-97)+((i+1)/2);
 		}
-
 		// Returns a string-character decoded from an encoded character value.
 		public string DecodeString() {
 			string res=null;
@@ -82,8 +69,6 @@ namespace VLAB_AccountServices {
 			}
 			return res;
 		}
-
-
 		// Returns an encoded string value.
 		public string EncodeString() {
 			string res=null;
@@ -110,8 +95,6 @@ namespace VLAB_AccountServices {
 			}
 			return res;
 		}
-
-
 		// Returns a single character (string), decoded from the character provided on success, false otherwise.
 		private string DecodeChar(char c) {
 			string res=null;
@@ -145,7 +128,6 @@ namespace VLAB_AccountServices {
 			}
 			return res;
 		}
-
 		// Returns a string-character decoded from an encoded character value.
 		public static string EncodeString(char q) {
 			string res="";
@@ -274,6 +256,5 @@ namespace VLAB_AccountServices {
 			}
 			return res;
 		}
-
 	}
 }

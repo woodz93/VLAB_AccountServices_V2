@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-
 namespace VLAB_AccountServices.services.assets.sys {
 	public class sys {
-
 		public static string debug_buffer="";
 		protected static bool output_flush=false;
 		protected static bool logging=true;
@@ -60,52 +58,8 @@ namespace VLAB_AccountServices.services.assets.sys {
 		}
 		// Returns a string representing the current date and time.
 		public static string getTime() {
-			string res;
-			DateTime dt=new DateTime(DateTime.Now.Ticks);
-			string hour;
-			string minute;
-			string second;
-			string month;
-			string day;
-			string year=dt.Year.ToString();
-			string sym="AM";
-			if (dt.Month<10) {
-				month="0"+dt.Month;
-			} else {
-				month=dt.Month.ToString();
-			}
-			if (dt.Day<10) {
-				day="0"+dt.Day;
-			} else {
-				day=dt.Day.ToString();
-			}
-			if (dt.Hour<10) {
-				hour="0"+dt.Hour;
-			} else {
-				if (dt.Hour>12) {
-					int temp=((dt.Hour)-12);
-					if (temp<10) {
-						hour="0"+temp.ToString();
-					} else {
-						hour=temp.ToString();
-					}
-					sym="PM";
-				} else {
-					hour=dt.Hour.ToString();
-				}
-			}
-			if (dt.Minute<10) {
-				minute="0"+dt.Minute;
-			} else {
-				minute=dt.Minute.ToString();
-			}
-			if (dt.Second<10) {
-				second="0"+dt.Second;
-			} else {
-				second=dt.Second.ToString();
-			}
-			res=month+"-"+day+"-"+year+" | "+hour+":"+minute+":"+second+" "+sym;
-			return res;
+			var dt=new DateTime(DateTime.Now.Ticks);
+			return dt.ToString("MM-dd-yyyy | hh:mm:ss tt");
 		}
 		// Returns the converted output buffer into HTML-formatted string.
 		public static void flush() {

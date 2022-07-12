@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using VLAB_AccountServices.services.assets.classes.Network;
-
 namespace VLAB_AccountServices.services.assets.sys {
 	public class console {
 		private static bool enable_output=true;

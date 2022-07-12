@@ -1,24 +1,18 @@
 ﻿using System;
 using System.IO;
 using VLAB_AccountServices.services.assets.classes.Network;
-using VLAB_AccountServices.services.assets.classes.Database;
-using VLAB_AccountServices.services.assets.classes.Str;
 using VLAB_AccountServices.services.assets.sys;
-
 namespace VLAB_AccountServices.services {
 	internal class Case {
-
 		protected static string db="UHMC_VLab";
 		protected static string tb="vlab_pendingusers";
 		protected static string db_ip="172.20.0.142";
 		protected static string db_port="";
 		protected static string db_username="uhmcad_user";
 		protected static string db_password="MauiC0LLegeAD2252!";
-
 		private static string case_dir="\\\\172.20.0.101\\a\\Inventory\\programs\\accountservices\\cases\\";
 		private static string case_svr="172.20.0.101";
 		private static string dir="/logs/";
-
 		// Creates a new case and returns the case reference id.
 		public static string createCase(string q) {
 			string res="";
@@ -123,9 +117,6 @@ namespace VLAB_AccountServices.services {
 			}
 			return res;
 		}
-
-
-
 	}
 }
 
