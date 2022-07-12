@@ -44,7 +44,7 @@ namespace VLAB_AccountServices {
 			console.errored=false;
 			console.Clear();
 			console.Log("Page loaded successfully!");
-			Default.constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
+			//Default.constr=@"Data Source=" + Default.db_ip + ";Initial Catalog=" + Default.db + ";Persist Security Info=True;User ID=" + Default.db_username + ";Password=" + Default.db_password + ";";
 			Session.Clear();
 			Session.Add("data","");
 			this.obj=new User();															// Creates a new instance of the User class object.
