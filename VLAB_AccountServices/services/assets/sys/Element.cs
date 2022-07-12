@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI.WebControls;
 
 namespace VLAB_AccountServices.services.assets.sys {
 	public class Element : resetPassword {
-
 		public static Dictionary<string,string> groupList=new Dictionary<string,string>();
-
 		public static CheckBoxList group_element=null;
-
 		// Sets the group to modify.
 		public static void SetGroupElement(CheckBoxList elm) {
 			if (elm!=null) {
@@ -22,14 +17,6 @@ namespace VLAB_AccountServices.services.assets.sys {
 			if (Element.CheckString(name)) {
 				if (!Element.groupList.ContainsKey(name)) {
 					Element.groupList.Add(name,name);
-					/*
-					string id=Element.genID();
-					if (Element.CheckString(id)) {
-						Element.groupList.Add(id, name);
-					} else {
-						console.Error("Failed to generate ID.");
-					}
-					*/
 				}
 			}
 		}
@@ -112,9 +99,5 @@ namespace VLAB_AccountServices.services.assets.sys {
 			}
 			return res;
 		}
-
-
-
-
 	}
 }
