@@ -117,31 +117,16 @@ namespace VLAB_AccountServices.services {
 		{
 			this.ini();
 			this.obj=new User();
-			//if (this.post_isset("data") && CasAuthentication.CurrentPrincipal!=null) {
 			if (this.UC.IsChecked()) {
 				bool pcheck=true;
 				try{
-					//this.casp=CasAuthentication.CurrentPrincipal;
-					//this.UsernameString=System.Web.HttpContext.Current.User.Identity.Name;
 					this.UsernameString=this.UC.GetUsername();										// Gets and stores the CAS/UH username.
 					username.Text=this.UsernameString;												// Sets the username input element value to the UH username collected from the CAS system.
 				}catch(Exception ex){
 					console.Error("Failed to collect CAS client information.\n\t\t"+ex.Message);
 					pcheck=false;
 				}
-				/*
-				string campus="";
-				try{
-					//campus=sp.Assertion.Attributes["campusKey"].ToString();
-					//campus=this.getAttribute(sp,"cn");
-					//status.Text+="<br>\""+user+"\"<br><br>";
-				}catch(Exception ec){
-					//status.Text+="<br>ERROR: "+ec.Message+"<br><br>";
-					console.Error(ec.Message);
-				}
-				*/
 				if (Session.Count>0 && pcheck) {
-					//console.Log("Number of session variables that exist are ("+Session.Count.ToString()+")");
 					this.GetSessionData();
 					if (this.pass) {
 						if (this.ValidateUsername()) {
@@ -168,7 +153,6 @@ namespace VLAB_AccountServices.services {
 				Response.Redirect("../Default.aspx");
 				this.redirect();
 			}
-			//console.Log("END OF LINE");
 			if (Database.ExistingRecords.Count>0) {
 				console.Log("Attempting to remove unused records...");
 				Thread.Sleep(1000);
@@ -338,8 +322,6 @@ namespace VLAB_AccountServices.services {
 					console.Error("Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + resetPassword.ending);
 				}
 			} else {
-				//console.Info("Preparing to send debug command.");
-				//this.Debug(this.obj);
 				console.Error("Failed to process your request. Password does not meet the requirements.");
 			}
 		}
@@ -560,7 +542,7 @@ namespace VLAB_AccountServices.services {
 				console.Error("Failed to set status element.\n\t\t"+ex.Message);
 			}
 		}
-
+		// Enables the form element.
 		public void EnableForm() {
 			submit_btn.Enabled=true;
 		}
@@ -595,23 +577,8 @@ namespace VLAB_AccountServices.services {
 		protected void queryRequest(string q="") {
 			if (q.Length > 0) {
 				string id=this.genID();
-				//q=this.sqlParse(q);
-				//string values="'"+id+"','"+q+"'";
-				//status.Text+="<br><br>DATA<br>"+id+"<br><br>";
-				//string values=" @DATA ";
 				string sql="INSERT INTO " + resetPassword.tb + " (\"id\",\"data\") VALUES ( @ID, @DATA );";
-				//status.Text+=sql;
 				try{
-					/*
-					using (SqlConnection con=new SqlConnection(resetPassword.constr)) {
-						SqlCommand cmd=new SqlCommand(sql,con);
-						cmd.Parameters.AddWithValue("@ID",id);
-						cmd.Parameters.AddWithValue("@DATA",q);
-						con.Open();
-						cmd.ExecuteNonQuery();
-						con.Close();
-					}
-					*/
 					Database ins=new Database();
 					ins.SetAction(DatabasePrincipal.InsertPrincipal);
 					ins.AddColumn("id",id);
@@ -624,7 +591,10 @@ namespace VLAB_AccountServices.services {
 								console.Error("Failed to invoke application from queryRequest...\n\t\t"+e.Message);
 							}
 							try{
-								this.ResponseWait(id);
+								ins.AddWhere("id",id);
+								ins.ResponseWait();
+								Database dbins=new Database();
+								dbins.RemoveRecord(id);
 							}catch(Exception ee){
 								console.Error("Failed to wait for response...\n\t\t"+ee.Message);
 							}
@@ -634,8 +604,6 @@ namespace VLAB_AccountServices.services {
 					}catch(Exception e){
 						console.Error("Failed to process database query...\n\t\t"+e.Message);
 					}
-					// Wait for response...
-					//this.ResponseWait(id);
 				}catch(Exception e){
 					CaseLog cl=new CaseLog();
 					cl.code="0x0001";
@@ -650,224 +618,6 @@ namespace VLAB_AccountServices.services {
 				}
 			}
 			
-		}
-		// Returns true on success, false otherwise. Repeats until a response was issued by the AD program.
-		protected bool ResponseWait(string id=null) {
-			bool res=false;
-			if (!String.IsNullOrEmpty(id)) {
-				if (!String.IsNullOrWhiteSpace(id)) {
-					if (this.counter<50) {
-						Thread.Sleep(100);
-						string resp=null;
-						try{
-							resp=this.CheckRecordResponse(id);
-						}catch(Exception e){
-							console.Error("Failed to check for record response...\n\t\t"+e.Message);
-							resp="failed";
-						}
-						if (resp==null) {
-							Thread.Sleep(50);
-							this.ResponseWait(id);
-						} else {
-							if (resp=="success") {
-								res=true;
-							} else if (resp=="failed") {
-								res=false;
-							}
-							Database dbins=new Database();
-							dbins.RemoveRecord(id);
-						}
-					} else {
-						console.Error("Response check timed out.");
-					}
-				} else {
-					console.Error("The provided ID was invalid.");
-				}
-			} else {
-				console.Error("The provided ID was invalid.");
-			}
-			return res;
-		}
-		// Returns the record response on success, null otherwise.
-		protected string CheckRecordResponse(string id=null) {
-			string res=null;
-			if (!String.IsNullOrEmpty(id)) {
-				if (!String.IsNullOrWhiteSpace(id)) {
-					Database dbins=new Database();
-					if (dbins.RecordExists(id)) {
-						List<Dictionary<string,string>> list=this.GetMatchingRecords(id);
-						console.Info(list.Count.ToString());
-						int i=0;
-						uint tmp;
-						string msg;
-						string file;
-						string line;
-						string path;
-						string str;
-						Status ins=new Status();
-						while(i<list.Count){
-							if (list[i]["id"]==id) {
-								if (!String.IsNullOrEmpty(list[i]["data"])) {
-									if (!String.IsNullOrWhiteSpace(list[i]["data"])) {
-										ins.id=list[i]["id"];
-										ins.data=list[i]["data"];
-										ins.ToObject();
-										tmp=ins.GetStatus();
-										msg=ins.GetMessage();
-										file=ins.GetFileName();
-										line=ins.GetLine();
-										path=ins.GetSource();
-										if (msg==null) {
-											msg="[NULL]";
-										}
-										if (msg==null) {
-											msg="[NULL]";
-										}
-										if (file==null) {
-											file="[NULL]";
-										}
-										if (path==null) {
-											path="[NULL]";
-										}
-										if (line==null) {
-											line="[NULL]";
-										}
-										str=msg+"\n\tFrom \""+path+"/"+file+"\" ("+line+")";
-										if (tmp!=0x00) {
-											if (tmp==0x01) {
-												console.Error("Failed to process your request...\n\t\t"+str);
-												res="failed";
-											} else {
-												console.Log("Process completed successfully.");
-												res="success";
-											}
-										}
-									}
-								}
-							}
-							i++;
-						}
-					} else {
-						console.Error("Record does not exist!");
-						res="failed";
-					}
-
-				}
-			}
-			return res;
-		}
-		// Returns a list consisting of all the records that match the ID.
-		protected List<Dictionary<string,string>> GetMatchingRecords(string id=null) {
-			List<Dictionary<string,string>> res=new List<Dictionary<string,string>>();
-			if (!String.IsNullOrEmpty(id)) {
-				if (!String.IsNullOrWhiteSpace(id)) {
-					int lim=this.GetMatchingRecordsCount(id);
-					if (lim>0) {
-						string sql="SELECT * FROM " + resetPassword.tb + " WHERE id= @ID ;";
-						//int i=0;
-						int o=0;
-						List<string> cols=this.GetColumns();
-						Dictionary<string,string> tmp=new Dictionary<string,string>();
-						try{
-							using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
-								SqlCommand cmd=new SqlCommand(sql,con);
-								cmd.Parameters.AddWithValue("@ID",id);
-								con.Open();
-								SqlDataReader r=cmd.ExecuteReader();
-								while(r.Read()){
-									o=0;
-									if (tmp.Count>0) {
-										tmp.Clear();
-									}
-									while(o<cols.Count){
-										tmp.Add(cols[o],r.GetString(o));
-										o++;
-									}
-									res.Add(tmp);
-								}
-								con.Close();
-							}
-						}catch(Exception ex){
-							console.Error("Failed to get matching records...\n\t\t"+ex.Message);
-						}
-					}
-				}
-			}
-			return res;
-		}
-		// Returns a List consisting of all the columns in the database.
-		protected List<string> GetColumns() {
-			List<string> res;
-			if (this.cols!=null) {
-				res=this.cols;
-			} else {
-				string sql="SELECT * FROM "+resetPassword.tb+";";
-				int i=0;
-				int lim=0;
-				res=new List<string>();
-				using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
-					SqlCommand cmd=new SqlCommand(sql,con);
-					con.Open();
-					try{
-						SqlDataReader r=cmd.ExecuteReader();
-						lim=r.FieldCount;
-						while(i<lim){
-							res.Add(r.GetName(i));
-							i++;
-						}
-					}catch(Exception e){
-						console.Error("Failed to get column names...\n\t\t"+e.Message);
-					}
-					/*
-					lim=r.FieldCount;
-					while(i<lim){
-						//res.Add(r.GetName(i));
-						res.Add(r.GetString(i));
-						i++;
-					}
-					*/
-					con.Close();
-				}
-			}
-			return res;
-		}
-		// Returns the number of records that match the ID.
-		protected int GetMatchingRecordsCount(string id=null) {
-			int res=0;
-			if (!String.IsNullOrEmpty(id)) {
-				if (!String.IsNullOrWhiteSpace(id)) {
-					string sql="SELECT COUNT(*) AS TOTAL FROM " + resetPassword.tb + " WHERE id= @ID ;";
-					try{
-						Database ins=new Database();
-						ins.SetAction(DatabasePrincipal.SelectPrincipal);
-						ins.AddColumn("id",id);
-						ins.AddWhere("id",id);
-						ins.Send();
-						res=ins.output.Count;
-						/*
-						using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
-							SqlCommand cmd=new SqlCommand(sql,con);
-							cmd.Parameters.AddWithValue("@ID",id);
-							con.Open();
-							SqlDataReader r=cmd.ExecuteReader();
-							if (r.HasRows) {
-								
-								while(r.Read()){
-									res=r.GetInt32(0);
-									break;
-								}
-								
-								//res=r["TOTAL"].;
-							}
-							con.Close();
-						}
-						*/
-					}catch(Exception ex){
-						console.Error("Failed to get number of matching records...\n\t\t"+ex.Message);
-					}
-				}
-			}
-			return res;
 		}
 		// Validates the string based on regular expressions.
 		protected bool validate(string q="") {
