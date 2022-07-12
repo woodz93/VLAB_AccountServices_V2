@@ -19,7 +19,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		private Dictionary<string,string> pairs=new Dictionary<string,string>();
 		private Dictionary<string,string> where_pairs=new Dictionary<string,string>();
 		private List<uint> action_list=new List<uint>();
-
 		private uint action=0x0000;
 		public List<Dictionary<string,string>> output=new List<Dictionary<string,string>>();
 		private List<Dictionary<string,string>> error_buffer=new List<Dictionary<string,string>>();
@@ -30,7 +29,6 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		// Data...
 		public static List<string> ExistingRecords=new List<string>();
 		private long LastTime=0;
-
 		//
 		// Summary:
 		//			Creates an instance of the Database object.
