@@ -12,7 +12,6 @@ namespace VLAB_AccountServices.services.assets.classes.UserInfo {
 		private string raw=null;
 		private bool ini_complete=false;
 		private UserData ud=null;
-
 		public UserInfo() {
 
 		}
@@ -139,7 +138,5 @@ namespace VLAB_AccountServices.services.assets.classes.UserInfo {
 			}
 			return res;
 		}
-
-
 	}
 }

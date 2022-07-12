@@ -1155,8 +1155,5 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 			}
 			return q;
 		}
-		
-
-
 	}
 }
