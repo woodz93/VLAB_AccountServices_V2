@@ -46,11 +46,6 @@ namespace VLAB_AccountServices.services {
 		private string ModeString="";
 
 		public UserCheck UC=null;
-		
-		
-
-
-
 		protected void Page_Unload(object sender, EventArgs e) {
 			this.CleanUp();
 		}
