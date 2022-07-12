@@ -1,30 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace VLAB_AccountServices.services.assets.classes.Database {
 	public class Records {
-
 		public List<Dictionary<string,string>> Raw=null;
-		
 		private int Iter=0;
-
 		public Records(List<Dictionary<string,string>> obj=null) {
 			this.Raw=obj;
 		}
-
 		// Resets the iteration counter variable.
 		public void Reset() {
 			this.Iter=0;
 		}
-
 		// Clears the results.
 		public void Clear() {
 			this.Raw.Clear();
 			this.Iter=0;
 		}
-
 		// Prepares an iteration process.
 		public bool Read() {
 			//Dictionary<string,string> res=new Dictionary<string, string>();
@@ -63,11 +54,5 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		public string ToString() {
 			return "[Database.RecordsObject]";
 		}
-		
-
-
-
-
-
 	}
 }
