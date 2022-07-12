@@ -54,7 +54,6 @@ namespace VLAB_AccountServices.services.assets.sys {
 				console.errored=false;
 			}
 		}
-
 		// Writes output to the client.
 		public static void Log(string message) {
 			if (console.debugging_mode>=0x111) {
@@ -88,7 +87,6 @@ namespace VLAB_AccountServices.services.assets.sys {
 				console.Output("<font style='color:rgb(100,255,100);font-weight:bolder;'>[SUCCESS]</font>:<font style='color:rgb(100,255,100);font-weight:bolder;'>\t"+message+"</font>");
 			}
 		}
-
 		private static void Output(string q=null) {
 			if (console.enable_output) {
 				if (console.CheckValue(q)) {
