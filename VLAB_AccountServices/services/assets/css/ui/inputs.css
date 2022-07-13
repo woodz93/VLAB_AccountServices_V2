@@ -1,4 +1,36 @@
 ﻿
+
+input, button, select, textarea {
+	position:relative;
+	top:0;
+	left:0;
+}
+
+.card .btn {
+	color:#000;
+}
+
+input:disabled, button:disabled, select:disabled, textarea:disabled {
+	background-color:rgb(150,150,150);
+	cursor:not-allowed;
+}
+
+#GroupsElement .aspNetDisabled {
+	display:none;
+}
+
+#UserGroupsElement label {
+	text-decoration:unset;
+}
+input[type="checkbox"] {
+	cursor:pointer;
+}
+
+
+
+
+
+/*
 input {
 	position:relative;
 	top:0;
@@ -40,7 +72,7 @@ input[type="checkbox"]:disabled {
 	background:radial-gradient(rgb(100,100,100),rgb(150,150,150));
 	border:5px solid rgb(150,150,150);
 }
-
+*/
 
 /*
 input[type="checkbox"]:checked:after, input[type="checkbox"]:after:checked {

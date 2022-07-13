@@ -49,6 +49,15 @@ namespace VLAB_AccountServices.services {
 		protected global::System.Web.UI.WebControls.TextBox password_confirm;
 
 		/// <summary>
+		/// status control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.Label status;
+
+		/// <summary>
 		/// group_container control.
 		/// </summary>
 		/// <remarks>
@@ -76,6 +85,15 @@ namespace VLAB_AccountServices.services {
 		protected global::System.Web.UI.WebControls.CheckBoxList GroupsElement;
 
 		/// <summary>
+		/// UserGroupsElement control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.CheckBoxList UserGroupsElement;
+
+		/// <summary>
 		/// dev control.
 		/// </summary>
 		/// <remarks>
@@ -101,14 +119,5 @@ namespace VLAB_AccountServices.services {
 		/// To modify move field declaration from designer file to code-behind file.
 		/// </remarks>
 		protected global::System.Web.UI.WebControls.Button submit_btn;
-
-		/// <summary>
-		/// status control.
-		/// </summary>
-		/// <remarks>
-		/// Auto-generated field.
-		/// To modify move field declaration from designer file to code-behind file.
-		/// </remarks>
-		protected global::System.Web.UI.WebControls.Label status;
 	}
 }

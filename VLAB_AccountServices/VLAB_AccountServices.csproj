@@ -166,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
+    <Content Include="services\assets\css\Bootstrap\Bootstrap.css" />
+    <Content Include="services\assets\css\Bootstrap\Bootstrap.js" />
+    <None Include="services\assets\css\Bootstrap\bootstrap.min.css.map" />
     <Content Include="services\assets\css\main.css" />
     <Content Include="services\assets\css\mobile\mobile.css" />
     <Content Include="services\assets\css\resources\fonts.css" />
@@ -177,6 +180,7 @@
     <Content Include="services\assets\css\ui\button.css" />
     <Content Include="services\assets\css\ui\status.css" />
     <Content Include="services\assets\css\ui\scrollbar.css" />
+    <Content Include="services\assets\css\ui\Alignment.css" />
     <Content Include="services\assets\css\ui\text.css" />
     <Content Include="services\assets\css\vars.css" />
     <Content Include="services\assets\eye.png" />

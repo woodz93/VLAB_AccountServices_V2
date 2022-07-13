@@ -1,0 +1,18 @@
+﻿
+.center-h {
+	left:50%;
+	transform:translateX(-50%);
+}
+.center-v {
+	top:50%;
+	transform:translateY(-50%);
+}
+
+.center-v.center-h, .center-h.center-v {
+	top:50%;
+	transform:translateX(-50%) translateY(-50%);
+}
+
+.pos-rel {
+	position:relative;
+}

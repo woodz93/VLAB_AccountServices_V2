@@ -1,28 +1,40 @@
 
+@import url("Bootstrap/Bootstrap.css");
+
+
 @import url("vars.css");
 @import url("ui/scrollbar.css");
+@import url("ui/container.css");
 @import url("resources/fonts.css");
 @import url("ui/page.css");
-@import url("ui/container.css");
 @import url("ui/inputs.css");
-
-
-
-
-@import url("vars.css");
-@import url("ui/page.css");
 @import url("ui/bg.css");
-@import url("ui/container.css");
-@import url("ui/label.css");
-@import url("ui/inputs.css");
-@import url("ui/button.css");
 @import url("ui/text.css");
 @import url("ui/status.css");
+@import url("ui/Alignment.css");
+@import url("ui/button.css");
 
+
+/*
+
+
+
+@import url("ui/label.css");
+@import url("ui/inputs.css");
 @import url("mobile/mobile.css");
 
 
+*/
 
+
+
+
+* {
+	outline:none !important;
+}
+button:focus, button:active, .btn:focus, .btn:active {
+	box-shadow:unset !important;
+}
 
 
 

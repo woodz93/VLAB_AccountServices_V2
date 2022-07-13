@@ -1,39 +1,35 @@
 ﻿.container {
 	position:relative;
-	top:50%;
-	left:50%;
-	transform:translateX(-50%) translateY(-50%);
-	width:auto;
-	height:auto;
-	padding:50px;
-	display:flex;
+	top:0;
+	left:0;
+	width:fit-content;
+	height:fit-content;
+	padding:0;
+	display:block;
 	overflow:hidden;
-	overflow-y:auto;
-	background-color:var(--container-bg-color-);
+	margin:0;
+	/*background-color:var(--container-bg-color-);*/
 }
 
 form.container {
 	position:relative;
 	top:0;
-	transform:translateX(-50%);
+	left:0;
 	overflow-y:hidden;
 	height:auto;
 	width:auto;
-	max-width:90%;
+	max-width:95vw;
 	max-height:unset;
+	padding:10px;
 }
-
+/*
 div.container {
 	position:relative;
-	top:-40px;
-	left:50%;
-	transform:translateX(-50%);
 	overflow-y:hidden;
-	/*height:500px;*/
 	height:auto;
-	/*max-height:calc(80% - 100px);*/
 	display:block;
 }
+*/
 /*
 div.container:before {
 	clear:both;
@@ -189,14 +185,11 @@ table {
 table.groups {
 	position:relative;
 	top:0;
-	left:50%;
-	transform:translateX(-50%);
+	left:0;
 	width:auto;
-	max-width:75%;
-	height:auto;
+	height:fit-content;
 	margin:0;
-	display:block;
-	overflow:hidden;
+	display:inline-block;
 }
 
 table.groups tbody {
@@ -248,8 +241,7 @@ table.container tr td:nth-child(even) {
 div.groups.container {
 	position:relative;
 	top:0;
-	left:50%;
-	transform:translateX(-50%);
+	left:0;
 	background-color:rgba(0,0,0,0);
 	width:auto;
 	height:auto;
@@ -284,6 +276,18 @@ span.aspNetDisabled label {
 div.large {
 	position:relative;
 	top:0;
-	width:85vw;
+	width:auto;
+	min-width:65vw;
 	display:block;
+}
+
+button[data-bs-toggle="collapse"] {
+	background-color:#0a58ca;
+}
+button[data-bs-toggle="collapse"].collapsed {
+	background-color:initial;
+}
+
+table {
+	border-color:rgb(30,30,30) !important;
 }

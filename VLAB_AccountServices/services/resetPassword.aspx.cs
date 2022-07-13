@@ -244,6 +244,7 @@ namespace VLAB_AccountServices.services {
 				dbins.AddColumn("id",id);
 				dbins.AddWhere("id",id);
 				dbins.AsyncRemoveRecordFromId(3,id);
+				Response.Redirect("resetPassword.aspx");
 			}
 		}
 		// Performs poast-back action.
@@ -255,6 +256,9 @@ namespace VLAB_AccountServices.services {
 				console.Info("Debug mode has been enabled.");
 			}
 			if (!(password.Text.Length>0 && password_confirm.Text.Length>0)) {
+				p=false;
+			}
+			if (password.Text!=password_confirm.Text) {
 				p=false;
 			}
 			if (p) {
@@ -282,6 +286,7 @@ namespace VLAB_AccountServices.services {
 							console.Info("Password has been modified.");
 							status.Text+="Your password has been modified for validation, please review the changed password and re-submit this form.";
 						}
+						Response.Redirect("resetPassword.aspx");
 					}
 				} else {
 					this.UsernameString="NULL";

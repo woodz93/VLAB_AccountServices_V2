@@ -144,6 +144,7 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 			if (Str.Str.CheckStr(name)) {
 				int i=0;
 				var con=(CheckBoxList)RPObj.FindControl("GroupsElement");
+				var con0=(CheckBoxList)RPObj.FindControl("UserGroupsElement");
 				string dn;										// Display name.
 				// NOTE: The values within the "GroupElement" only contain the "display_name" value, NOT the actual AD group name(s).
 				if (Element.groupList.ContainsValue(name)) {
@@ -152,6 +153,7 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 						if (con.Items[i].Text==dn) {
 							con.Items[i].Selected=true;
 							con.Items[i].Enabled=false;
+							con0.Items.Add(con.Items[i]);
 							break;								// Does not need to continue iteration because the group was found.
 						}
 						i++;

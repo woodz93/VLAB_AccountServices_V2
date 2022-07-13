@@ -14,11 +14,10 @@ label, h1, label, font, span, p, section, article, li {
 .title, .sub_title {
 	position:relative;
 	top:0;
-	left:50%;
-	transform:translateX(-50%);
+	left:0;
 	font-weight:bolder;
 	font-size:1.5em;
-	width:auto;
+	width:fit-content;
 	max-width:100%;
 	display:inline-block;
 }
@@ -58,7 +57,19 @@ table.list.groups tr td span label {
 	cursor:pointer;
 }
 
+span.title {
+	position:relative;
+	top:0;
+	left:0;
+	width:fit-content;
+	display:inline-block;
+}
+
 
 * {
 	font-family:var(--font-family-) !important;
+}
+
+label:disabled, font:disabled, article:disabled, span:disabled, div:disabled, .aspNetDisabled * {
+	cursor:not-allowed !important;
 }
