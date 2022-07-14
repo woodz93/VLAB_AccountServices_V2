@@ -288,6 +288,7 @@ namespace VLAB_AccountServices.services {
 							console.Info("Password has been modified.");
 							status.Text+="Your password has been modified for validation, please review the changed password and re-submit this form.";
 						}
+						this.EmailUser();
 						Response.Redirect("resetPassword.aspx");
 					}
 				} else {
@@ -311,6 +312,14 @@ namespace VLAB_AccountServices.services {
 			} else {
 				console.Error("Failed to process your request. Password does not meet the requirements.");
 			}
+		}
+		// Sends an email to the user.
+		private void EmailUser() {
+			Mail ins=new Mail();
+			ins.SetDestination("");
+			ins.SetMessage("[MESSAGE VARIES DEPENDING ON WHAT HAPPENED]");
+			ins.SetSubject("UHMC Account Services");
+			ins.SetFrom("uhmchelp@hawaii.edu");
 		}
 		// Checks object for valid username.
 		private bool CheckString(string q=null) {

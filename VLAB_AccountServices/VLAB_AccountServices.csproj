@@ -220,6 +220,7 @@
     <Compile Include="services\assets\classes\Groups\GroupData.cs" />
     <Compile Include="services\assets\classes\Groups\GroupMeta.cs" />
     <Compile Include="services\assets\classes\Groups\Groups.cs" />
+    <Compile Include="services\assets\classes\Network\Mail.cs" />
     <Compile Include="services\assets\classes\Network\Network.cs" />
     <Compile Include="services\assets\classes\Str\Str.cs" />
     <Compile Include="services\assets\classes\sys\sys.cs" />
