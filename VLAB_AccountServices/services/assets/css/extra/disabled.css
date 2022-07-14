@@ -1,0 +1,7 @@
+﻿
+
+.aspNetDisabled, label:disabled, font:disabled, article:disabled, span:disabled, div:disabled, .aspNetDisabled label, table.list.groups tr td span.aspNetDisabled label, table.list.groups tr td span.aspNetDisabled input, table.list.groups tr td span.aspNetDisabled input[type="checkbox"], table.list.groups tr td span.aspNetDisabled input.form-check-input[type="checkbox"][disabled="disabled"], .aspNetDisabled * {
+	cursor:not-allowed;
+	user-select:none;
+}
+

@@ -210,20 +210,7 @@ table.groups span {
 	height:auto;
 	display:inline-block;
 }
-table.groups tr td input[type="checkbox"] {
-	position:relative;
-	width:25px;
-	height:25px;
-	left:0;
-	display:inline-block;
-}
-table.groups tr td label {
-	position:relative;
-	left:0;
-	text-align:right;
-	display:inline-block;
-	vertical-align:top;
-}
+
 
 table.container tr td {
 	/*border-bottom:2px solid #000;*/
@@ -290,4 +277,9 @@ button[data-bs-toggle="collapse"].collapsed {
 
 table {
 	border-color:rgb(30,30,30) !important;
+}
+
+.form-check, .form-switch {
+	display:inline-block;
+	vertical-align:middle;
 }

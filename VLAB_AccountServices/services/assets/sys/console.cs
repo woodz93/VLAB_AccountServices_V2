@@ -116,12 +116,9 @@ namespace VLAB_AccountServices.services.assets.sys {
 							}
 						}
 					} else if (console.mode==0x10) {
-						console.resetPassword_Instance.StatElm.Text+="FAILED";
-						try{
-							// Write to IIS event logs.
-						}catch{
-							
-						}
+						//console.resetPassword_Instance.StatElm.Text+="FAILED";
+						Event evt=new Event("AccountServicesWWW");
+						evt.Log("Testing log message");
 					}
 				}
 			}

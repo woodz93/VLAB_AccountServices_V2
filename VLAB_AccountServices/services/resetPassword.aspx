@@ -13,7 +13,7 @@
 </head>
 <body>
 
-	
+	<button type="button" data-bs-toggle="modal" data-bs-target="#modal_support_panel" class="btn btn-primary help">Help</button>
 
 	<div id="bg" class="bg"></div>
 	<div class="container center-h center-v beval">
@@ -31,7 +31,7 @@
 									<td><label for="username">Username: </label></td>
 									<td>
 										<asp:textbox id="username" Text="" runat="server" name="username" type="text" value="" placeholder="UH Username..." CausesValidation="false"></asp:textbox>
-										<button type="button" class="btn btn-info info" data-bs-toggle="modal" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-content="Your UH username/email.\nThis is determined from your UH login and cannot be changed in this form."></button>
+										<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Your UH username/email.\nThis is determined from your UH login and cannot be changed in this form."></button>
 									</td>
 								</tr>
 								<tr>
@@ -39,7 +39,7 @@
 									<td>
 										<asp:textbox id="password" Text="" runat="server" name="password" type="password" value="" placeholder="UH Password..." CausesValidation="false"></asp:textbox>
 										<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password"></button>
-										<button type="button" class="btn btn-info info" data-bs-toggle="modal" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-content="Enter a password that you'll use to login to your desktop."></button>
+										<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Enter a password that you'll use to login to your desktop."></button>
 									</td>
 								</tr>
 								<tr>
@@ -47,7 +47,7 @@
 									<td>
 										<asp:textbox id="password_confirm" Text="" runat="server" name="password_confirm" type="password" value="" placeholder="Confirm password..." CausesValidation="false"></asp:textbox>
 										<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password_confirm"></button>
-										<button type="button" class="btn btn-info info" data-bs-toggle="modal" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-content="Confirm your password."></button>
+										<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Confirm your password."></button>
 									</td>
 								</tr>
 							</table>
@@ -65,8 +65,8 @@
 							<br />
 							<table class="table table-striped table-bordered">
 								<tr>
-									<th>Available Desktops <button type="button" class="btn btn-info info" data-bs-toggle="modal" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-content="Here, you can select the virtual desktops that you want access to.\nOnce you've submitted the form, you'll gain immediate access to the virtual desktops you have selected."></button></th>
-									<th>My Desktops <button type="button" class="btn btn-info info" data-bs-toggle="modal" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-content="These are the virtual desktops that you already have access to."></button></th>
+									<th>Available Desktops <button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Here, you can select the virtual desktops that you want access to.\nOnce you've submitted the form, you'll gain immediate access to the virtual desktops you have selected."></button></th>
+									<th>My Desktops <button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="These are the virtual desktops that you already have access to."></button></th>
 								</tr>
 								<tr>
 									<td>
@@ -90,10 +90,13 @@
 			</div>
 			<br>
 			<asp:button id="submit_btn" CssClass="submit_btn btn btn-outline-primary btn-lg center-h submit_button hidden" name="submit_btn" Text="[ERROR]" Onclick="processPassword" runat="server" type="submit" CausesValidation="true"></asp:button>
+
+			
+
 		</form>
 	</div>
 
-	<button type="button" data-bs-toggle="modal" data-bs-target="#modal_panel" class="btn btn-primary" hidden>Open</button>
+	
 
 	<div id="modal_panel" class="modal fade">
 		<div class="modal-dialog">
@@ -113,6 +116,62 @@
 			</div>
 		</div>
 	</div>
+
+
+	<div id="modal_support_panel" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 id="modal_support_title" class="modal-title">Response</h4>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div id="modal_support_content" class="modal-body">
+					<form method="post" enctype="multipart/form-data" target="gform_ajax_frame_6" id="gform_6" action="https://maui.hawaii.edu/helpdesk/">
+						<div class="input-group mb-3">
+							<span class="input-group-text">Your Name:</span>
+							<input type="text" class="form-control" placeholder="First Name" id="input_6_5_3" name="input_5.3">
+							<input type="text" class="form-control" placeholder="Last Name" id="input_6_5_6" name="input_5.6">
+						</div>
+						<div class="input-group mb-3">
+							<span class="input-group-text">Email:</span>
+							<input id="input_6_2" name="input_2" type="text" class="form-control" placeholder="Email">
+						</div>
+						<div class="input-group mb-3">
+							<label for="input_7" class="input-group-text">Department:</label>
+							<select class="form-select" name="input_7" id="input_6_7">
+								<option value="Please Select">-- --</option>
+								<option value="Admissions">Admissions</option>
+								<option value="Counseling">Counseling</option>
+								<option value="Careers or Internships">Careers or Internships</option>
+								<option value="Scheduling">Scheduling</option>
+								<option value="Housing">Housing</option>
+								<option value="Financial Aid">Financial Aid</option>
+								<option value="IT Help" selected>IT Help</option>
+								<option value="Other">Other</option>
+							</select>
+						</div>
+						<div class="input-group mb-3">
+							<span class="input-group-text">Description:</span>
+							<input id="input_6_8" name="input_8" type="text" class="form-control" placeholder="Brief one-sentence description of the issue..." value="AccountServices">
+						</div>
+						<div class="form-floating mb-3 mt-3">
+							<textarea class="form-control" rows="10" cols="400" name="input_3" id="input_6_3" placeholder="Please provide additional details on the issue here..."></textarea>
+							<label for="input_3">Details:</label>
+						</div>
+						<div hidden>
+							<iframe title="reCAPTCHA" src="https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LfjJfUSAAAAABb0BxPDtUiUzF0V1CwVm8ZTCyMF&co=aHR0cHM6Ly9tYXVpLmhhd2FpaS5lZHU6NDQz&hl=en&v=4rwLQsl5N_ccppoTAwwwMrEN&theme=light&size=normal&cb=y4b9minbt3gw" width="304" height"78" role="presentation" name="a-rzcaksaeb8yf" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe>
+						</div>
+						<button type="button" class="btn btn-outline-primary" onclick="SubmitHelpRequest()">Submit Ticket</button>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
 
 </body>
 </html>

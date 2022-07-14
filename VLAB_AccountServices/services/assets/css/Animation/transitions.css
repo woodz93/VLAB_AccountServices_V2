@@ -1,0 +1,41 @@
+﻿
+@import url("vars.css");
+
+/*
+.t- {
+	-webkit-transition-duration:var(--t-);
+	-moz-transition-duration:var(--t-);
+	-ms-transition-duration:var(--t-);
+	-o-transition-duration:var(--t-);
+	transition-duration:var(--t-);
+}
+*/
+
+.t-250 {
+	-webkit-transition-duration:var(--t-250);
+	-moz-transition-duration:var(--t-250);
+	-ms-transition-duration:var(--t-250);
+	-o-transition-duration:var(--t-250);
+	transition-duration:var(--t-250);
+}
+.t-500 {
+	-webkit-transition-duration:var(--t-500);
+	-moz-transition-duration:var(--t-500);
+	-ms-transition-duration:var(--t-500);
+	-o-transition-duration:var(--t-500);
+	transition-duration:var(--t-500);
+}
+.t-750 {
+	-webkit-transition-duration:var(--t-750);
+	-moz-transition-duration:var(--t-750);
+	-ms-transition-duration:var(--t-750);
+	-o-transition-duration:var(--t-750);
+	transition-duration:var(--t-750);
+}
+.t-1000 {
+	-webkit-transition-duration:var(--t-1000);
+	-moz-transition-duration:var(--t-1000);
+	-ms-transition-duration:var(--t-1000);
+	-o-transition-duration:var(--t-1000);
+	transition-duration:var(--t-1000);
+}

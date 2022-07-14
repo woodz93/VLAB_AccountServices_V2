@@ -4,7 +4,7 @@ setTimeout(function () { ini(); }, 0);
 
 function ini() {
 	if ((typeof Server) !== "undefined") {
-		setup();
+		setTimeout(function(){setup();},10);
 	} else {
 		setTimeout(function () {
 			ini();
@@ -35,18 +35,156 @@ function setup() {
 				}
 			}
 		});
+		SetupWindowListeners();
+		SetupPopOvers();
+		AdjustCheckboxes();
 		console.log("All elements have successfully been setup!");
 	} else {
 		setTimeout(function () { ini(); }, 100);
 	}
 }
 
+function AdjustCheckboxes() {
+	let list=document.querySelectorAll("input[type=\"checkbox\"]");
+	let i=0;
+	let elm=false;
+	let par=false;
+	let tmp=false;
+	while(i<list.length){
+		list[i].classList.add("form-check-input");
+		par=list[i].parentElement;
+		elm=list[i];
+		tmp=document.createElement("div");
+		tmp.classList.add("form-check");
+		tmp.classList.add("form-switch");
+
+		par.removeChild(list[i]);
+		tmp.appendChild(elm);
+		par.insertAdjacentElement("afterbegin",tmp);
+		i++;
+	}
+	if (document.getElementById("modal_support_panel")) {
+		elm=document.getElementById("modal_support_panel");
+		par=elm.parentElement;
+		par.removeChild(elm);
+		document.getElementsByTagName("body")[0].appendChild(elm);
+	}
+	if (document.getElementById("input_6_2")) {
+		document.getElementById("input_6_2").value=document.getElementById("username").value+"@hawaii.edu";
+	}
+}
+
+function SetupPopOvers() {
+	let list = document.querySelectorAll('*[data-bs-toggle="popover"]');
+	let i = 0;
+	let p = false;
+	while (i < list.length) {
+		p = false;
+		if (list[i]) {
+			if (!list[i].hasAttribute("title")) {
+				p = true;
+			} else if (!list[i].getAttribute("title")) {
+				p = true;
+			}
+		}
+		if (p) {
+			list[i].setAttribute("title", "Information");
+			list[i].title = "Information";
+		}
+		i++;
+	}
+	var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+	var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+		return new bootstrap.Popover(popoverTriggerEl);
+	});
+}
+
+
+function SetupWindowListeners() {
+	window.addEventListener("click",function(event){
+		WinEvt(event);
+	});
+	let list=document.querySelectorAll("[data-bs-toggle=\"popover\"]");
+	let i=0;
+	while(i<list.length){
+		//list[i].setAttribute("data-bs-content",Convert(list[i].getAttribute("data-bs-content")));
+		list[i].addEventListener("click",function(event){
+			setTimeout(function(){
+				let elm=document.querySelector("#"+event.srcElement.getAttribute("aria-describedby"));
+				if (elm) {
+					elm=elm.querySelector(".popover-body");
+					elm.innerHTML=Convert(elm.textContent);
+				}
+			},10);
+			WinEvt(event);
+		});
+		i++;
+	}
+}
+
+function WinEvt(event = false) {
+	if (event.srcElement) {
+		let tar = document.querySelector("div.popover.fade.show.bs-popover-end[role=\"tooltip\"]") || false;
+		//console.log(document.querySelector("[data-bs-toggle=\"popover\"][aria-describeby]"));
+		//console.log(event);
+		let id="";
+		if (event.srcElement.hasAttribute("aria-describedby")) {
+			id=event.srcElement.getAttribute("aria-describedby");
+		}
+		if (event.srcElement !== tar && event.srcElement!==document.querySelector("[data-bs-toggle=\"popover\"][aria-describedby=\""+id+"\"]")) {
+			ClosePopover(id);
+		}
+	}
+}
+
+function ClosePopover(exc=false) {
+	let e=false;
+	let list = document.querySelectorAll("div.popover.fade.show.bs-popover-end[role=\"tooltip\"]");
+	let i = 0;
+	let par = false;
+	let id="";
+	let eid=false;
+	if (exc!==false) {
+		if (exc.length!==undefined) {
+			if (exc.length>0) {
+				eid=exc;
+				e=document.querySelector("#"+eid);
+			}
+		}
+	}
+	while (i < list.length) {
+		if (list[i]) {
+			//par = list[i].parentElement;
+			//par.removeChild(list[i]);
+			
+			id="";
+			if (list[i].id) {
+				id=list[i].id;
+			}
+			if (id!==e.id) {
+				document.querySelector("[data-bs-toggle=\"popover\"][aria-describedby=\""+id+"\"]").click();
+			}
+		}
+		i++;
+	}
+	/*
+	if (list.length>0) {
+		let elm = document.querySelector("[data-bs-toggle=\"popover\"][aria-describedby]");
+		if (elm) {
+			elm.click();
+		}
+	}
+	*/
+}
+
 function SetInfo(q = false) {
+	/*
 	let obj = {
 		"title": "Information",
-		"content": q.getAttribute("data-content")
+		"content": q.getAttribute("data-bs-content")
 	};
 	SetModal(obj);
+	*/
 }
 function SetModal(obj = false) {
 	if (obj !== false) {
@@ -136,14 +274,14 @@ function prepSubmitBtn() {
 			if (info[list[i].textContent]) {
 				tmp = info[list[i].textContent];
 			}
-			elm = " <button type=\"button\" class=\"btn btn-info info\" data-bs-toggle=\"modal\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-content=\"" + tmp + "\"></button>";
+			elm = " <button type=\"button\" class=\"btn btn-info info t-500\" data-bs-toggle=\"popover\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-bs-content=\"" + tmp + "\"></button>";
 			list[i].insertAdjacentHTML("beforeend", elm);
 			if (list0[i]) {
 				tmp = "[" + list0[i].textContent + "]";
 				if (info[list0[i].textContent]) {
 					tmp = info[list0[i].textContent];
 				}
-				elm = " <button type=\"button\" class=\"btn btn-info info\" data-bs-toggle=\"modal\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-content=\"" + tmp + "\"></button>";
+				elm = " <button type=\"button\" class=\"btn btn-info info t-500\" data-bs-toggle=\"popover\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-bs-content=\"" + tmp + "\"></button>";
 				list0[i].insertAdjacentHTML("beforeend", elm);
 			}
 			i++;
@@ -343,4 +481,31 @@ function passwordResetSvrResponse(q = false) {
 			}
 		}
 	}
+}
+
+
+
+function SubmitHelpRequest() {
+	let form={
+		"elm":document.getElementById("gform_6"),
+		"fname":document.getElementById("input_6_5_3").value,
+		"lname":document.getElementById("input_6_5_6").value,
+		"email":document.getElementById("input_6_2").value,
+		"department":document.getElementById("input_6_7").value,
+		"desc":document.getElementById("input_6_8").value,
+		"message":document.getElementById("input_6_3").value
+	};
+	form["name"]=form.fname+" "+form.lname;
+	form["alert"]=true;
+	form["source"]="API";
+	form["autorespond"]=true;
+	let a={
+		"src":"https://uhmchelp.maui.hawaii.edu/api/tickets.json",
+		"args":form
+	};
+	Server.send(a,true,"HelpResponse");
+}
+
+function HelpResponse(q=false) {
+	console.log(q);
 }

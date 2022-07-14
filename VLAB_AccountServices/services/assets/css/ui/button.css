@@ -1,4 +1,16 @@
 ﻿
+button.help {
+	position:absolute;
+	top:unset;
+	left:unset;
+	bottom:0;
+	right:0;
+	width:fit-content;
+	height:fit-content;
+	display:inline-block;
+	z-index:2000;
+}
+
 /*
 button, .submit_btn {
 	appearance:button;
@@ -143,6 +155,10 @@ button.info {
 	height:30px;
 	padding:0px;
 	display:inline;
+	border-radius:10px;
+}
+button.info:hover {
+	border-radius:5px;
 }
 
 button.info:before {

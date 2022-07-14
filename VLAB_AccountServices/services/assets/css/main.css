@@ -13,7 +13,7 @@
 @import url("ui/status.css");
 @import url("ui/Alignment.css");
 @import url("ui/button.css");
-
+@import url("extra/extra.css");
 
 /*
 
@@ -29,12 +29,7 @@
 
 
 
-* {
-	outline:none !important;
-}
-button:focus, button:active, .btn:focus, .btn:active {
-	box-shadow:unset !important;
-}
+
 
 
 

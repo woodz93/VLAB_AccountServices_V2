@@ -78,6 +78,8 @@ namespace VLAB_AccountServices.services {
 		}
 		// Performs a first-time initialization of all variables and data.
 		protected void ini() {
+			//Event evt=new Event("resetPasswordWWW");
+			//evt.Error("This is a testing message from the resetPassword.aspx.cs file.");
 			//this.SetConnectionTimeout();
 			this.InitialChecks();
 			console.ini_complete=false;

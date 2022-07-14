@@ -1,0 +1,13 @@
+﻿
+
+* {
+	outline:none !important;
+}
+button:focus, button:active, .btn:focus, .btn:active {
+	box-shadow:unset !important;
+}
+
+button.info {
+	cursor:pointer;
+}
+

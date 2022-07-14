@@ -6,12 +6,15 @@ using System.Web;
 using VLAB_AccountServices.services.assets.classes.Database;
 using VLAB_AccountServices.services.assets.classes.sys;
 using VLAB_AccountServices.services.assets.sys;
+using DotNetCasClient;
+using DotNetCasClient.Security;
 
 namespace VLAB_AccountServices.services.assets.classes.UserInfo {
 	public class UserInfo {
 		private string raw=null;
 		private bool ini_complete=false;
 		private UserData ud=null;
+		private ICasPrincipal CAS=null;
 		public UserInfo() {
 
 		}
@@ -27,6 +30,14 @@ namespace VLAB_AccountServices.services.assets.classes.UserInfo {
 				}catch(Exception e){
 					console.Error("Failed to deserialize the data object.\n\t\t"+e.Message);
 				}
+			}
+		}
+		// Initializes all required items.
+		private void ini() {
+			try{
+				this.CAS=CasAuthentication.CurrentPrincipal;
+			}catch(Exception e){
+				
 			}
 		}
 		// Sets the data string.

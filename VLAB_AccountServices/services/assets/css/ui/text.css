@@ -70,6 +70,4 @@ span.title {
 	font-family:var(--font-family-) !important;
 }
 
-label:disabled, font:disabled, article:disabled, span:disabled, div:disabled, .aspNetDisabled * {
-	cursor:not-allowed !important;
-}
+

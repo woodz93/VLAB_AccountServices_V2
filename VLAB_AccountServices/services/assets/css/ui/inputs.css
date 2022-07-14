@@ -22,12 +22,38 @@ input:disabled, button:disabled, select:disabled, textarea:disabled {
 #UserGroupsElement label {
 	text-decoration:unset;
 }
+
+table.groups tr td input[type="checkbox"] {
+	position:relative;
+	left:0;
+	display:inline-block;
+}
+table.groups tr td label {
+	position:relative;
+	left:0;
+	text-align:right;
+	display:inline-block;
+	vertical-align:middle;
+}
+
 input[type="checkbox"] {
 	cursor:pointer;
 }
+.form-check input[type="checkbox"].form-check-input {
+	border-color:rgba(0,0,0,0.75);
+}
+.aspNetDisabled .form-check input[type="checkbox"].form-check-input {
+	border-color:rgba(0,0,0,0.25);
+}
 
+option[value]:after {
+	clear:both;
+	content:attr(value);
+}
 
-
+.form-floating > textarea.form-control {
+	height:200px;
+}
 
 
 /*
