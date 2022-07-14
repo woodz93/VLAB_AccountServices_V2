@@ -260,8 +260,8 @@ function prepSubmitBtn() {
 			document.getElementById("submit_btn").disabled = true;
 		});
 		*/
-		let list = document.querySelectorAll("table#GroupsElement span");
-		let list0 = document.querySelectorAll("table#UserGroupsElement span");
+		let list = document.querySelectorAll("table#GroupsElement td");
+		let list0 = document.querySelectorAll("table#UserGroupsElement td");
 		let i = 0;
 		//let tmp = "<button type=\"button\" class=\"btn btn - info info\" data-bs-toggle=\"modal\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-content=\""+info[i]+"\"></button>";
 		let elm = "";
