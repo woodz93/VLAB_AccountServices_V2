@@ -484,8 +484,19 @@ function passwordResetSvrResponse(q = false) {
 }
 
 
+function DisableHelpForm() {
+	let elm=document.getElementById("submit_ticket_btn");
+	elm.disabled=true;
+	elm.insertAdjacentHTML("afterbegin","<span class=\"spinner-border spinner-border-sm\"></span>");
+}
+
+var GV_HelpPass=false;
+var GV_OVR=true;
 
 function SubmitHelpRequest() {
+
+	DisableHelpForm();
+
 	let form={
 		"elm":document.getElementById("gform_6"),
 		"fname":document.getElementById("input_6_5_3").value,
@@ -503,9 +514,62 @@ function SubmitHelpRequest() {
 		"src":"https://uhmchelp.maui.hawaii.edu/api/tickets.json",
 		"args":form
 	};
-	Server.send(a,true,"HelpResponse");
+	GV_HelpPass=true;
+	setTimeout(function(){CheckHelp();},5000);
+	try{
+		if (GV_OVR) {
+			Server.send(a,true,"HelpResponse");
+		}
+	}catch{
+		HelpError();
+	}
 }
 
 function HelpResponse(q=false) {
-	console.log(q);
+	//console.log(q);
+	GV_HelpPass=false;
 }
+function CheckHelp() {
+	//console.log(GV_HelpPass);
+	if (GV_HelpPass) {
+		HelpError();
+	}
+}
+// This is a testing message from the UHMC account services website.
+function HelpError() {
+	let elm=document.getElementById("submit_ticket_btn");
+	if (elm.classList.contains("btn-outline-primary")) {
+		elm.classList.remove("btn-outline-primary");
+	}
+	if (elm.querySelector("span")) {
+		elm.removeChild(elm.querySelector("span"));
+	}
+	if (!elm.classList.contains("btn-outline-danger")) {
+		elm.classList.add("btn-outline-danger");
+	}
+	elm.innerHTML="[ERROR]";
+	OpenNote("Unable to submit help ticket!");
+	GV_OVR=false;
+}
+
+
+function OpenNote(q=false) {
+	if (q!==false) {
+		let elm=document.getElementById("note");
+		if (elm) {
+			if (elm.classList.contains("hidden")) {
+				elm.innerHTML=q;
+				elm.classList.remove("hidden");
+			}
+		}
+	}
+}
+function CloseNote() {
+	let elm=document.getElementById("note");
+	if (elm) {
+		if (!elm.classList.contains("hidden")) {
+			elm.classList.add("hidden");
+		}
+	}
+}
+

@@ -10,6 +10,9 @@ button.help {
 	display:inline-block;
 	z-index:2000;
 }
+button#submit_ticket_btn:disabled {
+	cursor:not-allowed;
+}
 
 /*
 button, .submit_btn {

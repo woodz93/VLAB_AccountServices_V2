@@ -283,3 +283,39 @@ table {
 	display:inline-block;
 	vertical-align:middle;
 }
+
+.note {
+	position:fixed;
+	top:unset;
+	bottom:0;
+	left:0;
+	width:fit-content;
+	height:fit-content;
+	max-width:50vw;
+	max-height:50vh;
+	z-index:2001;
+	border:none;
+	padding-right:10px;
+	border-right:5px solid;
+	display:block;
+}
+.note.hidden {
+	position:fixed;
+	top:unset;
+	bottom:0;
+	left:-100%;
+	width:fit-content;
+	height:fit-content;
+	max-width:50vw;
+	max-height:50vh;
+	z-index:2001;
+	border:none;
+	padding-right:10px;
+	padding-left:10px;
+	border-right:5px solid;
+	display:block;
+}
+
+.danger {
+	border-color:#7D2029;
+}

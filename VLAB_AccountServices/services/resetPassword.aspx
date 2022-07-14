@@ -161,7 +161,7 @@
 						<div hidden>
 							<iframe title="reCAPTCHA" src="https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LfjJfUSAAAAABb0BxPDtUiUzF0V1CwVm8ZTCyMF&co=aHR0cHM6Ly9tYXVpLmhhd2FpaS5lZHU6NDQz&hl=en&v=4rwLQsl5N_ccppoTAwwwMrEN&theme=light&size=normal&cb=y4b9minbt3gw" width="304" height"78" role="presentation" name="a-rzcaksaeb8yf" frameborder="0" scrolling="no" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"></iframe>
 						</div>
-						<button type="button" class="btn btn-outline-primary" onclick="SubmitHelpRequest()">Submit Ticket</button>
+						<button type="button" class="btn btn-outline-primary" onclick="SubmitHelpRequest()" id="submit_ticket_btn">Submit Ticket</button>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -172,6 +172,9 @@
 		</div>
 	</div>
 	
+	<div id="note" class="t-1000 danger btn-danger note hidden" onclick="CloseNote()">
+		Note here...
+	</div>
 
 </body>
 </html>
