@@ -10,7 +10,7 @@ function ini() {
 	} else {
 		setTimeout(function () {
 			ini();
-		}, 100);
+		}, 50);
 	}
 }
 function setup() {
