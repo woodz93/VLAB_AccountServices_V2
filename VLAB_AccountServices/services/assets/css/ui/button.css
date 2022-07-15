@@ -115,11 +115,14 @@ button:hover:before, .submit_btn:hover:before {
 */
 .peak {
 	position:relative;
-	top:0;
+	top:50%;
 	left:0;
-	display:inline;
-	padding:13px;
-	vertical-align:middle;
+	transform:translateY(-50%);
+	width:28px;
+	height:28px;
+	display:inline-block;
+	/*padding:13px;*/
+	/*vertical-align:middle;*/
 }
 .peak:after {
 	clear:both;
@@ -151,13 +154,11 @@ button.card-header {
 }
 
 button.info {
-	position:relative;
-	top:0;
 	left:0;
 	width:20px;
 	height:20px;
 	padding:0px;
-	display:inline;
+	display:inline-block;
 	border-radius:10px;
 	font-size:0.75em;
 }
@@ -172,4 +173,8 @@ button.info:before {
 	top:50%;
 	left:50%;
 	transform:translateX(-50%) translateY(-50%);
+}
+
+table.pwd-mgr button.info {
+	transform:translateY(-70%);
 }

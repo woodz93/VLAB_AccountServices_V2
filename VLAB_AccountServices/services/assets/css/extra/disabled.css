@@ -5,3 +5,7 @@
 	user-select:none;
 }
 
+input[disabled="disabled"] {
+	background-color:rgb(150,150,150) !important;
+}
+

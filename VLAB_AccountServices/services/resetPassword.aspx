@@ -26,33 +26,50 @@
 					<div class="card">
 						<button data-bs-toggle="collapse" data-bs-target="#password_mgr_container" class="btn btn-primary center-h card-header collapsed" type="button">Password Management</button>
 						<div id="password_mgr_container" class="collapse" data-bs-parent="#accordion">
-							<table class="container">
+							<table class="container pwd-mgr">
 								<tr>
-									<td><label for="username">Username: </label></td>
+									<!--<td><label for="username">Username: </label></td>-->
 									<td>
-										<asp:textbox id="username" Text="" runat="server" name="username" type="text" value="" placeholder="UH Username..." CausesValidation="false"></asp:textbox>
-										<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Your UH username/email.\nThis is determined from your UH login and cannot be changed in this form."></button>
+										<div class="form-floating mb-3 mt-3 tal">
+											<asp:textbox id="username" Text="" runat="server" name="username" type="text" value="" placeholder="UH Username..." CausesValidation="false" CssClass="form-control"></asp:textbox>
+											<label for="password-confirm">Username</label>
+										</div>
+										<div class="options">
+											<button type="button" class="btn btn-info peak hide"></button>
+											<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Your UH username/email.\nThis is determined from your UH login and cannot be changed in this form."></button>
+										</div>
 									</td>
 								</tr>
 								<tr>
-									<td><label for="password">Password: </label></td>
+									<!--<td><label for="password">Password: </label></td>-->
 									<td>
-										<asp:textbox id="password" Text="" runat="server" name="password" type="password" value="" placeholder="UH Password..." CausesValidation="false"></asp:textbox>
-										<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password"></button>
-										<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Enter a password that you'll use to login to your desktop."></button>
+										<div class="form-floating mb-3 mt-3 tal">
+											<asp:textbox id="password" Text="" runat="server" name="password" type="password" value="" placeholder="UH Password..." CausesValidation="false" CssClass="form-control"></asp:textbox>
+											<label for="password">Password</label>
+										</div>
+										<div class="options">
+											<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password"></button>
+											<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Enter a password that you'll use to login to your virtual desktop."></button>
+										</div>
+
 									</td>
 								</tr>
 								<tr>
-									<td><label for="password-confirm">Confirm Password: </label></td>
+									<!--<td><label for="password-confirm">Confirm Password: </label></td>-->
 									<td>
-										<asp:textbox id="password_confirm" Text="" runat="server" name="password_confirm" type="password" value="" placeholder="Confirm password..." CausesValidation="false"></asp:textbox>
-										<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password_confirm"></button>
-										<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Confirm your password."></button>
+										<div class="form-floating mb-3 mt-3 tal">
+											<asp:textbox id="password_confirm" Text="" runat="server" name="password_confirm" type="password" value="" placeholder="Confirm password..." CausesValidation="false" CssClass="form-control"></asp:textbox>
+											<label for="password-confirm">Confirm Password</label>
+										</div>
+										<div class="options">
+											<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password_confirm"></button>
+											<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Confirm your password."></button>
+										</div>
 									</td>
 								</tr>
 							</table>
 							<br>
-							<button class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)">Save Password</button>
+							<button class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)" data-type="submit">Save Password</button>
 							<br>
 							<asp:label id="status" Text="" runat="server" class="status alert alert-dark center-h" CausesValidation="false">Response messages will display here.</asp:label>
 						</div>
@@ -78,7 +95,7 @@
 								</tr>
 							</table>
 							<br>
-							<button class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)">Add Groups</button>
+							<button class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)" data-type="submit">Add Groups</button>
 						</div>
 					</div>
 

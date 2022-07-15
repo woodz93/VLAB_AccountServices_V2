@@ -208,7 +208,7 @@ table.groups span {
 	left:0;
 	width:100%;
 	height:auto;
-	display:inline-block;
+	display:inline;
 }
 
 
@@ -318,4 +318,48 @@ table {
 
 .danger {
 	border-color:#7D2029;
+}
+
+table.pwd-mgr .form-floating {
+	width:fit-content;
+	height:fit-content;
+	display:inline-block;
+	overflow:hidden;
+}
+table.pwd-mgr tr {
+	position:relative;
+	top:0;
+	left:0;
+	display:block;
+	height:60px;
+	margin-bottom:10px;
+}
+table.pwd-mgr tr td {
+	position:relative;
+	left:50%;
+	transform:translateX(-50%);
+	width:fit-content;
+	display:block;
+}
+
+.hide {
+	opacity:0;
+	cursor:default !important;
+}
+
+div.options {
+	position:relative;
+	left:0;
+	transform:translateY(-100%);
+	width:fit-content;
+	height:fit-content;
+	display:inline-block;
+}
+
+div.popover.show {
+	box-shadow:0px 0px 20px 2px #000;
+}
+
+div.card {
+	background-color:rgba(255,255,255,0.7);
 }

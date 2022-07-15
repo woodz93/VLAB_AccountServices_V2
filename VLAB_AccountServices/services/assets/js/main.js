@@ -2,8 +2,10 @@
 
 setTimeout(function () { ini(); }, 0);
 
+var GV_Debug=false;
+
 function ini() {
-	if ((typeof Server) !== "undefined") {
+	if ((typeof Server) !== "undefined" && (typeof bootstrap)!=="undefined") {
 		setTimeout(function(){setup();},10);
 	} else {
 		setTimeout(function () {
@@ -38,12 +40,13 @@ function setup() {
 		SetupWindowListeners();
 		SetupPopOvers();
 		AdjustCheckboxes();
+		
+		setTimeout(function(){LoadState();},0);
 		console.log("All elements have successfully been setup!");
 	} else {
 		setTimeout(function () { ini(); }, 100);
 	}
 }
-
 function AdjustCheckboxes() {
 	let list=document.querySelectorAll("input[type=\"checkbox\"]");
 	let i=0;
@@ -73,7 +76,6 @@ function AdjustCheckboxes() {
 		document.getElementById("input_6_2").value=document.getElementById("username").value+"@hawaii.edu";
 	}
 }
-
 function SetupPopOvers() {
 	let list = document.querySelectorAll('*[data-bs-toggle="popover"]');
 	let i = 0;
@@ -87,6 +89,9 @@ function SetupPopOvers() {
 				p = true;
 			}
 		}
+		if (list[i].parentElement.getElementsByClassName("aspNetDisabled").length>0) {
+			p=false;
+		}
 		if (p) {
 			list[i].setAttribute("title", "Information");
 			list[i].title = "Information";
@@ -98,9 +103,16 @@ function SetupPopOvers() {
 		return new bootstrap.Popover(popoverTriggerEl);
 	});
 }
-
-
 function SetupWindowListeners() {
+	document.querySelector("form#form_main").addEventListener("submit",function(event){
+		if (GV_Debug) {
+			event.preventDefault();
+		}
+		SaveState();
+	});
+	window.addEventListener("beforeunload",function(event){
+		SaveState();
+	});
 	window.addEventListener("click",function(event){
 		WinEvt(event);
 	});
@@ -112,8 +124,11 @@ function SetupWindowListeners() {
 			setTimeout(function(){
 				let elm=document.querySelector("#"+event.srcElement.getAttribute("aria-describedby"));
 				if (elm) {
-					elm=elm.querySelector(".popover-body");
-					elm.innerHTML=Convert(elm.textContent);
+					//if (!(elm.parentElement.getElementsByClassName("aspNetDisabled").length>0)) {
+						//console.log(elm.parentElement.getElementsByClassName("aspNetDisabled"));
+						elm=elm.querySelector(".popover-body");
+						elm.innerHTML=Convert(elm.textContent);
+					//}
 				}
 			},10);
 			WinEvt(event);
@@ -121,7 +136,6 @@ function SetupWindowListeners() {
 		i++;
 	}
 }
-
 function WinEvt(event = false) {
 	if (event.srcElement) {
 		let tar = document.querySelector("div.popover.fade.show.bs-popover-end[role=\"tooltip\"]") || false;
@@ -136,7 +150,6 @@ function WinEvt(event = false) {
 		}
 	}
 }
-
 function ClosePopover(exc=false) {
 	let e=false;
 	let list = document.querySelectorAll("div.popover.fade.show.bs-popover-end[role=\"tooltip\"]");
@@ -176,7 +189,6 @@ function ClosePopover(exc=false) {
 	}
 	*/
 }
-
 function SetInfo(q = false) {
 	/*
 	let obj = {
@@ -201,7 +213,6 @@ function SetModal(obj = false) {
 		}
 	}
 }
-
 function Convert(q = false) {
 	if (q !== false) {
 		if (q.indexOf("\n") != -1) {
@@ -213,9 +224,6 @@ function Convert(q = false) {
 	}
 	return q;
 }
-
-
-
 function SubmitForm(q=false) {
 	if (document.getElementById("submit_btn")) {
 		let elm = document.getElementById("submit_btn");
@@ -248,10 +256,29 @@ function SubmitForm(q=false) {
 		}
 	}
 }
-
-
 function prepSubmitBtn() {
 	if (document.getElementById("submit_btn")) {
+		let l=document.querySelectorAll("button[data-type=\"submit\"]");
+		let i=0;
+		while(i<l.length){
+			let e=l[i];
+			e.addEventListener("click",function(){
+				setTimeout(function(){
+					if (e.classList.contains("btn-outline-primary")) {
+						e.classList.remove("btn-outline-primary");
+					}
+					if (e.querySelector("span")) {
+						e.removeChild(e.querySelector("span"));
+					}
+					if (!e.classList.contains("btn-outline-danger")) {
+						e.classList.add("btn-outline-danger");
+					}
+					e.innerHTML="[ERROR]";
+					OpenNote("Failed to process your request!");
+				},5000);
+			});
+			i++;
+		}
 		/*
 		document.getElementById("form_main").addEventListener("submit", function () {
 			document.getElementById("submit_btn").disabled = true;
@@ -262,7 +289,7 @@ function prepSubmitBtn() {
 		*/
 		let list = document.querySelectorAll("table#GroupsElement td");
 		let list0 = document.querySelectorAll("table#UserGroupsElement td");
-		let i = 0;
+		i = 0;
 		//let tmp = "<button type=\"button\" class=\"btn btn - info info\" data-bs-toggle=\"modal\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-content=\""+info[i]+"\"></button>";
 		let elm = "";
 		let info = {
@@ -274,8 +301,11 @@ function prepSubmitBtn() {
 			if (info[list[i].textContent]) {
 				tmp = info[list[i].textContent];
 			}
-			elm = " <button type=\"button\" class=\"btn btn-info info t-500\" data-bs-toggle=\"popover\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-bs-content=\"" + tmp + "\"></button>";
-			list[i].insertAdjacentHTML("beforeend", elm);
+			//console.log(list[i]);
+			if (!(list[i].getElementsByClassName("aspNetDisabled").length>0)) {
+				elm = " <button type=\"button\" class=\"btn btn-info info t-500\" data-bs-toggle=\"popover\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-bs-content=\"" + tmp + "\"></button>";
+				list[i].insertAdjacentHTML("beforeend", elm);
+			}
 			if (list0[i]) {
 				tmp = "[" + list0[i].textContent + "]";
 				if (info[list0[i].textContent]) {
@@ -290,7 +320,6 @@ function prepSubmitBtn() {
 		setTimeout(function () { prepSubmitBtn(); }, 100);
 	}
 }
-
 function checkPassword() {
 	if (document.getElementById("password") && document.getElementById("password_confirm") && document.getElementById("form_main") && document.getElementById("submit_btn")) {
 		let fp = document.getElementById("password");
@@ -321,7 +350,6 @@ function checkPassword() {
 		}
 	}
 }
-
 function checkPasswordValue() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
@@ -356,7 +384,6 @@ function checkPasswordValue() {
 	}
 	return res;
 }
-
 function submitPasswordResetApplication() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
@@ -375,7 +402,6 @@ function submitPasswordResetApplication() {
 		Server.send(a, "passwordResetSvrResponse");
 	}
 }
-
 function disableAllFields() {
 	let user = document.getElementById("username");
 	let pass = document.getElementById("password");
@@ -396,7 +422,6 @@ function enableAllFields() {
 	passc.disable = false;
 	btn.disable = false;
 }
-
 function dismiss() {
 	if (document.getElementById("status")) {
 		let s = document.getElementById("status");
@@ -409,7 +434,6 @@ function dismiss() {
 		}
 	}
 }
-
 function output(q = false) {
 	if (q !== false) {
 		if ((typeof q) === "string") {
@@ -426,7 +450,6 @@ function output(q = false) {
 		}
 	}
 }
-
 function peak(elm = false) {
 	if (elm !== false) {
 		let t = (typeof elm);
@@ -449,7 +472,6 @@ function peak(elm = false) {
 		}
 	}
 }
-
 function passwordResetSvrResponse(q = false) {
 	console.log(q);
 	if (q !== false) {
@@ -482,17 +504,13 @@ function passwordResetSvrResponse(q = false) {
 		}
 	}
 }
-
-
 function DisableHelpForm() {
 	let elm=document.getElementById("submit_ticket_btn");
 	elm.disabled=true;
 	elm.insertAdjacentHTML("afterbegin","<span class=\"spinner-border spinner-border-sm\"></span>");
 }
-
 var GV_HelpPass=false;
 var GV_OVR=true;
-
 function SubmitHelpRequest() {
 
 	DisableHelpForm();
@@ -524,7 +542,6 @@ function SubmitHelpRequest() {
 		HelpError();
 	}
 }
-
 function HelpResponse(q=false) {
 	//console.log(q);
 	GV_HelpPass=false;
@@ -551,8 +568,6 @@ function HelpError() {
 	OpenNote("Unable to submit help ticket!");
 	GV_OVR=false;
 }
-
-
 function OpenNote(q=false) {
 	if (q!==false) {
 		let elm=document.getElementById("note");
@@ -570,6 +585,112 @@ function CloseNote() {
 		if (!elm.classList.contains("hidden")) {
 			elm.classList.add("hidden");
 		}
+	}
+}
+var GV_SaveElms=[
+	document.querySelector("[data-bs-target=\"#password_mgr_container\"]"),
+	document.getElementById("password_mgr_container"),
+	document.querySelector("button[data-bs-toggle=\"collapse\"][data-bs-target=\"#vdi_container\"]"),
+	document.getElementById("vdi_container"),
+	document.getElementById("input_6_3"),
+	document.getElementById("input_6_5_3"),
+	document.getElementById("input_6_5_6")
+];
+function SaveState() {
+	let list=GV_SaveElms;
+	//console.log(list);
+	let i=0;
+	let obj={};
+	let tag="";
+	while(i<list.length){
+		if (list[i]) {
+			tag=list[i].tagName.toLowerCase();
+			if (tag==="textarea" || tag==="input") {
+				obj[i]=list[i].value;
+			} else {
+				obj[i]=list[i].classList;
+			}
+
+		}
+		i++;
+	}
+	let str=JSON.stringify(obj);
+	//console.log(str);
+	localStorage.setItem("vdi-web-state-for-"+GetUsername(),str);
+}
+function LoadState() {
+	let list=GV_SaveElms;
+	let i=0;
+	if (localStorage.getItem("vdi-web-state-for-"+GetUsername())) {
+		let obj=false;
+		try{
+			obj=JSON.parse(localStorage.getItem("vdi-web-state-for-"+GetUsername()));
+		}catch{
+			SaveState();
+		}
+		//console.log(obj);
+		if (obj!==false) {
+			let item=false;
+			let value=false;
+			let tag="";
+			for([item,value] of Object.entries(obj)){
+				tag=list[item].tagName.toLowerCase();
+				if (list[item]) {
+					if (tag==="textarea" || tag==="input") {
+						list[item].value=value;
+					} else {
+						list[item].setAttribute("aria-expanded","false");
+						LoadClassList(list[item],value);
+					}
+				}
+			}
+		}
+	}
+}
+
+function GetUsername() {
+	return document.getElementById("username").value;
+}
+
+function LoadClassList(elm,items) {
+	let item=false;
+	let value=false;
+	if (elm.tagName!=="TEXTAREA") {
+		elm.class="";
+		let i=0;
+		while(i<elm.classList.length){
+			elm.classList.remove(elm.classList[i]);
+			i++;
+		}
+	}
+
+	for([item,value] of Object.entries(items)){
+		
+		if (!elm.classList.contains(value)) {
+			if (value==="show") {
+				if (elm.classList.contains("collapse")) {
+					elm.classList.remove("collapse");
+				}
+				elm.classList.add("collapsing");
+				elm.style="height:406px;";
+				//elm.setAttribute("aria-expanded","true");
+				let tmp=elm;
+				setTimeout(function(){
+					tmp.classList.remove("collapsing");
+					tmp.classList.add("collapse");
+					tmp.classList.add("show");
+					tmp.style="";
+				},0);
+			} else {
+				if (value==="collapsed") {
+					if (elm.tagName==="button") {
+						elm.setAttribute("aria-expanded","true");
+					}
+				}
+				elm.classList.add(value);
+			}
+		}
+		
 	}
 }
 
