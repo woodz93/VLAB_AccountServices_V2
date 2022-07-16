@@ -1,11 +1,14 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="resetPassword.aspx.cs" Inherits="VLAB_AccountServices.services.resetPassword" %>
-
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 	<title>UHMC AD Password Reset</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#FF0000">
+	<meta property="og:image" content="http://projectvirtma.ddns.net/Assets/Media/Backgrounds/Clip/0.png" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="uhmc" />
+
 	<link rel="stylesheet" href="assets/css/main.css" defer="true" />
 	<script src="assets/js/server.js" defer></script>
 	<script src="assets/js/main.js" defer></script>
