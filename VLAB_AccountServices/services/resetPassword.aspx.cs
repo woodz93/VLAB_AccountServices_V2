@@ -135,6 +135,7 @@ namespace VLAB_AccountServices.services {
 				}
 				string msg="<table><tr><th>Field</th><th>Value</th></tr>"+data+"</table>";
 				Mail ins=new Mail();
+				ins.AddTo("uhmchelp@hawaii.edu");
 				ins.SetFrom(this.HelpRequestForm["email"]);
 				ins.SetSubject("AccountServices Help Ticket");
 				ins.SetMessage(msg);
@@ -248,12 +249,7 @@ namespace VLAB_AccountServices.services {
 				List<string>grps=new List<string>();
 				string gpstr="";
 				List<string> list=this.GetSelectedGroupsElement();
-				//console.Log(list.ToString());
-				//console.Log(Request.ToString());
 				while(i<GroupsElement.Items.Count){
-					//console.Info(GroupsElement.Items[i].Text);
-					//console.Log(Element.groupList.ToString());
-					//console.Log(GroupsElement.ToString());
 					if (Element.groupList.ContainsKey(GroupsElement.Items[i].Text)) {
 						if (list.Contains(GroupsElement.Items[i].Text)) {
 							//if (GroupsElement.Items[i].Selected) {
@@ -270,21 +266,6 @@ namespace VLAB_AccountServices.services {
 					}
 					i++;
 				}
-				/*
-				i=0;
-				while(i<GroupsElement.Items.Count){
-					if (GroupsElement.Items[i].Selected) {
-						grps.Add(GroupsElement.Items[i].Value);
-						//console.Log(GroupsElement.Items[i].Value);
-						if (i>0) {
-							gpstr+=",\""+GroupsElement.Items[i].Value+"\"";
-						} else {
-							gpstr+="\""+GroupsElement.Items[i].Value+"\"";
-						}
-					}
-					i++;
-				}
-				*/
 				gpstr="["+gpstr+"]";
 				console.Info(gpstr);
 				string id=this.genID();
@@ -312,6 +293,7 @@ namespace VLAB_AccountServices.services {
 				dbins.AddColumn("id",id);
 				dbins.AddWhere("id",id);
 				dbins.AsyncRemoveRecordFromId(3,id);
+				this.EmailUser("You've recently added new virtual desktops to your account.<br>If you have not done this, please contact us at uhmchelp@hawaii.edu");
 				Response.Redirect("resetPassword.aspx");
 			}
 		}
@@ -354,7 +336,8 @@ namespace VLAB_AccountServices.services {
 							console.Info("Password has been modified.");
 							status.Text+="Your password has been modified for validation, please review the changed password and re-submit this form.";
 						}
-						this.EmailUser();
+						string tst="Your password has been updated.<br>If you did not make this change, please contact us at uhmchelp@hawaii.edu";
+						this.EmailUser(tst);
 						Response.Redirect("resetPassword.aspx");
 					}
 				} else {
@@ -380,12 +363,14 @@ namespace VLAB_AccountServices.services {
 			}
 		}
 		// Sends an email to the user.
-		private void EmailUser() {
+		private void EmailUser(string msg="") {
 			Mail ins=new Mail();
-			ins.SetDestination("");
-			ins.SetMessage("[MESSAGE VARIES DEPENDING ON WHAT HAPPENED]");
+			ins.AddTo(this.UC.GetUsername()+"@hawaii.edu");
+			ins.SetMessage(msg);
 			ins.SetSubject("UHMC Account Services");
 			ins.SetFrom("uhmchelp@hawaii.edu");
+			ins.IsBodyHtml=true;
+			ins.Send();
 		}
 		// Checks object for valid username.
 		private bool CheckString(string q=null) {

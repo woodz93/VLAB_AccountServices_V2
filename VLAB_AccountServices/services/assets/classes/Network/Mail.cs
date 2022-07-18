@@ -18,6 +18,7 @@ namespace VLAB_AccountServices {
 		//private string From="uhmchelp@hawaii.edu";
 		private string From="uhmchelp@hawaii.edu";
 		private string Destination_Email="uhmchelp@hawaii.edu";
+		private List<string>To=new List<string>();
 		private string Message=null;
 		private string Subject=null;
 		private bool ini_complete=false;
@@ -100,10 +101,17 @@ namespace VLAB_AccountServices {
 						sub=this.Subject;
 					}
 					try{
-						MailMessage mm=new MailMessage(this.From,this.Destination_Email,sub,this.Message);
+						MailMessage mm=new MailMessage();
+						mm.From=new MailAddress(this.From);
+						int i=0;
+						while(i<this.To.Count){
+							mm.To.Add(this.To[i]);
+							i++;
+						}
+						//MailMessage mm=new MailMessage(this.From,this.Destination_Email,sub,this.Message);
 						mm.IsBodyHtml=this.IsBodyHtml;
 						if (this.Attachments.Count>0) {
-							int i=0;
+							i=0;
 							while(i<this.Attachments.Count){
 								mm.Attachments.Add(this.Attachments[i]);
 								i++;
@@ -131,7 +139,14 @@ namespace VLAB_AccountServices {
 
 		public void SetDestination(string destination=null) {
 			if (Mail.CheckValue(destination)) {
-				this.Destination_Email=destination;
+				//this.Destination_Email=destination;
+
+			}
+		}
+		// Adds a destination email address.
+		public void AddTo(string email=null) {
+			if (Mail.CheckValue(email)) {
+				this.To.Add(email);
 			}
 		}
 
