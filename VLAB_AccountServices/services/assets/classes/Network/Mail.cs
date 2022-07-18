@@ -13,15 +13,16 @@ namespace VLAB_AccountServices {
 		private static readonly string USERNAME="";
 		private static readonly string PASSWORD="";
 
-		private string From="uhmchelp@hawaii.edu";
-		private string Destination_Email="uhmchelp@hawaii.edu";
+		//private string From="uhmchelp@hawaii.edu";
+		private string From="dvalente@hawaii.edu";
+		private string Destination_Email="dvalente@hawaii.edu";
 		private string Message=null;
 		private string Subject=null;
 		private bool ini_complete=false;
 		private List<Attachment>Attachments=new List<Attachment>();
 
 		public Mail() {
-
+			this.ini();
 		}
 		public Mail(string destination=null) {
 			this.SetDestination(destination);
@@ -97,7 +98,7 @@ namespace VLAB_AccountServices {
 						sub=this.Subject;
 					}
 					try{
-						MailMessage mm=new MailMessage(this.Destination_Email,this.From,sub,this.Message);
+						MailMessage mm=new MailMessage(this.From,this.Destination_Email,sub,this.Message);
 						if (this.Attachments.Count>0) {
 							int i=0;
 							while(i<this.Attachments.Count){

@@ -86,20 +86,26 @@ namespace VLAB_AccountServices.services {
 			//evt.Error("This is a testing message from the resetPassword.aspx.cs file.");
 			//this.SetConnectionTimeout();
 			this.InitialChecks();
+			resetPassword.StatusElm=status;
+			this.StatElm=status;
 			console.ini_complete=false;
 			console.ini(this);
 			console.errored=false;
 			this.SetConnectionString();
-			this.SetElements();
 			console.Clear();
-
-			this.DispPOST();
-			//this.ProcessHelpRequest();
+			if (Request.Form.Count>0) {
+				this.ProcessHelpRequest();
+			} else {
+				this.SetElements();
+			}
+			//this.DispPOST();
+			
 
 		}
 
 		private void ProcessHelpRequest() {
 			if (Request.Form.Count>0) {
+				//Response.ClearContent();
 				int i=0;
 				while(i<Request.Form.Count){
 					this.HelpRequestForm[Request.Form.GetKey(i)]=Request.Form[i];
@@ -107,7 +113,22 @@ namespace VLAB_AccountServices.services {
 				}
 			}
 			if (this.HelpRequestForm.Count>0) {
+				string data="";
+				int i=0;
+				string item;
+				string value;
+				foreach(string key in this.HelpRequestForm.Keys){
+					item=key;
+					value=this.HelpRequestForm[key];
+					data+="<tr><td>"+item+"</td><td>"+value+"</td></tr>";
+				}
+				string msg="<table><tr><th>Field</th><th>Value</th></tr>"+data+"</table>";
 				Mail ins=new Mail();
+				ins.SetSubject("AccountServices Help Ticket");
+				ins.SetMessage(msg);
+				ins.Send();
+				console.Info("Processed email.");
+				//console.Success("Processed email!");
 			}
 		}
 
@@ -533,8 +554,6 @@ namespace VLAB_AccountServices.services {
 		// Prepares all HTML elements for use...
 		private void SetElements() {
 			try{
-				resetPassword.StatusElm=status;
-				this.StatElm=status;
 				// ToDo: Implement group element event listener to occur when a group item is selected.
 				//GroupsElement.Items.Add("VD-VLAB3");
 				//group_container.Visible=false;
