@@ -8,10 +8,10 @@ using VLAB_AccountServices.services.assets.sys;
 namespace VLAB_AccountServices {
 	public class Mail {
 
-		private static readonly string SMTP_CLIENT="smtp.gmail.com";
+		private static readonly string SMTP_CLIENT="mr1.maui.hawaii.local";
 		private static readonly int SMTP_CLIENT_PORT=587;
-		private static readonly string USERNAME="dvalente@hawaii.edu";
-		private static readonly string PASSWORD="....";
+		private static readonly string USERNAME="";
+		private static readonly string PASSWORD="";
 
 		private string From=null;
 		private string Destination_Email=null;
@@ -106,11 +106,12 @@ namespace VLAB_AccountServices {
 							}
 						}
 						try{
-							SmtpClient client=new SmtpClient(Mail.SMTP_CLIENT,Mail.SMTP_CLIENT_PORT);
+							//SmtpClient client=new SmtpClient(Mail.SMTP_CLIENT,Mail.SMTP_CLIENT_PORT);
+							SmtpClient client=new SmtpClient(Mail.SMTP_CLIENT);
 							client.EnableSsl=true;
 							client.DeliveryMethod=SmtpDeliveryMethod.Network;
 							client.UseDefaultCredentials=false;
-							client.Credentials=new System.Net.NetworkCredential(Mail.USERNAME,Mail.PASSWORD);
+							//client.Credentials=new System.Net.NetworkCredential(Mail.USERNAME,Mail.PASSWORD);
 							client.Send(mm);
 							console.Info("Successfully sent an email to the user/client.");
 						}catch(Exception e){

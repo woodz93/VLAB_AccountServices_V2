@@ -98,7 +98,7 @@
 								</tr>
 							</table>
 							<br>
-							<button class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)" data-type="submit">Add Groups</button>
+							<button class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)" data-type="submit">Add</button>
 						</div>
 					</div>
 

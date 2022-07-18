@@ -607,6 +607,8 @@ function SaveState() {
 			tag=list[i].tagName.toLowerCase();
 			if (tag==="textarea" || tag==="input") {
 				obj[i]=list[i].value;
+			} else if (tag==="span" && list[i].id==="status") {
+				obj[i]=list[i].innerHTML;
 			} else {
 				obj[i]=list[i].classList;
 			}
@@ -638,6 +640,8 @@ function LoadState() {
 				if (list[item]) {
 					if (tag==="textarea" || tag==="input") {
 						list[item].value=value;
+					} else if (tag==="span" && list[item].id==="status") {
+						list[item].innerHTML=value;
 					} else {
 						list[item].setAttribute("aria-expanded","false");
 						LoadClassList(list[item],value);

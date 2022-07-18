@@ -1,0 +1,30 @@
+﻿
+div.container.center-h.center-v.beval {
+	max-width:unset !important;
+}
+
+@media (min-width:1400px) {
+	.container {
+		max-width:unset;
+	}
+}
+@media (min-width:1200px) {
+	.container {
+		max-width:unset;
+	}
+}
+@media (min-width:992px) {
+	.container {
+		max-width:unset;
+	}
+}
+@media (min-width:768px) {
+	.container {
+		max-width:unset;
+	}
+}
+@media (min-width:576px) {
+	.container {
+		max-width:unset;
+	}
+}
