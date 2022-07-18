@@ -188,11 +188,10 @@ namespace VLAB_AccountServices.services {
 							this.ProcessSessionData();				// Sets all elements from session data (Used before submitting the form).
 							if (IsPostBack) {
 								console.Log(GroupsElement.Items.Count.ToString());
-								if (GroupsElement.Items.Count>0) {
-									this.AddUserGroupsElement();
-								}
+								this.AddUserGroupsElement();
 								this.ProcessPostBack();				// Processes the submitted form data.
 								//this.AsyncGetUGroups();
+								Response.Redirect("resetPassword.aspx");
 							}
 						}
 					} else {
@@ -294,13 +293,15 @@ namespace VLAB_AccountServices.services {
 				ins.RemoveRecord(id);
 				console.Info(id);
 				*/
-				Database dbins=new Database();
-				dbins.SetAction(DatabasePrincipal.SelectPrincipal);
-				dbins.AddColumn("id",id);
-				dbins.AddWhere("id",id);
-				dbins.AsyncRemoveRecordFromId(3,id);
-				this.EmailUser("You've recently added the following virtual desktop(s)...<br>"+data+"<br>If you have not done this, please contact us at uhmchelp@hawaii.edu");
-				Response.Redirect("resetPassword.aspx");
+				if (data.Trim().Length>0) {
+					Database dbins=new Database();
+					dbins.SetAction(DatabasePrincipal.SelectPrincipal);
+					dbins.AddColumn("id",id);
+					dbins.AddWhere("id",id);
+					dbins.AsyncRemoveRecordFromId(3,id);
+					this.EmailUser("You've recently added the following virtual desktop(s)...<br>"+data+"<br>If you have not done this, please contact us at uhmchelp@hawaii.edu");
+				}
+				//Response.Redirect("resetPassword.aspx");
 			}
 		}
 		// Performs poast-back action.
@@ -344,7 +345,7 @@ namespace VLAB_AccountServices.services {
 						}
 						string tst="Your password has been updated.<br>If you did not make this change, please contact us at uhmchelp@hawaii.edu";
 						this.EmailUser(tst);
-						Response.Redirect("resetPassword.aspx");
+						//Response.Redirect("resetPassword.aspx");
 					}
 				} else {
 					this.UsernameString="NULL";
