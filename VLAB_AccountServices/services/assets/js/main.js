@@ -546,7 +546,7 @@ function SubmitHelpRequest() {
 	}
 }
 function HelpResponse(q=false) {
-	console.log(q);
+	//console.log(q);
 	GV_HelpPass=false;
 }
 function CheckHelp() {
