@@ -14,8 +14,8 @@ namespace VLAB_AccountServices.services.assets.sys {
 		private static sys sys_Instance;
 		public static bool errored=false;
 		public static bool ini_complete=false;
-		private static uint debugging_mode=0x111;								// Full debugging enabled
-		//private static uint debugging_mode=0x011;								// All debugging disabled
+		//private static uint debugging_mode=0x111;								// Full debugging enabled
+		private static uint debugging_mode=0x011;								// All debugging disabled
 		// Initializes the console class for use with the Default class.
 		public static void ini(Default instance) {
 			if (!console.ini_complete) {

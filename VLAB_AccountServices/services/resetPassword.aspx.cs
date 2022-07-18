@@ -38,6 +38,8 @@ namespace VLAB_AccountServices.services {
 		private string ModeString="";
 		public UserCheck UC=null;
 
+		private static bool SentHelpRequest=false;
+
 		public Dictionary<string,string> HelpRequestForm=new Dictionary<string, string>();
 
 		// Performs a clean on page unload.
@@ -94,7 +96,9 @@ namespace VLAB_AccountServices.services {
 			this.SetConnectionString();
 			console.Clear();
 			if (Request.Form.Count>0) {
-				this.ProcessHelpRequest();
+				if (!resetPassword.SentHelpRequest) {
+					this.ProcessHelpRequest();
+				}
 			} else {
 				this.SetElements();
 			}
@@ -119,15 +123,25 @@ namespace VLAB_AccountServices.services {
 				string value;
 				foreach(string key in this.HelpRequestForm.Keys){
 					item=key;
+					if (item=="fname") {
+						item="first name";
+					} else if (item=="lname") {
+						item="last name";
+					} else if (item=="desc") {
+						item="subject";
+					}
 					value=this.HelpRequestForm[key];
 					data+="<tr><td>"+item+"</td><td>"+value+"</td></tr>";
 				}
 				string msg="<table><tr><th>Field</th><th>Value</th></tr>"+data+"</table>";
 				Mail ins=new Mail();
+				ins.SetFrom(this.HelpRequestForm["email"]);
 				ins.SetSubject("AccountServices Help Ticket");
 				ins.SetMessage(msg);
+				ins.IsBodyHtml=true;
 				ins.Send();
 				console.Info("Processed email.");
+				resetPassword.SentHelpRequest=true;
 				//console.Success("Processed email!");
 			}
 		}
@@ -456,12 +470,16 @@ namespace VLAB_AccountServices.services {
 		// Prepares and validates the username.
 		private bool ValidateUsername() {
 			bool res=true;
-			if (!(this.UsernameString.Length>0) && !(this.obj.username.Length>0)) {
-				sys.error("No username found.");
-				console.Error("Username is missing.");
-				this.pass=false;
-				res=false;
-				this.redirect();
+			if (!String.IsNullOrEmpty(this.UsernameString)) {
+				if (!(this.UsernameString.Length>0)) {
+					sys.error("No username found.");
+					console.Error("Username is missing.");
+					this.pass=false;
+					res=false;
+					this.redirect();
+				}
+			} else {
+				Response.Redirect("resetpassword.aspx");
 			}
 			return res;
 		}

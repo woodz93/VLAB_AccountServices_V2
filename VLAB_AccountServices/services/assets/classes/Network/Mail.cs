@@ -13,9 +13,11 @@ namespace VLAB_AccountServices {
 		private static readonly string USERNAME="";
 		private static readonly string PASSWORD="";
 
+		public bool IsBodyHtml=false;
+
 		//private string From="uhmchelp@hawaii.edu";
-		private string From="dvalente@hawaii.edu";
-		private string Destination_Email="dvalente@hawaii.edu";
+		private string From="uhmchelp@hawaii.edu";
+		private string Destination_Email="uhmchelp@hawaii.edu";
 		private string Message=null;
 		private string Subject=null;
 		private bool ini_complete=false;
@@ -99,6 +101,7 @@ namespace VLAB_AccountServices {
 					}
 					try{
 						MailMessage mm=new MailMessage(this.From,this.Destination_Email,sub,this.Message);
+						mm.IsBodyHtml=this.IsBodyHtml;
 						if (this.Attachments.Count>0) {
 							int i=0;
 							while(i<this.Attachments.Count){
@@ -109,12 +112,12 @@ namespace VLAB_AccountServices {
 						try{
 							//SmtpClient client=new SmtpClient(Mail.SMTP_CLIENT,Mail.SMTP_CLIENT_PORT);
 							SmtpClient client=new SmtpClient(Mail.SMTP_CLIENT);
-							client.EnableSsl=true;
+							//client.EnableSsl=true;
 							client.DeliveryMethod=SmtpDeliveryMethod.Network;
 							client.UseDefaultCredentials=false;
 							//client.Credentials=new System.Net.NetworkCredential(Mail.USERNAME,Mail.PASSWORD);
 							client.Send(mm);
-							console.Info("Successfully sent an email to the user/client.");
+							console.Success("Successfully sent an email to the user/client.");
 						}catch(Exception e){
 							console.Error("Failed to connect to SMTP client...\n\t\t"+e.Message);
 						}
