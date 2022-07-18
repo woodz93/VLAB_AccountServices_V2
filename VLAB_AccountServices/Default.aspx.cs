@@ -2,6 +2,7 @@
 using DotNetCasClient.Security;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using VLAB_AccountServices.services;
@@ -58,7 +59,9 @@ namespace VLAB_AccountServices {
 			console.Log("Checking CAS principal...");
 			if (CasAuthentication.CurrentPrincipal!=null) {									// Checks if the user has gone through the CAS system.
 				ICasPrincipal sp=CasAuthentication.CurrentPrincipal;						// Creates a new instance of the CAS principal.
-				string username=System.Web.HttpContext.Current.User.Identity.Name;			// Gets the UH username from the CAS principal.
+				string username=System.Web.HttpContext.Current.User.Identity.Name;          // Gets the UH username from the CAS principal.
+				string fname = getAttribute(sp, "givenName");
+				string lname = getAttribute(sp, "sn");
 				//sys.Write("Username has been collected from the CAS system with it's value as &quot;"+username+"&quot;.");
 				this.obj.username=username;													// Stores the username within the User object.
 				console.Log("Checking username...");
@@ -172,6 +175,27 @@ namespace VLAB_AccountServices {
 		protected string genID() {
 			Database ins=new Database();
 			return ins.GetUniqueID();
+		}
+
+		private static string getAttribute(ICasPrincipal sessionPrincipal, string key)
+		{
+			string value = "";
+			if (sessionPrincipal != null)
+			{
+				IAssertion sessionAssertion = sessionPrincipal.Assertion;
+				if (sessionAssertion != null)
+				{
+					if (sessionAssertion.Attributes.ContainsKey(key))
+					{
+						string[] array = sessionAssertion.Attributes[key].ToArray();
+						if (array.Count() > 0)
+						{
+							value = array[0];
+						}
+					}
+				}
+			}
+			return value;
 		}
 	}
 }
