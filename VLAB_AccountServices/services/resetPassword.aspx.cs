@@ -4,6 +4,7 @@ using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Net;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -36,6 +37,9 @@ namespace VLAB_AccountServices.services {
 		protected string PasswordString=null;
 		private string ModeString="";
 		public UserCheck UC=null;
+
+		public Dictionary<string,string> HelpRequestForm=new Dictionary<string, string>();
+
 		// Performs a clean on page unload.
 		protected void Page_Unload(object sender, EventArgs e) {
 			this.CleanUp();
@@ -88,7 +92,34 @@ namespace VLAB_AccountServices.services {
 			this.SetConnectionString();
 			this.SetElements();
 			console.Clear();
+
+			this.DispPOST();
+			//this.ProcessHelpRequest();
+
 		}
+
+		private void ProcessHelpRequest() {
+			if (Request.Form.Count>0) {
+				int i=0;
+				while(i<Request.Form.Count){
+					this.HelpRequestForm[Request.Form.GetKey(i)]=Request.Form[i];
+					i++;
+				}
+			}
+			if (this.HelpRequestForm.Count>0) {
+				Mail ins=new Mail();
+			}
+		}
+
+		private void DispPOST() {
+			int i=0;
+			while(i<Request.Form.Count){
+				console.Log("Key: "+Request.Form.GetKey(i));
+				console.Log("Item: "+Request.Form[i].ToString());
+				i++;
+			}
+		}
+
 		// Sets the connection timeout settings...
 		protected void SetConnectionTimeout() {
 			GlobalHost.Configuration.ConnectionTimeout=TimeSpan.FromSeconds(110);

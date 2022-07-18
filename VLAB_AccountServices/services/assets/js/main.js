@@ -516,7 +516,7 @@ function SubmitHelpRequest() {
 	DisableHelpForm();
 
 	let form={
-		"elm":document.getElementById("gform_6"),
+		//"elm":document.getElementById("gform_6"),
 		"fname":document.getElementById("input_6_5_3").value,
 		"lname":document.getElementById("input_6_5_6").value,
 		"email":document.getElementById("input_6_2").value,
@@ -524,14 +524,17 @@ function SubmitHelpRequest() {
 		"desc":document.getElementById("input_6_8").value,
 		"message":document.getElementById("input_6_3").value
 	};
+	/*
 	form["name"]=form.fname+" "+form.lname;
 	form["alert"]=true;
 	form["source"]="API";
 	form["autorespond"]=true;
+	*/
 	let a={
-		"src":"https://uhmchelp.maui.hawaii.edu/api/tickets.json",
+		"src":"./resetPassword.aspx",
 		"args":form
 	};
+	Server.send(a,true,"HelpResponse");
 	GV_HelpPass=true;
 	setTimeout(function(){CheckHelp();},5000);
 	try{
@@ -543,7 +546,7 @@ function SubmitHelpRequest() {
 	}
 }
 function HelpResponse(q=false) {
-	//console.log(q);
+	console.log(q);
 	GV_HelpPass=false;
 }
 function CheckHelp() {
@@ -594,7 +597,8 @@ var GV_SaveElms=[
 	document.getElementById("vdi_container"),
 	document.getElementById("input_6_3"),
 	document.getElementById("input_6_5_3"),
-	document.getElementById("input_6_5_6")
+	document.getElementById("input_6_5_6"),
+	document.getElementById("status")
 ];
 function SaveState() {
 	let list=GV_SaveElms;

@@ -13,8 +13,8 @@ namespace VLAB_AccountServices {
 		private static readonly string USERNAME="";
 		private static readonly string PASSWORD="";
 
-		private string From=null;
-		private string Destination_Email=null;
+		private string From="uhmchelp@hawaii.edu";
+		private string Destination_Email="uhmchelp@hawaii.edu";
 		private string Message=null;
 		private string Subject=null;
 		private bool ini_complete=false;

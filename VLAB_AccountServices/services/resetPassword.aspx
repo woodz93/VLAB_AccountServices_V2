@@ -146,7 +146,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div id="modal_support_content" class="modal-body">
-					<form method="post" enctype="multipart/form-data" target="gform_ajax_frame_6" id="gform_6" action="https://maui.hawaii.edu/helpdesk/">
+					<form method="post" enctype="multipart/form-data" target="gform_ajax_frame_6" id="gform_6">
 						<div class="input-group mb-3">
 							<span class="input-group-text">Your Name:</span>
 							<input type="text" class="form-control" placeholder="First Name" id="input_6_5_3" name="input_5.3">
