@@ -108,6 +108,8 @@ namespace VLAB_AccountServices {
 							mm.To.Add(this.To[i]);
 							i++;
 						}
+						mm.Body=this.Message;
+						mm.Subject=sub;
 						//MailMessage mm=new MailMessage(this.From,this.Destination_Email,sub,this.Message);
 						mm.IsBodyHtml=this.IsBodyHtml;
 						if (this.Attachments.Count>0) {

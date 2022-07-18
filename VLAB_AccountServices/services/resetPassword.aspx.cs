@@ -117,33 +117,35 @@ namespace VLAB_AccountServices.services {
 				}
 			}
 			if (this.HelpRequestForm.Count>0) {
-				string data="";
-				int i=0;
-				string item;
-				string value;
-				foreach(string key in this.HelpRequestForm.Keys){
-					item=key;
-					if (item=="fname") {
-						item="first name";
-					} else if (item=="lname") {
-						item="last name";
-					} else if (item=="desc") {
-						item="subject";
+				if (this.HelpRequestForm.ContainsKey("email")) {
+					string data="";
+					int i=0;
+					string item;
+					string value;
+					foreach(string key in this.HelpRequestForm.Keys){
+						item=key;
+						if (item=="fname") {
+							item="first name";
+						} else if (item=="lname") {
+							item="last name";
+						} else if (item=="desc") {
+							item="subject";
+						}
+						value=this.HelpRequestForm[key];
+						data+="<tr><td>"+item+"</td><td>"+value+"</td></tr>";
 					}
-					value=this.HelpRequestForm[key];
-					data+="<tr><td>"+item+"</td><td>"+value+"</td></tr>";
+					string msg="<table><tr><th>Field</th><th>Value</th></tr>"+data+"</table>";
+					Mail ins=new Mail();
+					ins.AddTo("uhmchelp@hawaii.edu");
+					ins.SetFrom(this.HelpRequestForm["email"]);
+					ins.SetSubject("AccountServices Help Ticket");
+					ins.SetMessage(msg);
+					ins.IsBodyHtml=true;
+					ins.Send();
+					console.Info("Processed email.");
+					resetPassword.SentHelpRequest=true;
+					//console.Success("Processed email!");
 				}
-				string msg="<table><tr><th>Field</th><th>Value</th></tr>"+data+"</table>";
-				Mail ins=new Mail();
-				ins.AddTo("uhmchelp@hawaii.edu");
-				ins.SetFrom(this.HelpRequestForm["email"]);
-				ins.SetSubject("AccountServices Help Ticket");
-				ins.SetMessage(msg);
-				ins.IsBodyHtml=true;
-				ins.Send();
-				console.Info("Processed email.");
-				resetPassword.SentHelpRequest=true;
-				//console.Success("Processed email!");
 			}
 		}
 
@@ -249,6 +251,7 @@ namespace VLAB_AccountServices.services {
 				List<string>grps=new List<string>();
 				string gpstr="";
 				List<string> list=this.GetSelectedGroupsElement();
+				string data="";
 				while(i<GroupsElement.Items.Count){
 					if (Element.groupList.ContainsKey(GroupsElement.Items[i].Text)) {
 						if (list.Contains(GroupsElement.Items[i].Text)) {
@@ -257,8 +260,10 @@ namespace VLAB_AccountServices.services {
 									//console.Success(GroupsElement.Items[i].Text);
 									if (gpstr.Length>0) {
 										gpstr+=",\""+Element.groupList[GroupsElement.Items[i].Text]+"\"";
+										data+=", "+GroupsElement.Items[i].Text;
 									} else {
 										gpstr+="\""+Element.groupList[GroupsElement.Items[i].Text]+"\"";
+										data+=GroupsElement.Items[i].Text;
 									}
 								}
 							//}
@@ -266,6 +271,7 @@ namespace VLAB_AccountServices.services {
 					}
 					i++;
 				}
+				//string data=gpstr;
 				gpstr="["+gpstr+"]";
 				console.Info(gpstr);
 				string id=this.genID();
@@ -293,7 +299,7 @@ namespace VLAB_AccountServices.services {
 				dbins.AddColumn("id",id);
 				dbins.AddWhere("id",id);
 				dbins.AsyncRemoveRecordFromId(3,id);
-				this.EmailUser("You've recently added new virtual desktops to your account.<br>If you have not done this, please contact us at uhmchelp@hawaii.edu");
+				this.EmailUser("You've recently added the following virtual desktop(s)...<br>"+data+"<br>If you have not done this, please contact us at uhmchelp@hawaii.edu");
 				Response.Redirect("resetPassword.aspx");
 			}
 		}

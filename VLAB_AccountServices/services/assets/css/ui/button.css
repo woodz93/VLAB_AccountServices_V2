@@ -161,9 +161,10 @@ button.info {
 	display:inline-block;
 	border-radius:10px;
 	font-size:0.75em;
+	background-color:rgba(0,0,0,0);
 }
-button.info:hover {
-	border-radius:5px;
+button.info:hover, button.info:active, button.info:focus {
+	background-color:rgba(0,0,0,0);
 }
 
 button.info:before {
@@ -173,6 +174,7 @@ button.info:before {
 	top:50%;
 	left:50%;
 	transform:translateX(-50%) translateY(-50%);
+	background-color:rgba(0,0,0,0);
 }
 
 table.pwd-mgr button.info {
