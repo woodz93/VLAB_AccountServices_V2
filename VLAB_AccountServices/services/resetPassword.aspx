@@ -79,7 +79,7 @@
 							<br>
 							<button class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)" data-type="submit">Save Password</button>
 							<br>
-							<asp:label id="status" Text="" runat="server" class="status alert alert-dark center-h" CausesValidation="false">Response messages will display here.</asp:label>
+							<asp:label id="status" Text="" runat="server" class="status alert alert-dark center-h" CausesValidation="false"></asp:label>
 						</div>
 					</div>
 					<div class="card">

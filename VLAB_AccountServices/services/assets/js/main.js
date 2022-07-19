@@ -22,9 +22,11 @@ function setup() {
 		document.getElementById("password_confirm").addEventListener("keyup", function (e) {
 			checkPassword();
 		});
+		/*
 		document.getElementById("status").addEventListener("click", function (e) {
 			setTimeout(function () { dismiss(); }, 0);
 		});
+		*/
 		window.addEventListener("keydown", function (event) {
 			if (event.keyCode === 9) {
 				if (event.srcElement.id === "password") {
@@ -360,13 +362,27 @@ function checkPasswordValue() {
 		if (pass.value.length > 4) {
 			//if (pass.value.match(/[A-Z]{1,}[a-z]{1,}[0-9]{1,}([_!@#\$%\^&\*\(\)\-\{\}\[\]\.\,\`\~`\n\t:"'\?\<\>\|\/\\]{1,}|[\u200b]{1,})/g)) {
 			if (pass.value.match(/[A-Z]{1,}/g) && pass.value.match(/[a-z]{1,}/g) && pass.value.match(/[0-9]{1,}/g) && pass.value.match(/([_!@#\$%\^&\*\(\)\-\{\}\[\]\.\,\`\~`\n\t:"'\?\<\>\|\/\\]{1,}|[\u200b]{1,})/g)) {
-				if (pass.value === passc.value) {
-					if (!pass.value.match(/^(apple[s]*[_\-\s]*[0-9]*|password[s]*[_\-\s]*[0-9]*|orange[s]*[_\-\s]*[0-9]*)/i)) {
-						dismiss();
-						res = true;
+				if (pass.value.length === passc.value.length) {
+					if (pass.value === passc.value) {
+						if (!pass.value.match(/^(apple[s]*[_\-\s]*[0-9]*|password[s]*[_\-\s]*[0-9]*|orange[s]*[_\-\s]*[0-9]*)\z/i)) {
+							dismiss();
+							res = true;
+							//console.log(pass.value);
+							//console.log(passc.value);
+						} else {
+							output("Password is too simple.");
+							//console.log(pass.value);
+							//console.log(passc.value);
+						}
+					} else {
+						output("Passwords do not match.");
+						//console.log(pass.value);
+						//console.log(passc.value);
 					}
 				} else {
-					output("Passwords do not match.");
+					output("Passwords do not match length.");
+					//console.log(pass.value);
+					//console.log(passc.value);
 				}
 			} else {
 				output("Password must contain at least one capital letter, one lowercase letter, one number, and one special character.");
@@ -423,6 +439,7 @@ function enableAllFields() {
 	btn.disable = false;
 }
 function dismiss() {
+	
 	if (document.getElementById("status")) {
 		let s = document.getElementById("status");
 		if (s.classList.contains("alert-danger")) {
@@ -433,6 +450,7 @@ function dismiss() {
 			s.classList.add("alert-dark");
 		}
 	}
+	
 }
 function output(q = false) {
 	if (q !== false) {
@@ -473,7 +491,7 @@ function peak(elm = false) {
 	}
 }
 function passwordResetSvrResponse(q = false) {
-	console.log(q);
+	//console.log(q);
 	if (q !== false) {
 		let t = (typeof q);
 		if (t === "string") {
@@ -597,8 +615,8 @@ var GV_SaveElms=[
 	document.getElementById("vdi_container"),
 	document.getElementById("input_6_3"),
 	document.getElementById("input_6_5_3"),
-	document.getElementById("input_6_5_6"),
-	document.getElementById("status")
+	document.getElementById("input_6_5_6")
+	//document.getElementById("status")
 ];
 function SaveState() {
 	let list=GV_SaveElms;
@@ -645,7 +663,11 @@ function LoadState() {
 					if (tag==="textarea" || tag==="input") {
 						list[item].value=value;
 					} else if (tag==="span" && list[item].id==="status") {
-						list[item].innerHTML=value;
+						if (value.length>0) {
+							if (!(list[item].textContent.length>0)) {
+								list[item].innerHTML=value;
+							}
+						}
 					} else {
 						list[item].setAttribute("aria-expanded","false");
 						LoadClassList(list[item],value);

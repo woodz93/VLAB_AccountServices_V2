@@ -7,7 +7,7 @@
 	cursor:pointer;
 	margin-top:10px;
 	display:block;
-	text-align:center;
+	text-align:left;
 	-webkit-transition-duration:var(--status-anim-dur-);
 	-moz-transition-duration:var(--status-anim-dur-);
 	-ms-transition-duration:var(--status-anim-dur-);

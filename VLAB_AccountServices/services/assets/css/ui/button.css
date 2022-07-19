@@ -1,6 +1,6 @@
 ﻿
 button.help {
-	position:absolute;
+	position:fixed;
 	top:unset;
 	left:unset;
 	bottom:0;

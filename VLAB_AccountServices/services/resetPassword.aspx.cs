@@ -95,19 +95,24 @@ namespace VLAB_AccountServices.services {
 			console.errored=false;
 			this.SetConnectionString();
 			console.Clear();
+			console.Info("Initialization complete...");
 			if (Request.Form.Count>0) {
 				if (!resetPassword.SentHelpRequest) {
 					this.ProcessHelpRequest();
 				}
 			} else {
+				console.Info("Preparing HTML elements...");
 				this.SetElements();
+				console.Info("HTML element processing completed.");
 			}
-			//this.DispPOST();
-			
 
+			console.Warn(this.UC.GetCampus());
+
+			//this.DispPOST();
 		}
 
 		private void ProcessHelpRequest() {
+			console.Info("Processing help request...");
 			if (Request.Form.Count>0) {
 				//Response.ClearContent();
 				int i=0;
@@ -144,7 +149,7 @@ namespace VLAB_AccountServices.services {
 					ins.Send();
 					console.Info("Processed email.");
 					resetPassword.SentHelpRequest=true;
-					//console.Success("Processed email!");
+					console.Success("Processed email!");
 				}
 			}
 		}
@@ -213,7 +218,10 @@ namespace VLAB_AccountServices.services {
 				Database dins=new Database();
 				dins.AsyncRemoveAllRecords();
 				this.ShowRecords();
+			} else {
+				console.Info("No records queries needed removal.");
 			}
+			console.Info("---- End Of Initialization ----");
 		}
 		// A debugging function used to output the records that currently exist in the database.
 		private void ShowRecords() {
@@ -396,6 +404,7 @@ namespace VLAB_AccountServices.services {
 		}
 		// Processes session data.
 		private void ProcessSessionData() {
+			console.Log("Processing session data.");
 			if (this.pass) {
 				if (this.post_isset("data")) {
 					if (AD.isset(this.obj,"cmd")) {
@@ -571,6 +580,7 @@ namespace VLAB_AccountServices.services {
 				//GroupsElement.Items.Add("VD-VLAB3");
 				//group_container.Visible=false;
 				try{
+					console.Log("Preparing VDI options...");
 					Element.groupList.Clear();
 					Element.SetGroupElement(GroupsElement);
 					Element.AddGroup("VD-ADOBECC","Adobe");
@@ -578,19 +588,25 @@ namespace VLAB_AccountServices.services {
 					Element.AddGroup("BUSINESS VIRTUAL LAB 2","Business Virtual Lab 2");
 					Element.AddGroup("MATH VIRTUAL LAB","Math Virtual Lab");
 					Element.AddGroup("VD-VLAB3","VLAB-3");
+					console.Log("Attempting to save generated groups...");
 					Element.SetGroups();
+					console.Success("Groups successfully saved.");
 				}catch(Exception e){
 					console.Warn("Failure at...\n\t\t"+e.Message);
 				}
 				Groups gp=new Groups(this);
+				console.Log("Attempting to process VDI options...");
 				gp.ProcessUserGroups();					// Takes about 2 seconds.
+				console.Success("VDI groups successfully prepared for iteration!");
 				int i=0;
+				console.Log("Processing user desktops...");
 				// Iterate through the group names...
 				while(i<gp.User_Groups.Count){
 					gp.SelectGroup(gp.User_Groups[i]);
 					i++;
 				}
-				this.SetSubmitText("Save Changes");
+				console.Success("User groups successfully prepared!");
+				//this.SetSubmitText("Save Changes");
 			}catch(Exception ex){
 				console.Error("Failed to set status element.\n\t\t"+ex.Message);
 			}
