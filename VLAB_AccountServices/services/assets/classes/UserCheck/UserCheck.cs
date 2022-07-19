@@ -179,7 +179,8 @@ namespace VLAB_AccountServices {
 				if (tmp0!=null) {
 					var tmp=tmp0[0];
 					if (tmp.Contains("org=")) {
-						res=tmp.Substring(tmp.IndexOf("org="),tmp.Length);
+						int st=tmp.IndexOf("org=");
+						res=tmp.Substring(st,(tmp.Length-st));
 					}
 				}
 			}
@@ -199,10 +200,21 @@ namespace VLAB_AccountServices {
 									//string fname = GetAttribute("givenName");
 									//string lname = GetAttribute("sn");
 									value=array;
+								} else {
+									console.Warn("Array does not contain anything...");
 								}
+							} else {
+								console.Warn("Session does not contain the key\n\t\t"+key);
 							}
+						} else {
+							console.Warn("Session assertion is null");
 						}
+					} else {
+						//console.Warn("CAS Principal is null");
+						value=this.GetAttribute(key);
 					}
+				} else {
+					console.Warn("Key failed validation");
 				}
 			}catch(Exception e){
 				console.Error("Failed to get user information from CAS principal...\n\t\t"+e.Message);

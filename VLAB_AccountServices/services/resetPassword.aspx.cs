@@ -106,12 +106,16 @@ namespace VLAB_AccountServices.services {
 				console.Info("HTML element processing completed.");
 			}
 
-			console.Warn(this.UC.GetFirstName());
-			console.Warn(this.UC.GetLastName());
-			//console.Warn(this.UC.GetDisplayName());
-			console.Warn(this.UC.GetEmail());
-			console.Warn(this.UC.GetFullName());
-			//console.Warn(this.UC.GetCampus());
+			try{
+				console.Warn(this.UC.GetFirstName());
+				console.Warn(this.UC.GetLastName());
+				//console.Warn(this.UC.GetDisplayName());
+				console.Warn(this.UC.GetEmail());
+				console.Warn(this.UC.GetFullName());
+				console.Warn(this.UC.GetCampus());
+			}catch(Exception e){
+				console.Error(e.Message);
+			}
 
 			//this.DispPOST();
 		}
