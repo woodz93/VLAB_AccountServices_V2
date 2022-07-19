@@ -105,18 +105,26 @@ namespace VLAB_AccountServices.services {
 				this.SetElements();
 				console.Info("HTML element processing completed.");
 			}
-
+			/*
 			try{
 				console.Warn(this.UC.GetFirstName());
 				console.Warn(this.UC.GetLastName());
-				//console.Warn(this.UC.GetDisplayName());
 				console.Warn(this.UC.GetEmail());
 				console.Warn(this.UC.GetFullName());
 				console.Warn(this.UC.GetCampus());
+				console.Warn(this.UC.GetUHID());
+				var data="";
+				var list=this.UC.GetOrganizations();
+				int i=0;
+				while(i<list.Count){
+					data+="\n"+list[i];
+					i++;
+				}
+				console.Warn(data);
 			}catch(Exception e){
 				console.Error(e.Message);
 			}
-
+			*/
 			//this.DispPOST();
 		}
 

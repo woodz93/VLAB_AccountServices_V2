@@ -25,11 +25,11 @@ namespace VLAB_AccountServices {
 		}
 		// Performs a username check with the AD server.
 		private void ini() {
+			this.CAS_Principal=CasAuthentication.CurrentPrincipal;
 			if (!this.CheckSession("data")) {
 				if (this.CheckCas()) {
 					string un=this.GetUsername();
 					if (!String.IsNullOrEmpty(un)) {
-						this.CAS_Principal=CasAuthentication.CurrentPrincipal;
 						var c=this.CheckUsername(un);
 						string cmd=null;
 						if (c==0x01) {
@@ -70,7 +70,10 @@ namespace VLAB_AccountServices {
 		public string GetFirstName() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("givenName")[0];
+				var tmp=this.GetAttribute("givenName");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -78,7 +81,10 @@ namespace VLAB_AccountServices {
 		public string GetLastName() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("sn")[0];
+				var tmp=this.GetAttribute("sn");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -86,7 +92,10 @@ namespace VLAB_AccountServices {
 		public string GetFullName() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("cn")[0];
+				var tmp=this.GetAttribute("cn");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -94,7 +103,10 @@ namespace VLAB_AccountServices {
 		public string GetEmail() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("uhEmail")[0];
+				var tmp=this.GetAttribute("uhEmail");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -102,7 +114,10 @@ namespace VLAB_AccountServices {
 		public string GetDepartment() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("ou")[0];
+				var tmp=this.GetAttribute("ou");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -110,7 +125,10 @@ namespace VLAB_AccountServices {
 		public string GetPhone() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("telephoneNumber")[0];
+				var tmp=this.GetAttribute("telephoneNumber");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -118,7 +136,10 @@ namespace VLAB_AccountServices {
 		public string GetJobTitle() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("title")[0];
+				var tmp=this.GetAttribute("title");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -126,7 +147,10 @@ namespace VLAB_AccountServices {
 		public List<string> GetAffiliations() {
 			List<string> res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("eduPersonAffiliation");
+				var tmp=this.GetAttribute("eduPersonAffiliation");
+				if (tmp!=null) {
+					res=tmp;
+				}
 			}
 			return res;
 		}
@@ -134,7 +158,10 @@ namespace VLAB_AccountServices {
 		public List<string> GetOrganizations() {
 			List<string> res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("eduPersonOrgDN");
+				var tmp=this.GetAttribute("eduPersonOrgDN");
+				if (tmp!=null) {
+					res=tmp;
+				}
 			}
 			return res;
 		}
@@ -142,7 +169,10 @@ namespace VLAB_AccountServices {
 		public string GetUHID() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("uhUuid")[0];
+				var tmp=this.GetAttribute("uhUuid");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -150,7 +180,10 @@ namespace VLAB_AccountServices {
 		public string GetOffice() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("physicalDeliveryOfficeName")[0];
+				var tmp=this.GetAttribute("physicalDeliveryOfficeName");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -158,7 +191,10 @@ namespace VLAB_AccountServices {
 		public string GetURL() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("labeledURI")[0];
+				var tmp=this.GetAttribute("labeledURI");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -166,7 +202,10 @@ namespace VLAB_AccountServices {
 		public string GetDisplayName() {
 			string res=null;
 			if (this.CheckCas()) {
-				res=this.GetAttribute("displayName")[0];
+				var tmp=this.GetAttribute("displayName");
+				if (tmp!=null) {
+					res=tmp[0];
+				}
 			}
 			return res;
 		}
@@ -175,12 +214,12 @@ namespace VLAB_AccountServices {
 			string res=null;
 			if (this.CheckCas()) {
 				var tmp0=this.GetAttribute("uhScopedHomeOrg");
-				console.Info(tmp0[0]);
+				//console.Info(tmp0[0]);
 				if (tmp0!=null) {
 					var tmp=tmp0[0];
 					if (tmp.Contains("org=")) {
 						int st=tmp.IndexOf("org=");
-						res=tmp.Substring(st,(tmp.Length-st));
+						res=tmp.Substring(st+4,(tmp.Length-(st+4)));
 					}
 				}
 			}
