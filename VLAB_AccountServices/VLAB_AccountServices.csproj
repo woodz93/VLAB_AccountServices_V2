@@ -200,6 +200,7 @@
     <Content Include="favicon.png" />
     <Content Include="services\favicon.png" />
     <Content Include="services\resetPassword.aspx" />
+    <Content Include="favicon.ico" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

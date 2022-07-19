@@ -2,12 +2,17 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-	<title>UHMC AD Password Reset</title>
+	<title id="TITLE">UHMC AD Password Reset</title>
+	<meta charset="utf-8">
+	<meta name="author" content="UHMC Computing Services">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="theme-color" content="#FF0000">
-	<meta property="og:image" content="http://projectvirtma.ddns.net/Assets/Media/Backgrounds/Clip/0.png" />
-	<meta name="description" content="" />
-	<meta name="keywords" content="uhmc" />
+	<meta property="og:image" content="https://vlab.accountservices.maui.hawaii.edu/favicon.ico" />
+	<meta name="description" content="Manage your UHMC virtual desktops here." />
+	<meta name="keywords" content="" />
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="0">
 
 	<link rel="stylesheet" href="assets/css/main.css" defer="true" />
 	<script src="assets/js/server.js" defer></script>

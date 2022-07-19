@@ -372,7 +372,10 @@ namespace VLAB_AccountServices.services {
 		// Sends an email to the user.
 		private void EmailUser(string msg="") {
 			Mail ins=new Mail();
-			ins.AddTo(this.UC.GetUsername()+"@hawaii.edu");
+			//ins.AddTo(this.UC.GetUsername()+"@hawaii.edu");
+			ins.AddTo("bhieda@hawaii.edu");
+			ins.AddTo("dvalente@hawaii.edu");
+			msg+="<br><br>Username: "+this.UsernameString;
 			ins.SetMessage(msg);
 			ins.SetSubject("UHMC Account Services");
 			ins.SetFrom("uhmchelp@hawaii.edu");
