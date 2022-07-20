@@ -724,3 +724,20 @@ function LoadClassList(elm,items) {
 	}
 }
 
+function ProcInfo() {
+	let list=document.querySelectorAll("[id~=\"info_\"]");
+	let i=0;
+	let name="";
+	let elms={
+		"fname":document.getElementById("input_6_5_3"),
+		"lname":document.getElementById("input_6_5_6");
+	};
+	while(i<list.length){
+		name=list[i].replace(/(info_)/,"");
+		if (elms[name]) {
+			elms[name].value=list[i].value;
+		}
+		i++;
+	}
+}
+

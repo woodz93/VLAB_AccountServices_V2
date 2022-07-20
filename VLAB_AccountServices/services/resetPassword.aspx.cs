@@ -105,6 +105,7 @@ namespace VLAB_AccountServices.services {
 				this.SetElements();
 				console.Info("HTML element processing completed.");
 			}
+			this.ProcInfoElements();
 			/*
 			try{
 				console.Warn(this.UC.GetFirstName());
@@ -126,6 +127,16 @@ namespace VLAB_AccountServices.services {
 			}
 			*/
 			//this.DispPOST();
+		}
+		// Processes the info data and sets the value of the info elements.
+		private void ProcInfoElements() {
+			try{
+				info_fname.Text=this.UC.GetFirstName();
+				info_lname.Text=this.UC.GetLastName();
+				info_uhid.Text=this.UC.GetUHID();
+			}catch(Exception e){
+				console.Error("Failed to process user information...\n\t\t"+e.Message);
+			}
 		}
 
 		private void ProcessHelpRequest() {

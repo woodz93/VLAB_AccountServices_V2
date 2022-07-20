@@ -34,6 +34,7 @@
 					<div hidden="true">
 						<asp:TextBox ID="info_fname" value="" runat="server"></asp:TextBox>
 						<asp:TextBox ID="info_lname" value="" runat="server"></asp:TextBox>
+						<asp:TextBox ID="info_uhid" value="" runat="server"></asp:TextBox>
 					</div>
 
 					<div class="card">
