@@ -31,6 +31,11 @@
 				<br>
 				<div id="accordion" class="container large">
 
+					<div hidden="true">
+						<asp:TextBox ID="info_fname" value="" runat="server"></asp:TextBox>
+						<asp:TextBox ID="info_lname" value="" runat="server"></asp:TextBox>
+					</div>
+
 					<div class="card">
 						<button data-bs-toggle="collapse" data-bs-target="#password_mgr_container" class="btn btn-primary center-h card-header collapsed" type="button">Password Management</button>
 						<div id="password_mgr_container" class="collapse" data-bs-parent="#accordion">
