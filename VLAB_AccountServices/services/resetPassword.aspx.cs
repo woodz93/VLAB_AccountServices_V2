@@ -38,6 +38,9 @@ namespace VLAB_AccountServices.services {
 		private string ModeString="";
 		public UserCheck UC=null;
 
+		private string UserGroupsSelected="";
+		private Dictionary<string,string>ClientData=new Dictionary<string,string>();
+
 		private static bool SentHelpRequest=false;
 
 		public Dictionary<string,string> HelpRequestForm=new Dictionary<string, string>();
@@ -167,10 +170,16 @@ namespace VLAB_AccountServices.services {
 						value=this.HelpRequestForm[key];
 						data+="<tr><td>"+item+"</td><td>"+value+"</td></tr>";
 					}
-					string msg="<table><tr><th>Field</th><th>Value</th></tr>"+data+"</table>";
+					string msg="<table><tr><th>Field</th><th>Value</th></tr>"+data+"</table><br>"+this.GetUserDetails();
+					string email=this.HelpRequestForm["email"];
+					if(String.IsNullOrEmpty(email) || String.IsNullOrWhiteSpace(email))
+					{
+						email=UC.GetEmail();
+					}
 					Mail ins=new Mail();
 					ins.AddTo("uhmchelp@hawaii.edu");
-					ins.SetFrom(this.HelpRequestForm["email"]);
+					//ins.AddTo("dvalente@hawaii.edu");
+					ins.SetFrom(email);
 					ins.SetSubject("AccountServices Help Ticket");
 					ins.SetMessage(msg);
 					ins.IsBodyHtml=true;
@@ -306,6 +315,7 @@ namespace VLAB_AccountServices.services {
 					}
 					i++;
 				}
+				this.UserGroupsSelected=data;
 				//string data=gpstr;
 				gpstr="["+gpstr+"]";
 				console.Info(gpstr);
@@ -411,13 +421,46 @@ namespace VLAB_AccountServices.services {
 			//ins.AddTo(this.UC.GetUsername()+"@hawaii.edu");
 			ins.AddTo("bhieda@hawaii.edu");
 			ins.AddTo("dvalente@hawaii.edu");
-			msg+="<br><br>Username: "+this.UsernameString;
+			msg+="<br><br>The change was conducted for the user \""+UC.GetUsername()+"\"";
 			ins.SetMessage(msg);
 			ins.SetSubject("UHMC Account Services");
 			ins.SetFrom("uhmchelp@hawaii.edu");
 			ins.IsBodyHtml=true;
 			ins.Send();
 		}
+		/// <summary>
+		/// Generates an HTML table consisting of all the user's information for debugging purposes.
+		/// </summary>
+		/// <returns>an <see cref="string">HTML table string</see>.</returns>
+		public string GetUserDetails()
+		{
+			string res="";
+			Dictionary<string,string>list=new Dictionary<string,string>();
+			list.Add("Full Name",UC.GetFullName());
+			list.Add("First Name",UC.GetFirstName());
+			list.Add("Last Name",UC.GetLastName());
+			list.Add("UH Username",UC.GetUsername());
+			//list.Add("UHID",UC.GetUHID());
+			//list.Add("Domain Username",this.UsernameString);
+			//list.Add("Domain Password",this.PasswordString);
+			list.Add("Browser Name",Client.GetBrowserName());
+			list.Add("Browser Type",Client.GetBrowserType());
+			list.Add("Browser Version",Client.GetBrowserVersion());
+			list.Add("Client Platform",Client.GetPlatform());
+			list.Add("Client UA",Client.GetUserAgent());
+			list.Add("Client IP",Client.GetIP());
+			list.Add("Campus",UC.GetCampus());
+			list.Add("Email",UC.GetEmail());
+			foreach(var item in list) {
+				res+="<tr style=\"border:2px solid #000;\"><td style=\"border-bottom:2px solid #000;border-top:2px solid #000;\">"+item.Key+"</td><td style=\"border-bottom:2px solid #000;border-top:2px solid #000;\">"+item.Value+"</td></tr>";
+			}
+			string sty="table,table tr{border:2px solid #000;}";
+			res="<style>"+sty+"</style><br><center><h1>Client Information:</h1><br><table style=\"border:2px solid #000;background-color:rgb(50,50,50);color:#FFF;\"><tr><th style=\"background-color:rgb(50,50,50) !important;\">Field</th><th style=\"background-color:rgb(50,50,50) !important;\">Value</th></tr>"+res+"</table><br><font style=\"color:red;text-align:left;\">FOR IT PERSONNEL ONLY!</font></center><br><br>";
+			return res;
+		}
+
+		
+
 		// Checks object for valid username.
 		private bool CheckString(string q=null) {
 			bool res=false;

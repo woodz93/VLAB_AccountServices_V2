@@ -730,7 +730,7 @@ function ProcInfo() {
 	let name="";
 	let elms={
 		"fname":document.getElementById("input_6_5_3"),
-		"lname":document.getElementById("input_6_5_6");
+		"lname":document.getElementById("input_6_5_6")
 	};
 	while(i<list.length){
 		name=list[i].replace(/(info_)/,"");
