@@ -4,7 +4,6 @@ using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Net;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -14,7 +13,8 @@ using VLAB_AccountServices.services.assets.classes.Database;
 using VLAB_AccountServices.services.assets.classes.Groups;
 using VLAB_AccountServices.services.assets.classes.Str;
 using VLAB_AccountServices.services.assets.sys;
-namespace VLAB_AccountServices.services {
+namespace VLAB_AccountServices.services
+{
 	public partial class resetPassword : System.Web.UI.Page {
 		protected byte mode=0x00;
 		protected static string db="UHMC_VLab";
