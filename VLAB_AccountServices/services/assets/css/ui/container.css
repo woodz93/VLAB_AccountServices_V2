@@ -377,3 +377,17 @@ div.container.center-h.center-v.beval form {
 	left:50%;
 	transform:translateX(-50%);
 }
+
+div#global.container.center-h.center-v.global {
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translateX(-50%) translateY(-50%);
+	max-height:90vh !important;
+	overflow:hidden;
+	overflow-y:auto;
+}
+
+div#form-container.container.beval {
+	overflow:hidden;
+}

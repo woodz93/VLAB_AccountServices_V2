@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-	<title id="TITLE">UHMC AD Password Reset</title>
+	<title id="TITLE">Account Services</title>
 	<meta charset="utf-8">
 	<meta name="author" content="UHMC Computing Services">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,116 +15,136 @@
 	<meta http-equiv="Expires" content="0">
 
 	<link rel="stylesheet" href="assets/css/main.css" defer="true" />
-	<script src="assets/js/server.js" defer></script>
+	<script src="assets/js/Loader.js" defer></script>
+	<!--<script src="assets/js/server.js" defer></script>-->
+	<!--
 	<script src="assets/js/main.js" defer></script>
 	<script src="assets/css/Bootstrap/Bootstrap.js" defer></script>
+	-->
 </head>
 <body>
 
 	<button type="button" data-bs-toggle="modal" data-bs-target="#modal_support_panel" class="btn btn-primary help">Help</button>
 
 	<div id="bg" class="bg"></div>
-	<div class="container center-h center-v beval">
-		<form id="form_main" class="container" runat="server" method="post">
-			<div class="container content">
-				<h1 class="title pos-rel center-h">Account Services</h1>
-				<br>
-				<div id="accordion" class="container large">
-
-					<div hidden="true">
-						<asp:TextBox ID="info_fname" value="" runat="server"></asp:TextBox>
-						<asp:TextBox ID="info_lname" value="" runat="server"></asp:TextBox>
-						<asp:TextBox ID="info_uhid" value="" runat="server"></asp:TextBox>
-					</div>
-
-					<div class="card">
-						<button data-bs-toggle="collapse" data-bs-target="#password_mgr_container" class="btn btn-primary center-h card-header collapsed" type="button">Password Management</button>
-						<div id="password_mgr_container" class="collapse" data-bs-parent="#accordion">
-							<table class="container pwd-mgr">
-								<tr>
-									<!--<td><label for="username">Username: </label></td>-->
-									<td>
-										<div class="form-floating mb-3 mt-3 tal">
-											<asp:textbox id="username" Text="" runat="server" name="username" type="text" value="" placeholder="UH Username..." CausesValidation="false" CssClass="form-control"></asp:textbox>
-											<label for="password-confirm">Username</label>
-										</div>
-										<div class="options">
-											<button type="button" class="btn btn-info peak hide"></button>
-											<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Your UH username/email.\nThis is determined from your UH login and cannot be changed in this form."></button>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<!--<td><label for="password">Password: </label></td>-->
-									<td>
-										<div class="form-floating mb-3 mt-3 tal">
-											<asp:textbox id="password" Text="" runat="server" name="password" type="password" value="" placeholder="UH Password..." CausesValidation="false" CssClass="form-control"></asp:textbox>
-											<label for="password">Password</label>
-										</div>
-										<div class="options">
-											<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password"></button>
-											<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Enter a password that you'll use to login to your virtual desktop."></button>
-										</div>
-
-									</td>
-								</tr>
-								<tr>
-									<!--<td><label for="password-confirm">Confirm Password: </label></td>-->
-									<td>
-										<div class="form-floating mb-3 mt-3 tal">
-											<asp:textbox id="password_confirm" Text="" runat="server" name="password_confirm" type="password" value="" placeholder="Confirm password..." CausesValidation="false" CssClass="form-control"></asp:textbox>
-											<label for="password-confirm">Confirm Password</label>
-										</div>
-										<div class="options">
-											<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password_confirm"></button>
-											<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Confirm your password."></button>
-										</div>
-									</td>
-								</tr>
-							</table>
-							<br>
-							<button class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)" data-type="submit">Save Password</button>
-							<br>
-							<asp:label id="status" Text="" runat="server" class="status alert alert-dark center-h" CausesValidation="false"></asp:label>
+	<div id="global" class="container center-h center-v global">
+		<div id="form-container" class="container beval">
+			<form id="form_main" class="container" runat="server" method="post">
+				<div class="container content">
+					<h1 class="title pos-rel center-h">Account Services</h1>
+					<br>
+					<div id="accordion" class="container large">
+						<!-- Local user information/data -->
+						<div class="hidden">
+							<!--
+								This section is used immediately when the user/client completely loads the page.
+								The data in these fields are stored in JavaScript variables that will be referenced by the server for user account reference information.
+							-->
+							<asp:TextBox ID="info_fname" value="" runat="server" Visible="true"></asp:TextBox>
+							<asp:TextBox ID="info_lname" value="" runat="server" Visible="true"></asp:TextBox>
+							<asp:TextBox ID="info_uhid" value="" runat="server" Visible="true"></asp:TextBox>
+							<asp:TextBox ID="info_email" value="" runat="server" Visible="true"></asp:TextBox>
 						</div>
-					</div>
-					<div class="card">
-						<button data-bs-toggle="collapse" data-bs-target="#vdi_container" class="btn btn-primary center-h card-header collapsed" CausesValidation="false" type="button">Available Desktops</button>
-						<div id="vdi_container" class="collapse" data-bs-parent="#accordion">
-							<asp:Panel ID="group_container" CssClass="groups container" Visible="false" runat="server" CausesValidation="false"></asp:Panel>
-							<asp:Label ID="groups_label" CssClass="sub_title center-h" for="groups" runat="server" Visible="false" CausesValidation="false">Available Groups:</asp:Label>
-							<br />
-							<table class="table table-striped table-bordered">
-								<tr>
-									<th>Available Desktops <button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Here, you can select the virtual desktops that you want access to.\nOnce you've submitted the form, you'll gain immediate access to the virtual desktops you have selected."></button></th>
-									<th>My Desktops <button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="These are the virtual desktops that you already have access to."></button></th>
-								</tr>
-								<tr>
-									<td>
-										<asp:CheckBoxList ID="GroupsElement" CssClass="list groups pos-rel" name="groups" runat="server" CausesValidation="false"></asp:CheckBoxList>
-									</td>
-									<td>
-										<asp:CheckBoxList ID="UserGroupsElement" CssClass="list groups pos-rel" name="groups" runat="server" CausesValidation="false"></asp:CheckBoxList>
-									</td>
-								</tr>
-							</table>
-							<br>
-							<button class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)" data-type="submit">Add</button>
-						</div>
-					</div>
+						<!-- PASSWORD MANAGEMENT SECTION -->
+						<div class="card">
+							<button data-bs-toggle="collapse" data-bs-target="#password_mgr_container" class="btn btn-primary center-h card-header collapsed" type="button">Password Management</button>
+							<div id="password_mgr_container" class="collapse" data-bs-parent="#accordion">
+								<table class="container pwd-mgr">
+									<!-- Username field elements -->
+									<tr>
+										<td>
+											<div class="form-floating mb-3 mt-3 tal">
+												<asp:textbox id="username" Text="" runat="server" name="username" type="text" value="" placeholder="UH Username..." CausesValidation="false" CssClass="form-control"></asp:textbox>
+												<label for="password-confirm">Username</label>
+											</div>
+											<div class="options">
+												<button type="button" class="btn btn-info peak hide"></button>
+												<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Your UH username/email.\nThis is determined from your UH login and cannot be changed in this form."></button>
+											</div>
+										</td>
+									</tr>
+									<!-- Password field elements -->
+									<tr>
+										<td>
+											<div class="form-floating mb-3 mt-3 tal">
+												<asp:textbox id="password" Text="" runat="server" name="password" type="password" value="" placeholder="UH Password..." CausesValidation="false" CssClass="form-control"></asp:textbox>
+												<label for="password">Password</label>
+											</div>
+											<div class="options">
+												<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password"></button>
+												<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Enter a password that you'll use to login to your virtual desktop."></button>
+											</div>
 
-					<asp:Panel ID="dev" Visible="false" runat="server">
-						<label for="debug">Debug:</label>
-						<asp:CheckBox ID="debug" name="debug" runat="server" />
-					</asp:Panel>
+										</td>
+									</tr>
+									<!-- Password confirmation field elements -->
+									<tr>
+										<td>
+											<div class="form-floating mb-3 mt-3 tal">
+												<asp:textbox id="password_confirm" Text="" runat="server" name="password_confirm" type="password" value="" placeholder="Confirm password..." CausesValidation="false" CssClass="form-control"></asp:textbox>
+												<label for="password-confirm">Confirm Password</label>
+											</div>
+											<div class="options">
+												<button type="button" class="btn btn-info peak" onclick="peak(this)" data-ref="password_confirm"></button>
+												<button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Confirm your password."></button>
+											</div>
+										</td>
+									</tr>
+								</table>
+								<br>
+								<button id="form-pwd-btn" class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)" data-type="submit">Save Password</button>
+								<br>
+								<asp:label id="status" Text="" runat="server" class="status alert alert-dark center-h" CausesValidation="false"></asp:label>
+							</div>
+						</div>
+						<!-- VIRTUAL DESKTOP MANAGEMENT SECTION -->
+						<div class="card">
+							<button data-bs-toggle="collapse" data-bs-target="#vdi_container" class="btn btn-primary center-h card-header collapsed" CausesValidation="false" type="button">Available Desktops</button>
+							<div id="vdi_container" class="collapse" data-bs-parent="#accordion">
+								<asp:Panel ID="group_container" CssClass="groups container" Visible="false" runat="server" CausesValidation="false"></asp:Panel>
+								<asp:Label ID="groups_label" CssClass="sub_title center-h" for="groups" runat="server" Visible="false" CausesValidation="false">Available Groups:</asp:Label>
+								<br />
+								<!-- The following table contains the user's available and already joined virtual desktops -->
+								<table class="table table-striped table-bordered">
+									<tr>
+										<th>Available Desktops <button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="Here, you can select the virtual desktops that you want access to.\nOnce you've submitted the form, you'll gain immediate access to the virtual desktops you have selected."></button></th>
+										<th>My Desktops <button type="button" class="btn btn-info info t-500" data-bs-toggle="popover" data-bs-target="#modal_panel" onclick="SetInfo(this)" data-bs-content="These are the virtual desktops that you already have access to."></button></th>
+									</tr>
+									<tr>
+										<!-- The available virtual desktops that the user can request -->
+										<td>
+											<asp:CheckBoxList ID="GroupsElement" CssClass="list groups pos-rel" name="groups" runat="server" CausesValidation="false"></asp:CheckBoxList>
+										</td>
+										<!-- The virtual desktops that the user is already has access to. -->
+										<td>
+											<asp:CheckBoxList ID="UserGroupsElement" CssClass="list groups pos-rel" name="groups" runat="server" CausesValidation="false"></asp:CheckBoxList>
+										</td>
+									</tr>
+								</table>
+								<br>
+								<!-- Virtual Desktop form submission element -->
+								<button id="form-vd-btn" class="btn btn-outline-primary pos-rel center-h submit_button" type="button" onclick="SubmitForm(this)" data-type="submit">Add</button>
+							</div>
+						</div>
+						<!-- Developer element (Used for testing specific functionalities and features) -->
+						<asp:Panel ID="dev" Visible="false" runat="server">
+							<label for="debug">Debug:</label>
+							<asp:CheckBox ID="debug" name="debug" runat="server" />
+						</asp:Panel>
+					</div>
 				</div>
-			</div>
-			<br>
-			<asp:button id="submit_btn" CssClass="submit_btn btn btn-outline-primary btn-lg center-h submit_button hidden" name="submit_btn" Text="[ERROR]" Onclick="processPassword" runat="server" type="submit" CausesValidation="true"></asp:button>
-
-			
-
-		</form>
+				<br>
+				<!-- Form submission button -->
+				<asp:button id="submit_btn" CssClass="submit_btn btn btn-outline-primary btn-lg center-h submit_button hidden" name="submit_btn" Text="[ERROR]" Onclick="processPassword" runat="server" type="submit" CausesValidation="true"></asp:button>
+				<br>
+				<!-- Below contains the element used for the post-submission response message (The message that informs the user where to go afterwards to access their virtual desktop) -->
+				<asp:Panel ID="SMCElement" CssClass="container footer hidden" runat="server" Visible="true">
+					<asp:Panel CssClass="alert alert-success" ID="SMCAlert" runat="server">
+						<strong>Success!</strong> You can now access your virtual desktops <a href="https://vlab.maui.hawaii.edu/" target="_blank">here</a>.
+					</asp:Panel>
+				</asp:Panel>
+			</form>
+		</div>
 	</div>
 
 	

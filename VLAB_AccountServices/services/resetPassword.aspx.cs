@@ -137,6 +137,7 @@ namespace VLAB_AccountServices.services {
 				info_fname.Text=this.UC.GetFirstName();
 				info_lname.Text=this.UC.GetLastName();
 				info_uhid.Text=this.UC.GetUHID();
+				info_email.Text=this.UC.GetEmail();
 			}catch(Exception e){
 				console.Error("Failed to process user information...\n\t\t"+e.Message);
 			}
@@ -350,6 +351,16 @@ namespace VLAB_AccountServices.services {
 				//Response.Redirect("resetPassword.aspx");
 			}
 		}
+		/// <summary>
+		/// Outputs any messages to the client upon form processing completion.
+		/// </summary>
+		private void FinalFormOutput()
+		{
+			SMCElement.Visible=true;
+			SMCAlert.Visible=true;
+			SMCElement.Attributes.Add("show","true");
+		}
+
 		// Performs poast-back action.
 		private void ProcessPostBack() {
 			bool p=true;
@@ -455,12 +466,9 @@ namespace VLAB_AccountServices.services {
 				res+="<tr style=\"border:2px solid #000;\"><td style=\"border-bottom:2px solid #000;border-top:2px solid #000;\">"+item.Key+"</td><td style=\"border-bottom:2px solid #000;border-top:2px solid #000;\">"+item.Value+"</td></tr>";
 			}
 			string sty="table,table tr{border:2px solid #000;}";
-			res="<style>"+sty+"</style><br><center><h1>Client Information:</h1><br><table style=\"border:2px solid #000;background-color:rgb(50,50,50);color:#FFF;\"><tr><th style=\"background-color:rgb(50,50,50) !important;\">Field</th><th style=\"background-color:rgb(50,50,50) !important;\">Value</th></tr>"+res+"</table><br><font style=\"color:red;text-align:left;\">FOR IT PERSONNEL ONLY!</font></center><br><br>";
+			res="<style>"+sty+"</style><br><center><h1>Client Information:</h1><br><table style=\"border:2px solid #000;background-color:rgb(50,50,50);color:#FFF;text-align:left;\"><tr><th style=\"background-color:rgb(50,50,50) !important;\">Field</th><th style=\"background-color:rgb(50,50,50) !important;\">Value</th></tr>"+res+"</table><br><font style=\"color:red;text-align:left;\">FOR IT PERSONNEL ONLY!</font></center><br><br>";
 			return res;
 		}
-
-		
-
 		// Checks object for valid username.
 		private bool CheckString(string q=null) {
 			bool res=false;
@@ -658,7 +666,7 @@ namespace VLAB_AccountServices.services {
 					Element.AddGroup("BUSINESS VIRTUAL LAB","Business Virtual Lab");
 					Element.AddGroup("BUSINESS VIRTUAL LAB 2","Business Virtual Lab 2");
 					Element.AddGroup("MATH VIRTUAL LAB","Math Virtual Lab");
-					Element.AddGroup("VD-VLAB3","VLAB-3");
+					//Element.AddGroup("VD-VLAB3","VLAB-3");
 					console.Log("Attempting to save generated groups...");
 					Element.SetGroups();
 					console.Success("Groups successfully saved.");

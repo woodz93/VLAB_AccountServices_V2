@@ -194,6 +194,9 @@
     <Content Include="services\assets\eye_crossout.png" />
     <Content Include="services\assets\graphics\uhmc_bg.png" />
     <Content Include="services\assets\js\default.js" />
+    <Content Include="services\assets\js\Storage.js" />
+    <Content Include="services\assets\js\State.js" />
+    <Content Include="services\assets\js\Loader.js" />
     <Content Include="services\assets\js\main.js" />
     <Content Include="services\assets\js\server.js" />
     <Content Include="services\createAccount.aspx" />

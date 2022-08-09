@@ -7,10 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VLAB_AccountServices.services {
+namespace VLAB_AccountServices.services
+{
 
 
-	public partial class resetPassword {
+	public partial class resetPassword
+	{
 
 		/// <summary>
 		/// TITLE control.
@@ -56,6 +58,15 @@ namespace VLAB_AccountServices.services {
 		/// To modify move field declaration from designer file to code-behind file.
 		/// </remarks>
 		protected global::System.Web.UI.WebControls.TextBox info_uhid;
+
+		/// <summary>
+		/// info_email control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.TextBox info_email;
 
 		/// <summary>
 		/// username control.
@@ -155,5 +166,23 @@ namespace VLAB_AccountServices.services {
 		/// To modify move field declaration from designer file to code-behind file.
 		/// </remarks>
 		protected global::System.Web.UI.WebControls.Button submit_btn;
+
+		/// <summary>
+		/// SMCElement control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.Panel SMCElement;
+
+		/// <summary>
+		/// SMCAlert control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.Panel SMCAlert;
 	}
 }

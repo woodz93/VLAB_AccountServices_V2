@@ -13,7 +13,61 @@ function ini() {
 		}, 50);
 	}
 }
+
+function prepRegLoad() {
+	if (document.getElementById("SMCElement")) {
+		if (Store.Contains("SMCElement")) {
+			let elm = document.getElementById("SMCElement");
+			let obj = Store.Get("SMCElement");
+			let t = (typeof obj);
+			if (t === "object" || t === "array") {
+				State.Render(elm,obj);
+			}
+		}
+	}
+}
+
+function prepPostBack() {
+	if (document.getElementById("SMCElement")) {
+		let elm = document.getElementById("SMCElement");
+		if (elm.hasAttribute("show")) {
+			if (elm.getAttribute("show") === "true") {
+				console.warn(elm);
+				if (elm.classList.contains("hidden")) {
+					elm.classList.remove("hidden");
+				}
+				State.Save(elm,"SMCElement");
+			}
+		}
+	}
+}
+
+function prepHelpForm() {
+	let list = {
+		"info_fname": "input_6_5_3",
+		"info_lname": "input_6_5_6",
+		"info_email":"input_6_2"
+	};
+	let item = false;
+	let value = false;
+	for ([item,value] of Object.entries(list)) {
+		if (document.getElementById(item)) {
+			if (document.getElementById(value)) {
+				document.getElementById(value).value = document.getElementById(item).value;
+			} else {
+				console.warn(value + " was not found!");
+			}
+		} else {
+			console.warn(item + " was not found!");
+		}
+	}
+}
+
 function setup() {
+	setTimeout(function () { prepHelpForm(); },100);
+	prepRegLoad();
+	prepPostBack();
+	//PrepOutput();
 	prepSubmitBtn();
 	if (document.getElementById("password_confirm")) {
 		document.getElementById("password").addEventListener("keyup", function (e) {
@@ -47,6 +101,16 @@ function setup() {
 		console.log("All elements have successfully been setup!");
 	} else {
 		setTimeout(function () { ini(); }, 100);
+	}
+}
+function PrepOutput() {
+	if (document.getElementById("SMCElement")) {
+		let elm = document.getElementById("SMCElement");
+		if (elm.parentElement.classList.contains("aspNetHidden")) {
+			State.Render(elm,Store.Get("responseMessage"));
+		} else {
+			State.Save(elm,Store.Get("responseMessage"));
+		}
 	}
 }
 function AdjustCheckboxes() {
@@ -229,7 +293,31 @@ function Convert(q = false) {
 function SubmitForm(q=false) {
 	if (document.getElementById("submit_btn")) {
 		let elm = document.getElementById("submit_btn");
-		if (!elm.disabled) {
+		let p = true;
+		let t = (typeof q);
+		if (t === "object") {
+			t = (typeof q.id);
+			if (t === "string") {
+				if (q.id === "form-pwd-btn") {
+					if (!checkPasswordValue()) {
+						p = false;
+					}
+				} else if (q.id === "form-vd-btn") {
+					let tmp = document.querySelectorAll("table#GroupsElement input[type=\"checkbox\"]:checked");
+					let y = (typeof tmp);
+					if (y !== "undefined") {
+						if (!(tmp.length > 0)) {
+							p = false;
+						}
+					} else {
+						p = false;
+					}
+				}
+			}
+		}
+
+
+		if (!elm.disabled && p) {
 			elm.click();
 			elm.disabled = true;
 			let list = document.querySelectorAll("button.submit_button");
@@ -260,27 +348,94 @@ function SubmitForm(q=false) {
 }
 function prepSubmitBtn() {
 	if (document.getElementById("submit_btn")) {
+
+		
+
+		document.getElementById("form-vd-btn").addEventListener("click",function (e) {
+			let tmp = document.querySelectorAll("table#GroupsElement input[type=\"checkbox\"]:checked");
+			let t = (typeof tmp);
+			let p = false;
+			if (t !== "undefined") {
+				t = (typeof tmp.length);
+				if (t !== "undefined") {
+					if (!(tmp.length > 0)) {
+						p = true;
+					}
+				} else {
+					p = true;
+				}
+			} else {
+				p = true;
+			}
+			if (p) {
+				let elm = document.getElementById("form-vd-btn");
+				elm.disabled = true;
+				if (!elm.classList.contains("btn-outline-danger")) {
+					elm.classList.add("btn-outline-danger");
+				}
+				elm.innerHTML = "[ERROR]";
+				setTimeout(function () {
+					elm.disabled = false;
+					if (elm.classList.contains("btn-outline-danger")) {
+						elm.classList.remove("btn-outline-danger");
+					}
+					elm.innerHTML = "Add";
+				},5000);
+			}
+		});
+
+		document.getElementById("form-pwd-btn").addEventListener("click",function (e) {
+			let p0 = document.getElementById("password").value;
+			let p1 = document.getElementById("password_confirm").value;
+			let p = false;
+			if (!checkPasswordValue()) {
+				p = true;
+			}
+			if (p) {
+				e.preventDefault();
+				//document.getElementById("form_main").disabled = true;
+				let elm = document.getElementById("form-pwd-btn");
+				if (!elm.classList.contains("btn-outline-danger")) {
+					elm.classList.add("btn-outline-danger");
+					elm.innerHTML = "[ERROR]";
+					elm.disabled = true;
+					setTimeout(function () {
+						elm.disabled = false;
+						if (elm.classList.contains("btn-outline-danger")) {
+							elm.classList.remove("btn-outline-danger");
+						}
+						elm.innerHTML = "Save Password";
+					},5000);
+				}
+				output("Passwords are invalid or do not match!");
+			}
+		});
+
 		let l=document.querySelectorAll("button[data-type=\"submit\"]");
 		let i=0;
 		while(i<l.length){
-			let e=l[i];
-			e.addEventListener("click",function(){
-				setTimeout(function(){
-					if (e.classList.contains("btn-outline-primary")) {
-						e.classList.remove("btn-outline-primary");
+			let e = l[i];
+			e.addEventListener("click",function () {
+				setTimeout(function () {
+					if (!e.disabled) {
+						if (e.classList.contains("btn-outline-primary")) {
+							e.classList.remove("btn-outline-primary");
+						}
+						if (e.querySelector("span")) {
+							e.removeChild(e.querySelector("span"));
+						}
+						if (!e.classList.contains("btn-outline-danger")) {
+							e.classList.add("btn-outline-danger");
+						}
+						e.innerHTML = "[ERROR]";
+						OpenNote("Failed to process your request!");
 					}
-					if (e.querySelector("span")) {
-						e.removeChild(e.querySelector("span"));
-					}
-					if (!e.classList.contains("btn-outline-danger")) {
-						e.classList.add("btn-outline-danger");
-					}
-					e.innerHTML="[ERROR]";
-					OpenNote("Failed to process your request!");
-				},5000);
+				},4000);
 			});
 			i++;
 		}
+		
+
 		/*
 		document.getElementById("form_main").addEventListener("submit", function () {
 			document.getElementById("submit_btn").disabled = true;
