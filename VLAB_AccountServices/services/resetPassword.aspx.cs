@@ -390,7 +390,23 @@ namespace VLAB_AccountServices.services
 					this.PasswordString=Request.Form.GetValues("password")[0];
 					if (this.PasswordString.Length>0) {
 						if (this.validate(this.PasswordString)) {
-							data="{\"cmd\":\"" + this.ModeString + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\"}";
+							string ot="";
+							if(ModeString=="new-user")
+							{
+								Dictionary<string,string>l=new Dictionary<string,string>();
+								l.Add("fname",UC.GetFirstName());
+								l.Add("lname",UC.GetLastName());
+								l.Add("email",UC.GetEmail());
+								//l.Add("department",UC.GetDepartment());
+								l.Add("campus",UC.GetCampus());
+								//l.Add("uid",UC.GetUHID());
+								foreach(var item in l)
+								{
+									if(item.Value!=null)
+										ot+=",\""+item.Key+"\":\""+item.Value+"\"";
+								}
+							}
+							data="{\"cmd\":\"" + this.ModeString + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\""+ot+"}";
 							console.Info("Preparing to send regulated command.");
 							this.queryRequest(data);
 							this.EndingSuccess();
