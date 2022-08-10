@@ -4,8 +4,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 	<title>Loading...</title>
+	<!--
 	<script src="services/assets/js/server.js" defer></script>
 	<script src="services/assets/js/default.js" defer></script>
+	-->
 </head>
 <body>
 	<!--

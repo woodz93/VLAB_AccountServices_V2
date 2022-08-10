@@ -8,6 +8,7 @@ using VLAB_AccountServices.services.assets.classes.sys;
 using VLAB_AccountServices.services.assets.sys;
 using DotNetCasClient;
 using DotNetCasClient.Security;
+using System.Threading;
 
 namespace VLAB_AccountServices.services.assets.classes.UserInfo {
 	public class UserInfo {
@@ -15,15 +16,18 @@ namespace VLAB_AccountServices.services.assets.classes.UserInfo {
 		private bool ini_complete=false;
 		private UserData ud=null;
 		private ICasPrincipal CAS=null;
+		public bool Ready=false;
 		public UserInfo() {
-
+			ini();
 		}
 		public UserInfo(string data=null) {
+			ini();
 			if (this.CheckValue(data)) {
 				this.SetData(data);
 			}
 		}
 		public UserInfo(UserData obj=null) {
+			ini();
 			if (obj!=null) {
 				try{
 					this.SetData(JsonSerializer.Serialize(obj));
@@ -35,23 +39,29 @@ namespace VLAB_AccountServices.services.assets.classes.UserInfo {
 		// Initializes all required items.
 		private void ini() {
 			try{
-				this.CAS=CasAuthentication.CurrentPrincipal;
+				CAS=CasAuthentication.CurrentPrincipal;
+				if(CAS!=null)
+				{
+					//ud.Username=CAS.
+					Ready=true;
+					ini_complete=true;
+				}
 			}catch(Exception e){
-				
+				//Default.StatusElm.Text+="<br><br>- "+e.Message;
 			}
 		}
 		// Sets the data string.
 		public void SetData(string data=null) {
-			if (this.CheckValue(data)) {
-				this.raw=data;
-				this.ParseDataString();
+			if (CheckValue(data)) {
+				raw=data;
+				ParseDataString();
 			}
 		}
 		// Attempts to parse the raw data string.
 		private void ParseDataString() {
-			if (this.CheckValue(this.raw)) {
+			if (CheckValue(this.raw)) {
 				try{
-					this.ud=JsonSerializer.Deserialize<UserData>(this.raw);
+					ud=JsonSerializer.Deserialize<UserData>(this.raw);
 				}catch(Exception e){
 					console.Error("Unable to parse data object string...\n\t\t"+e.Message);
 				}
@@ -132,10 +142,21 @@ namespace VLAB_AccountServices.services.assets.classes.UserInfo {
 		// Returns true if the class object contains the required data.
 		private bool Check() {
 			bool res=false;
-			if (this.ini_complete) {
-				if (this.ud!=null) {
+			if(ini_complete)
+				if(ud!=null)
 					res=true;
+				else
+				{
+					//Default.StatusElm.Text+="<br><br>- UD Object is null!";
+					Thread.Sleep(100);
+					ini();
+					res=Check();
 				}
+			else
+			{
+				//Default.StatusElm.Text+="<br><br>- initialization did not complete yet!";
+				ini();
+				res=Check();
 			}
 			return res;
 		}

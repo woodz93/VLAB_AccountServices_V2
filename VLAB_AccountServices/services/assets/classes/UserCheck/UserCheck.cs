@@ -11,8 +11,10 @@ namespace VLAB_AccountServices {
 		private string id=null;
 		private bool _IsChecked=false;
 		private ICasPrincipal CAS_Principal=null;
+		public bool Ready=false;
 		public UserCheck() {
 			this.ini();
+			Ready=true;
 		}
 		// Performs a database cleanup.
 		private void CleanUp() {
