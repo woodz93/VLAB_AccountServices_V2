@@ -107,7 +107,28 @@ function setup() {
 }
 
 function Logout() {
-	window.location.href = "https://cas-test.its.hawaii.edu/cas/logout";
+	let host = window.location.host;
+	let proto = window.location.protocol;
+	RemoveCookie(".DotNetCasClientAuth");
+	RemoveCookie("ASP.NET_SessionId");
+	let url = "https://cas-test.its.hawaii.edu/cas/logout";
+	window.location.href = url;
+	//window.open(url,"blank");
+	//setTimeout(function () {
+	//	window.close();
+	//},1000);
+}
+
+function RemoveCookie(name) {
+	if (GetCookie(name)) {
+		document.cookie = name + "=;expires=0;path=/";
+	}
+}
+
+function GetCookie(name) {
+	return document.cookie.split(";").some(c => {
+		return c.trim().startsWith(name + "=");
+	});
 }
 
 function PrepOutput() {
