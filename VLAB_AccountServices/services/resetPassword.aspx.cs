@@ -361,6 +361,11 @@ namespace VLAB_AccountServices.services
 			SMCElement.Attributes.Add("show","true");
 		}
 
+		public void Logout(object sender = null,EventArgs args = null)
+		{
+			UC.Logout();
+		}
+
 		// Performs poast-back action.
 		private void ProcessPostBack() {
 			bool p=true;

@@ -52,6 +52,10 @@ namespace VLAB_AccountServices {
 				this._IsChecked=true;
 			}
 		}
+		public void Logout()
+		{
+			Response.Redirect("https://cas-test.its.hawaii.edu/cas/logout");
+		}
 		// Clears the session.
 		public void ClearSession() {
 			Session.Clear();

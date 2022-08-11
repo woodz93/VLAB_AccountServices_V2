@@ -64,6 +64,8 @@ function prepHelpForm() {
 }
 
 function setup() {
+	//document.getElementById("LogoutBtn").type = "button";
+	//document.getElementById("LogoutBtn").setAttribute("type","button");
 	setTimeout(function () { prepHelpForm(); },100);
 	prepRegLoad();
 	prepPostBack();
@@ -103,6 +105,11 @@ function setup() {
 		setTimeout(function () { ini(); }, 100);
 	}
 }
+
+function Logout() {
+	window.location.href = "https://cas-test.its.hawaii.edu/cas/logout";
+}
+
 function PrepOutput() {
 	if (document.getElementById("SMCElement")) {
 		let elm = document.getElementById("SMCElement");

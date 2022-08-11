@@ -180,3 +180,12 @@ button.info:before {
 table.pwd-mgr button.info {
 	transform:translateY(-70%);
 }
+
+button.logout {
+	position:absolute;
+	top:10px;
+	left:unset !important;
+	right:10px;
+	cursor:pointer !important;
+	z-index:1000;
+}

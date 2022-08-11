@@ -24,12 +24,14 @@
 </head>
 <body>
 
+	
 	<button type="button" data-bs-toggle="modal" data-bs-target="#modal_support_panel" class="btn btn-primary help">Help</button>
 
 	<div id="bg" class="bg"></div>
 	<div id="global" class="container center-h center-v global">
 		<div id="form-container" class="container beval">
 			<form id="form_main" class="container" runat="server" method="post">
+				<button class="logout btn btn-primary" runat="server" id="LogoutBtn" type="button" onclick="Logout()">Logout</button>
 				<div class="container content">
 					<h1 class="title pos-rel center-h">Account Services</h1>
 					<br>
@@ -138,9 +140,9 @@
 				<asp:button id="submit_btn" CssClass="submit_btn btn btn-outline-primary btn-lg center-h submit_button hidden" name="submit_btn" Text="[ERROR]" Onclick="processPassword" runat="server" type="submit" CausesValidation="true"></asp:button>
 				<br>
 				<!-- Below contains the element used for the post-submission response message (The message that informs the user where to go afterwards to access their virtual desktop) -->
-				<asp:Panel ID="SMCElement" CssClass="container footer hidden" runat="server" Visible="true">
-					<asp:Panel CssClass="alert alert-success" ID="SMCAlert" runat="server">
-						<strong>Success!</strong> You can now access your virtual desktops <a href="https://vlab.maui.hawaii.edu/" target="_blank">here</a>.
+				<asp:Panel ID="SMCElement" CssClass="container footer" runat="server" Visible="true">
+					<asp:Panel CssClass="alert alert-info" ID="SMCAlert" runat="server">
+						<strong>Info:</strong> You can access your virtual desktops <a href="https://vlab.maui.hawaii.edu/" target="_blank">here</a>.
 					</asp:Panel>
 				</asp:Panel>
 			</form>
