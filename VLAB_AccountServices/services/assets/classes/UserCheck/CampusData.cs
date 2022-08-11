@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VLAB_AccountServices.services.assets.classes.UserCheck
+namespace VLAB_AccountServices
 {
 	public class CampusData
 	{

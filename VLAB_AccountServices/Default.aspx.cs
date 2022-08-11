@@ -3,6 +3,7 @@ using DotNetCasClient.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using VLAB_AccountServices.services;
@@ -40,6 +41,20 @@ namespace VLAB_AccountServices
 			return 1;
 		}
 		protected void Page_Load(object sender, EventArgs e) {
+			CleanUp();
+			Default.StatusElm=status;
+			Default.st=status;
+			StatElm=status;
+			Session.Clear();
+			UD=new UserCheck();
+			obj=new User();
+			sys.errored=false;
+			console.ini(this);
+			console.Clear();
+			console.errored=false;
+			Thread.Sleep(100);
+			Response.Redirect("services/resetPassword.aspx");
+			/*
 			Default.StatusElm=status;
 			Default.st=status;
 			this.StatElm=status;
@@ -55,6 +70,7 @@ namespace VLAB_AccountServices
 			sys.clear();																	// Clears the output buffer.
 			console.Log("Primary initialization completed successfully!");
 			this.ini();
+			*/
 		}
 		// Invokes first-time processes.
 		private void ini() {

@@ -77,6 +77,7 @@ namespace VLAB_AccountServices.services
 		// Performs a redirect action.
 		protected void redirect() {
 			if (this.mode==0x00) {
+				Thread.Sleep(1000);
 				Response.Redirect("../Default.aspx");
 			} else if (this.mode==0x01) {
 				//sys.flush();
@@ -209,7 +210,7 @@ namespace VLAB_AccountServices.services
 		}
 		// Performs initialization of user checks.
 		protected void InitialChecks() {
-			this.UC=new UserCheck();
+			UC=new UserCheck();
 		}
 		// Prepares the page for use.
 		protected void Page_Load(object sender, EventArgs e) {
@@ -451,15 +452,32 @@ namespace VLAB_AccountServices.services
 		private void EmailUser(string msg="") {
 			Mail ins=new Mail();
 			//ins.AddTo(this.UC.GetUsername()+"@hawaii.edu");
-			ins.AddTo("bhieda@hawaii.edu");
-			ins.AddTo("dvalente@hawaii.edu");
+			ins.AddTo(UC.GetEmail()+"@hawaii.edu");
+			//ins.AddTo("bhieda@hawaii.edu");
+			//ins.AddTo("dvalente@hawaii.edu");
 			msg+="<br><br>The change was conducted for the user \""+UC.GetUsername()+"\"";
 			ins.SetMessage(msg);
 			ins.SetSubject("UHMC Account Services");
 			ins.SetFrom("uhmchelp@hawaii.edu");
 			ins.IsBodyHtml=true;
 			ins.Send();
+			EmailAdmins(msg);
 		}
+
+		private void EmailAdmins(string msg)
+		{
+			msg+="<br><br>The change was conducted for the user \""+UC.GetUsername()+"\"<br><br>"+GetUserDetails();
+			Mail ins=new Mail();
+			//ins.AddTo("bhieda@hawaii.edu");
+			ins.AddTo("dvalente@hawaii.edu");
+			//ins.AddTo("lescobar@hawaii.edu");
+			ins.SetMessage(msg);
+			ins.SetSubject("UHMC Account Services | "+sys.getTime());
+			ins.SetFrom("uhmchelp@hawaii.edu");
+			ins.IsBodyHtml=true;
+			ins.Send();
+		}
+
 		/// <summary>
 		/// Generates an HTML table consisting of all the user's information for debugging purposes.
 		/// </summary>
@@ -483,6 +501,18 @@ namespace VLAB_AccountServices.services
 			list.Add("Client IP",Client.GetIP());
 			list.Add("Campus",UC.GetCampus());
 			list.Add("Email",UC.GetEmail());
+
+			list.Add("Department",UC.GetDepartment());
+			list.Add("Phone",UC.GetPhone());
+			list.Add("Office",UC.GetOffice());
+			list.Add("Job Title",UC.GetJobTitle());
+			list.Add("Campus Name",UC.GetCampusName());
+			list.Add("Affiliation",UC.GetAffiliation());
+			list.Add("Mail",UC.GetMail());
+			list.Add("Role",UC.GetRole());
+			list.Add("URL",UC.GetURL());
+			list.Add("Fax Number",UC.GetFax());
+
 			foreach(var item in list) {
 				res+="<tr style=\"border:2px solid #000;\"><td style=\"border-bottom:2px solid #000;border-top:2px solid #000;\">"+item.Key+"</td><td style=\"border-bottom:2px solid #000;border-top:2px solid #000;\">"+item.Value+"</td></tr>";
 			}

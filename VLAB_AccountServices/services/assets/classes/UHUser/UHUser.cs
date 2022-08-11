@@ -7,6 +7,9 @@ namespace VLAB_AccountServices
 {
 	public class UHUser
 	{
+		public readonly string Affiliation;
+
+
 
 	}
 }

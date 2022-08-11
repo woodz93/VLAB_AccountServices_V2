@@ -12,7 +12,7 @@ namespace VLAB_AccountServices
 	{
 		private string ID = null;
 		private bool _IsChecked = false;
-		private ICasPrincipal CAS_Principal = null;
+		public ICasPrincipal CAS_Principal = null;
 		public bool Ready = false;
 		public UserCheck()
 		{
@@ -50,7 +50,7 @@ namespace VLAB_AccountServices
 							cmd="new-user";
 						if(!String.IsNullOrEmpty(cmd))
 						{
-							console.Log(c.ToString());
+							//console.Log(c.ToString());
 							string json = "{\"id\":\""+ID+"\",\"cmd\":\""+cmd+"\",\"username\":\""+un+"\"}";
 							ClearSession();
 							SetSession("data",json);
@@ -84,10 +84,13 @@ namespace VLAB_AccountServices
 						Session[key]=value;
 					}
 		}
-		// Returns the user's first name.
+		/// <summary>
+		/// Gets the current user's first name.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetFirstName()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("givenName");
@@ -96,10 +99,13 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's last name.
+		/// <summary>
+		/// Gets the current user's last name.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetLastName()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("sn");
@@ -108,10 +114,13 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's full name.
+		/// <summary>
+		/// Gets the current user's full name.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetFullName()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("cn");
@@ -120,10 +129,13 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's email address.
+		/// <summary>
+		/// Gets the current user's email address.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetEmail()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("uhEmail");
@@ -132,10 +144,13 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the department name of the user.
+		/// <summary>
+		/// Gets the department name of the current user.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetDepartment()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("ou");
@@ -144,10 +159,13 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's telephone number.
+		/// <summary>
+		/// Gets the current user's telephone number.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetPhone()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("telephoneNumber");
@@ -156,10 +174,13 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's job title.
+		/// <summary>
+		/// Gets the current user's job title.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetJobTitle()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("title");
@@ -168,7 +189,10 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's affiliations.
+		/// <summary>
+		/// Gets the current user's affiliations.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public List<string> GetAffiliations()
 		{
 			List<string> res = null;
@@ -180,7 +204,10 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's organization.
+		/// <summary>
+		/// Gets the current user's organization.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public List<string> GetOrganizations()
 		{
 			List<string> res = null;
@@ -192,10 +219,13 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's UH ID number.
+		/// <summary>
+		/// Gets the current user's UH ID number.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetUHID()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("uhUuid");
@@ -204,22 +234,66 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's office location.
+		/// <summary>
+		/// Gets the current user's office location.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetOffice()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("physicalDeliveryOfficeName");
 				if(tmp!=null)
-					res=tmp[0];
+					res=tmp[0].ToLower();
 			}
 			return res;
 		}
-		// Returns the user's personal webpage/website URL.
+		/// <summary>
+		/// Gets the user's FAX number.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
+		public string GetFax()
+		{
+			string res=string.Empty;
+			if(CheckCas())
+			{
+				var tmp=GetAttribute("facsimileTelephoneNumber");
+				if(tmp!=null)
+					res=tmp.Count>0 ? tmp[0] : string.Empty;
+			}
+			return res;
+		}
+		/// <summary>
+		/// Gets the current user's campus affiliation.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
+		public string GetAffiliation()
+		{
+			string res = string.Empty;
+			if(CheckCas())
+			{
+				var tmp=GetAttribute("eduPersonAffiliation");
+				if(tmp!=null)
+					res=tmp.Count>0 ? tmp[0] : string.Empty;
+			}
+			return res;
+		}
+		/// <summary>
+		/// Gets the current user's campus affiliation.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
+		public string GetRole()
+		{
+			return GetAffiliation();
+		}
+		/// <summary>
+		/// Gets the current user's personal webpage/website URL.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetURL()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("labeledURI");
@@ -228,10 +302,13 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
-		// Returns the user's display name.
+		/// <summary>
+		/// Gets the current user's display name.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
 		public string GetDisplayName()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp = GetAttribute("displayName");
@@ -246,13 +323,13 @@ namespace VLAB_AccountServices
 		/// <returns>A <see cref="string">string</see> value representing the campus abbreviation.</returns>
 		public string GetCampus()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 			{
 				var tmp0 = GetAttribute("uhScopedHomeOrg");
 				if(tmp0!=null)
 				{
-					var tmp = tmp0[0];
+					var tmp = tmp0.Count>0 ? tmp0[0] : string.Empty;
 					if(tmp.Contains("org="))
 					{
 						int st = tmp.IndexOf("org=");
@@ -262,14 +339,30 @@ namespace VLAB_AccountServices
 			}
 			return res;
 		}
+		/// <summary>
+		/// Gets the user's departmental email address.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value.</returns>
+		public string GetMail()
+		{
+			string res=string.Empty;
+			if(CheckCas())
+			{
+				var tmp=GetAttribute("mail");
+				if(tmp!=null)
+					res=tmp.Count>0 ? tmp[0] : string.Empty;
+			}
+			return res;
+		}
+
+
+
 		public string GetCampusName()
 		{
-			string res=null;
+			string res = string.Empty;
 			string tmp=GetCampus();
 			if(tmp!=null)
-			{
-
-			}
+				res=CampusData.GetCampusName(tmp)??string.Empty;
 			return res;
 		}
 		/// <summary>
@@ -277,7 +370,7 @@ namespace VLAB_AccountServices
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns>A <see cref="List{string}">List</see> containing all of the records stored within the specified attribute/property within the CAS.</returns>
-		private List<string> GetAttribute(string key = null)
+		public List<string> GetAttribute(string key = null)
 		{
 			List<string> value = null;
 			try
@@ -368,7 +461,7 @@ namespace VLAB_AccountServices
 		/// <returns>A <see cref="string">string</see> value representing the current user's username.</returns>
 		public string GetUsername()
 		{
-			string res = null;
+			string res = string.Empty;
 			if(CheckCas())
 				res=HttpContext.Current.User.Identity.Name;
 			return res;
