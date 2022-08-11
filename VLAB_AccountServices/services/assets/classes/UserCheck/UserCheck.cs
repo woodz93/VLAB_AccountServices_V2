@@ -6,317 +6,388 @@ using System.Linq;
 using System.Web;
 using VLAB_AccountServices.services.assets.classes.Database;
 using VLAB_AccountServices.services.assets.sys;
-namespace VLAB_AccountServices {
-	public class UserCheck : System.Web.UI.Page {
-		private string id=null;
-		private bool _IsChecked=false;
-		private ICasPrincipal CAS_Principal=null;
-		public bool Ready=false;
-		public UserCheck() {
-			this.ini();
+namespace VLAB_AccountServices
+{
+	public class UserCheck:System.Web.UI.Page
+	{
+		private string ID = null;
+		private bool _IsChecked = false;
+		private ICasPrincipal CAS_Principal = null;
+		public bool Ready = false;
+		public UserCheck()
+		{
+			Ini();
 			Ready=true;
 		}
-		// Performs a database cleanup.
-		private void CleanUp() {
-			Database ins=new Database();
+		/// <summary>
+		/// Performs a database cleanup.
+		/// </summary>
+		private void CleanUp()
+		{
+			Database ins = new Database();
 			ins.AsyncRemoveAllRecords();
 		}
 		// Returns true if the client checks are good to go, false otherwise.
-		public bool IsChecked() {
-			return this._IsChecked;
+		public bool IsChecked()
+		{
+			return _IsChecked;
 		}
 		// Performs a username check with the AD server.
-		private void ini() {
-			this.CAS_Principal=CasAuthentication.CurrentPrincipal;
-			if (!this.CheckSession("data")) {
-				if (this.CheckCas()) {
-					string un=this.GetUsername();
-					if (!String.IsNullOrEmpty(un)) {
-						var c=this.CheckUsername(un);
-						string cmd=null;
-						if (c==0x01) {
+		private void Ini()
+		{
+			CAS_Principal=CasAuthentication.CurrentPrincipal;
+			if(!CheckSession("data"))
+				if(CheckCas())
+				{
+					string un = GetUsername();
+					if(!String.IsNullOrEmpty(un))
+					{
+						var c = CheckUsername(un);
+						string cmd = null;
+						if(c==0x01)
 							cmd="set-password";
-						} else if (c==0x10) {
+						else if(c==0x10)
 							cmd="new-user";
-						}
-						if (!String.IsNullOrEmpty(cmd)) {
+						if(!String.IsNullOrEmpty(cmd))
+						{
 							console.Log(c.ToString());
-							string json="{\"id\":\""+this.id+"\",\"cmd\":\""+cmd+"\",\"username\":\""+un+"\"}";
-							this.ClearSession();
-							this.SetSession("data",json);
-							this._IsChecked=true;
+							string json = "{\"id\":\""+ID+"\",\"cmd\":\""+cmd+"\",\"username\":\""+un+"\"}";
+							ClearSession();
+							SetSession("data",json);
+							_IsChecked=true;
 						}
 					}
 				}
-			} else {
-				this._IsChecked=true;
-			}
+			else
+				_IsChecked=true;
 		}
 		public void Logout()
 		{
 			Response.Redirect("https://cas-test.its.hawaii.edu/cas/logout");
 		}
 		// Clears the session.
-		public void ClearSession() {
+		public void ClearSession()
+		{
 			Session.Clear();
 		}
 		// Sets the session variable.
-		public void SetSession(string key=null,string value=null) {
-			if (!String.IsNullOrEmpty(key)) {
-				if (!String.IsNullOrEmpty(value)) {
-					try{
+		public void SetSession(string key = null,string value = null)
+		{
+			if(!String.IsNullOrEmpty(key))
+				if(!String.IsNullOrEmpty(value))
+					try
+					{
 						Session.Add(key,value);
-					}catch(Exception e){
+					}
+					catch(Exception e)
+					{
 						Session[key]=value;
 					}
-				}
-			}
 		}
 		// Returns the user's first name.
-		public string GetFirstName() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("givenName");
-				if (tmp!=null) {
+		public string GetFirstName()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("givenName");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the user's last name.
-		public string GetLastName() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("sn");
-				if (tmp!=null) {
+		public string GetLastName()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("sn");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the user's full name.
-		public string GetFullName() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("cn");
-				if (tmp!=null) {
+		public string GetFullName()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("cn");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the user's email address.
-		public string GetEmail() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("uhEmail");
-				if (tmp!=null) {
+		public string GetEmail()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("uhEmail");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the department name of the user.
-		public string GetDepartment() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("ou");
-				if (tmp!=null) {
+		public string GetDepartment()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("ou");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the user's telephone number.
-		public string GetPhone() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("telephoneNumber");
-				if (tmp!=null) {
+		public string GetPhone()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("telephoneNumber");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the user's job title.
-		public string GetJobTitle() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("title");
-				if (tmp!=null) {
+		public string GetJobTitle()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("title");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the user's affiliations.
-		public List<string> GetAffiliations() {
-			List<string> res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("eduPersonAffiliation");
-				if (tmp!=null) {
+		public List<string> GetAffiliations()
+		{
+			List<string> res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("eduPersonAffiliation");
+				if(tmp!=null)
 					res=tmp;
-				}
 			}
 			return res;
 		}
 		// Returns the user's organization.
-		public List<string> GetOrganizations() {
-			List<string> res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("eduPersonOrgDN");
-				if (tmp!=null) {
+		public List<string> GetOrganizations()
+		{
+			List<string> res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("eduPersonOrgDN");
+				if(tmp!=null)
 					res=tmp;
-				}
 			}
 			return res;
 		}
 		// Returns the user's UH ID number.
-		public string GetUHID() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("uhUuid");
-				if (tmp!=null) {
+		public string GetUHID()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("uhUuid");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the user's office location.
-		public string GetOffice() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("physicalDeliveryOfficeName");
-				if (tmp!=null) {
+		public string GetOffice()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("physicalDeliveryOfficeName");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the user's personal webpage/website URL.
-		public string GetURL() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("labeledURI");
-				if (tmp!=null) {
+		public string GetURL()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("labeledURI");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
 		// Returns the user's display name.
-		public string GetDisplayName() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp=this.GetAttribute("displayName");
-				if (tmp!=null) {
+		public string GetDisplayName()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp = GetAttribute("displayName");
+				if(tmp!=null)
 					res=tmp[0];
-				}
 			}
 			return res;
 		}
-		// Returns the campus the user belongs to.
-		public string GetCampus() {
-			string res=null;
-			if (this.CheckCas()) {
-				var tmp0=this.GetAttribute("uhScopedHomeOrg");
-				//console.Info(tmp0[0]);
-				if (tmp0!=null) {
-					var tmp=tmp0[0];
-					if (tmp.Contains("org=")) {
-						int st=tmp.IndexOf("org=");
+		/// <summary>
+		/// Gets the campus abbreviation that the user belongs to.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value representing the campus abbreviation.</returns>
+		public string GetCampus()
+		{
+			string res = null;
+			if(CheckCas())
+			{
+				var tmp0 = GetAttribute("uhScopedHomeOrg");
+				if(tmp0!=null)
+				{
+					var tmp = tmp0[0];
+					if(tmp.Contains("org="))
+					{
+						int st = tmp.IndexOf("org=");
 						res=tmp.Substring(st+4,(tmp.Length-(st+4)));
 					}
 				}
 			}
 			return res;
 		}
-		// Returns the attribute located within the CAS principal, null is returned if the property key was not found.
-		private List<string> GetAttribute(string key=null) {
-			List<string> value=null;
-			try{
-				if (UserCheck.CheckValue(key)) {
-					if (this.CAS_Principal!=null) {
-						IAssertion sessionAssertion=this.CAS_Principal.Assertion;
-						if (sessionAssertion!=null) {
-							if (sessionAssertion.Attributes.ContainsKey(key)) {
-								var array=sessionAssertion.Attributes[key].ToList<string>();
-								if (array.Count()>0) {
-									//string fname = GetAttribute("givenName");
-									//string lname = GetAttribute("sn");
+		public string GetCampusName()
+		{
+			string res=null;
+			string tmp=GetCampus();
+			if(tmp!=null)
+			{
+
+			}
+			return res;
+		}
+		/// <summary>
+		/// Gets the attribute located within the CAS principal, null is returned if the property key was not found.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns>A <see cref="List{string}">List</see> containing all of the records stored within the specified attribute/property within the CAS.</returns>
+		private List<string> GetAttribute(string key = null)
+		{
+			List<string> value = null;
+			try
+			{
+				if(UserCheck.CheckValue(key))
+					if(CAS_Principal!=null)
+					{
+						IAssertion sessionAssertion = CAS_Principal.Assertion;
+						if(sessionAssertion!=null)
+							if(sessionAssertion.Attributes.ContainsKey(key))
+							{
+								var array = sessionAssertion.Attributes[key].ToList<string>();
+								if(array.Count()>0)
 									value=array;
-								} else {
+								else
 									console.Warn("Array does not contain anything...");
-								}
-							} else {
-								console.Warn("Session does not contain the key\n\t\t"+key);
 							}
-						} else {
+							else
+								console.Warn("Session does not contain the key\n\t\t"+key);
+						else
 							console.Warn("Session assertion is null");
-						}
-					} else {
-						//console.Warn("CAS Principal is null");
-						value=this.GetAttribute(key);
 					}
-				} else {
+					else
+						value=GetAttribute(key);
+				else
 					console.Warn("Key failed validation");
-				}
-			}catch(Exception e){
+			}
+			catch(Exception e)
+			{
 				console.Error("Failed to get user information from CAS principal...\n\t\t"+e.Message);
 			}
 			return value;
 		}
-		// Returns true if the property key name exists within the CAS principal object, false otherwise.
-		private bool HasAttribute(string key=null) {
-			bool res=false;
-			try{
-				if (UserCheck.CheckValue(key)) {
-					if (this.CAS_Principal!=null) {
-						IAssertion sessionAssertion=this.CAS_Principal.Assertion;
-						if (sessionAssertion!=null) {
-							if (sessionAssertion.Attributes.ContainsKey(key)) {
-								string[] array=sessionAssertion.Attributes[key].ToArray();
-								if (array.Count()>0) {
-									//res=array[0];
+		/// <summary>
+		/// Checks if the CAS contains the requested attribute/property.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns>A <see cref="bool">boolean</see> value determining if the CAS contains the attribute/property name or not.</returns>
+		private bool HasAttribute(string key = null)
+		{
+			bool res = false;
+			try
+			{
+				if(UserCheck.CheckValue(key))
+					if(CAS_Principal!=null)
+					{
+						IAssertion sessionAssertion = CAS_Principal.Assertion;
+						if(sessionAssertion!=null)
+							if(sessionAssertion.Attributes.ContainsKey(key))
+							{
+								string[] array = sessionAssertion.Attributes[key].ToArray();
+								if(array.Count()>0)
 									res=true;
-								}
 							}
-						}
 					}
-				}
-			}catch(Exception e){
+			}
+			catch(Exception e)
+			{
 				console.Error("Failed to get user information from CAS principal...\n\t\t"+e.Message);
 			}
 			return res;
 		}
-		// Returns true if the string value passes validation checks, false otherwise.
-		private static bool CheckValue(string q=null) {
-			bool res=false;
-			if (!String.IsNullOrEmpty(q)) {
-				if (q.Trim().Length>0) {
+		/// <summary>
+		/// Checks if the CAS contains the requested attribute/property.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns>A <see cref="bool">boolean</see> value determining if the CAS contains the attribute/property name or not.</returns>
+		public bool Contains(string key = null)
+		{
+			return HasAttribute(key);
+		}
+		/// <summary>
+		/// Checks the string value for usability.
+		/// </summary>
+		/// <param name="q"></param>
+		/// <returns>A <see cref="bool">boolean</see> value determining if the string value is practical to be used.</returns>
+		private static bool CheckValue(string q = null)
+		{
+			bool res = false;
+			if(!String.IsNullOrEmpty(q))
+				if(q.Trim().Length>0)
 					res=true;
-				}
-			}
 			return res;
 		}
-		// Returns the username provided by the CAS system.
-		public string GetUsername() {
-			string res=null;
-			if (this.CheckCas()) {
-				var casp=CasAuthentication.CurrentPrincipal;
+		/// <summary>
+		/// Gets the current user's username from the CAS.
+		/// </summary>
+		/// <returns>A <see cref="string">string</see> value representing the current user's username.</returns>
+		public string GetUsername()
+		{
+			string res = null;
+			if(CheckCas())
 				res=HttpContext.Current.User.Identity.Name;
-			}
 			return res;
 		}
-		// Returns 0x01 or 0x10 upon success, 0x00 otherwise.
-		private byte CheckUsername(string username=null) {
-			byte res=0x00;
-			if (!String.IsNullOrEmpty(username)) {
-				string data="{\"cmd\":\"check-user\",\"username\":\""+username+"\"}";
+		/// <summary>
+		/// Returns 0x01 or 0x10 upon success, 0x00 otherwise.
+		/// </summary>
+		/// <param name="username"></param>
+		/// <returns>A <see cref="byte">byte</see> value where <see cref="byte">0x01</see> represents that the current username exists in the domain, <see cref="byte">0x10</see> represents that the current user does not exist within the domain, and <see cref="byte">0x00</see> represents that there was an error that occurred within the accountservices.exe program.</returns>
+		private byte CheckUsername(string username = null)
+		{
+			byte res = 0x00;
+			if(!String.IsNullOrEmpty(username))
+			{
+				string data = "{\"cmd\":\"check-user\",\"username\":\""+username+"\"}";
 				console.Log("Creating a new database class instance...");
-				Database ins=new Database();
-				string id=ins.GetUniqueID();
-				this.id=id;
+				Database ins = new Database();
+				string id = ins.GetUniqueID();
+				ID=id;
 				ins.SetAction(DatabasePrincipal.InsertPrincipal);
 				ins.AddColumn("id",id);
 				ins.AddColumn("data",data);
@@ -324,37 +395,42 @@ namespace VLAB_AccountServices {
 				ins.InvokeApplication();
 				ins.ResponseWait();
 				ins.CheckResponse();
-				string tmp=ins.output[0].Values.ElementAt(0);
+				string tmp = ins.output[0].Values.ElementAt(0);
 				ins.Clear();
-				Database ins0=new Database();
+				Database ins0 = new Database();
 				//ins.AddWhere("id",id);
 				ins0.RemoveRecord(id);
-				if (tmp.Contains("status\":true")) {
+				if(tmp.Contains("status\":true"))
 					res=0x01;
-				} else {
+				else
 					res=0x10;
-				}
-			} else {
+			}
+			else
 				console.Error("The username provided is invalid.");
-			}
 			return res;
 		}
-		// Returns true if the user completed the CAS authentication.
-		public bool CheckCas() {
-			bool res=false;
-			if (CasAuthentication.CurrentPrincipal!=null) {
+		/// <summary>
+		/// Checks if the <see cref="ICasPrincipal">CAS</see> session principal is valid.
+		/// </summary>
+		/// <returns>A <see cref="true">boolean</see> value where <see cref="bool">true</see> represents that the CAS session principal is valid, and <see cref="bool">false</see> otherwise.</returns>
+		public bool CheckCas()
+		{
+			bool res = false;
+			if(CasAuthentication.CurrentPrincipal!=null)
 				res=true;
-			}
 			return res;
 		}
-		// Returns true if the session variable exists.
-		public bool CheckSession(string key=null) {
-			bool res=false;
-			if (!String.IsNullOrEmpty(key)) {
-				if (System.Web.HttpContext.Current.Session[key]!=null) {
+		/// <summary>
+		/// Verifies the session.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns>A <see cref="bool">boolean</see> value where <see cref="bool">true</see> represents that the current session is valid, and <see cref="bool">false</see> otherwise.</returns>
+		public bool CheckSession(string key = null)
+		{
+			bool res = false;
+			if(!String.IsNullOrEmpty(key))
+				if(System.Web.HttpContext.Current.Session[key]!=null)
 					res=true;
-				}
-			}
 			return res;
 		}
 	}

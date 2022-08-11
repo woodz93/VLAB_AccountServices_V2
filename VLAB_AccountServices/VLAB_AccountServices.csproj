@@ -230,6 +230,8 @@
     <Compile Include="services\assets\classes\Network\Network.cs" />
     <Compile Include="services\assets\classes\Str\Str.cs" />
     <Compile Include="services\assets\classes\sys\sys.cs" />
+    <Compile Include="services\assets\classes\UHUser\UHUser.cs" />
+    <Compile Include="services\assets\classes\UserCheck\CampusData.cs" />
     <Compile Include="services\assets\classes\UserCheck\UserCheck.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
