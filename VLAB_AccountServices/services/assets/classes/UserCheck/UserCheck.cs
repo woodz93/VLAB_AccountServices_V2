@@ -37,6 +37,7 @@ namespace VLAB_AccountServices
 		{
 			CAS_Principal=CasAuthentication.CurrentPrincipal;
 			if(!CheckSession("data"))
+			{
 				if(CheckCas())
 				{
 					string un = GetUsername();
@@ -58,6 +59,7 @@ namespace VLAB_AccountServices
 						}
 					}
 				}
+			}
 			else
 				_IsChecked=true;
 		}
@@ -495,7 +497,7 @@ namespace VLAB_AccountServices
 				ins0.RemoveRecord(id);
 				if(tmp.Contains("status\":true"))
 					res=0x01;
-				else
+				else if(tmp.Contains("status\":false"))
 					res=0x10;
 			}
 			else
