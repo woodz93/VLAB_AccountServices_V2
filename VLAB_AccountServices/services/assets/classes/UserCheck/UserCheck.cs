@@ -493,12 +493,13 @@ namespace VLAB_AccountServices
 				string tmp = ins.output[0].Values.ElementAt(0);
 				ins.Clear();
 				Database ins0 = new Database();
-				//ins.AddWhere("id",id);
 				ins0.RemoveRecord(id);
 				if(tmp.Contains("status\":true"))
 					res=0x01;
 				else if(tmp.Contains("status\":false"))
 					res=0x10;
+				else
+					console.Error("An error has occurred while attempting to check if the username exists on the system...");
 			}
 			else
 				console.Error("The username provided is invalid.");

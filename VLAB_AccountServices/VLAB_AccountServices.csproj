@@ -234,6 +234,8 @@
     <Compile Include="services\assets\classes\UHUser\UHAffiliationPrincipal.cs" />
     <Compile Include="services\assets\classes\UHUser\UHUser.cs" />
     <Compile Include="services\assets\classes\UserCheck\CampusData.cs" />
+    <Compile Include="services\assets\classes\UserCheck\ADRO.cs" />
+    <Compile Include="services\assets\classes\UserCheck\ADROD.cs" />
     <Compile Include="services\assets\classes\UserCheck\UserCheck.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
