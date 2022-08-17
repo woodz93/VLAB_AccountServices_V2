@@ -456,6 +456,7 @@ namespace VLAB_AccountServices.services
 			//ins.AddTo("bhieda@hawaii.edu");
 			//ins.AddTo("dvalente@hawaii.edu");
 			msg+="<br><br>The change was conducted for the user \""+UC.GetUsername()+"\"";
+			msg+="<br>To access your virtual desktops, go to <a href=\"https://vlab.maui.hawaii.edu\" target=\"_blank\">https://vlab.maui.hawaii.edu</a><br>To reset your password or add a desktop, go to <a href=\"https://vlab.accountservices.maui.hawaii.edu\" target=\"_blank\">https://vlab.accountservices.maui.hawaii.edu</a>";
 			ins.SetMessage(msg);
 			ins.SetSubject("UHMC Account Services");
 			ins.SetFrom("uhmchelp@hawaii.edu");
