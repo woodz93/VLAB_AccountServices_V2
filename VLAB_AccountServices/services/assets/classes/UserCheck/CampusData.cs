@@ -79,8 +79,8 @@ namespace VLAB_AccountServices
 
 		private static void SetupNames()
 		{
-			Names.Add("mcc","maui");
-			Names.Add("mauicc","maui");
+			Names.Add("mcc","maui college");
+			Names.Add("mauicc","maui college");
 			Names.Add("uhsystem","system");
 			Names.Add("uhm","manoa");
 			Names.Add("uhh","hilo");

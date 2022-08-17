@@ -166,11 +166,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Controllers\Access.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="services\assets\css\Animation\vars.css" />
     <Content Include="services\assets\css\Animation\transitions.css" />
     <Content Include="services\assets\css\Bootstrap\Bootstrap.css" />
     <Content Include="services\assets\css\Bootstrap\Bootstrap.js" />
+    <Content Include="ClientLogout.aspx" />
     <None Include="services\assets\css\Bootstrap\bootstrap.min.css.map" />
     <Content Include="services\assets\css\compatability\resolution.css" />
     <Content Include="services\assets\css\extra\extra.css" />
@@ -207,6 +209,14 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Access.aspx.cs">
+      <DependentUpon>Access.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controllers\Access.aspx.designer.cs">
+      <DependentUpon>Access.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\assets\data\FData.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -236,6 +246,9 @@
     <Compile Include="services\assets\classes\UserCheck\CampusData.cs" />
     <Compile Include="services\assets\classes\UserCheck\ADRO.cs" />
     <Compile Include="services\assets\classes\UserCheck\ADROD.cs" />
+    <Compile Include="services\assets\classes\UserCheck\AccessController.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="services\assets\classes\UserCheck\UserCheck.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -267,6 +280,13 @@
     </Compile>
     <Compile Include="services\resetPassword.aspx.designer.cs">
       <DependentUpon>resetPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ClientLogout.aspx.cs">
+      <DependentUpon>ClientLogout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ClientLogout.aspx.designer.cs">
+      <DependentUpon>ClientLogout.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

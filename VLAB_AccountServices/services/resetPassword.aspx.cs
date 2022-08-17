@@ -248,7 +248,7 @@ namespace VLAB_AccountServices.services
 				}
 			} else {
 				console.Error("Could not discover parameter data... POST or CAS not initialized.");
-				Response.Redirect("../Default.aspx");
+				//Response.Redirect("../Default.aspx");
 				this.redirect();
 			}
 			if (Database.ExistingRecords.Count>0) {
@@ -452,7 +452,7 @@ namespace VLAB_AccountServices.services
 		private void EmailUser(string msg="") {
 			Mail ins=new Mail();
 			//ins.AddTo(this.UC.GetUsername()+"@hawaii.edu");
-			ins.AddTo(UC.GetEmail()+"@hawaii.edu");
+			ins.AddTo(UC.GetEmail());
 			//ins.AddTo("bhieda@hawaii.edu");
 			//ins.AddTo("dvalente@hawaii.edu");
 			msg+="<br><br>The change was conducted for the user \""+UC.GetUsername()+"\"";
@@ -468,9 +468,9 @@ namespace VLAB_AccountServices.services
 		{
 			msg+="<br><br>The change was conducted for the user \""+UC.GetUsername()+"\"<br><br>"+GetUserDetails();
 			Mail ins=new Mail();
-			//ins.AddTo("bhieda@hawaii.edu");
+			ins.AddTo("bhieda@hawaii.edu");
 			ins.AddTo("dvalente@hawaii.edu");
-			//ins.AddTo("lescobar@hawaii.edu");
+			ins.AddTo("lescobar@hawaii.edu");
 			ins.SetMessage(msg);
 			ins.SetSubject("UHMC Account Services | "+sys.getTime());
 			ins.SetFrom("uhmchelp@hawaii.edu");

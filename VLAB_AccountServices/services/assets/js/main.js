@@ -106,12 +106,59 @@ function setup() {
 	}
 }
 
+function CheckSession() {
+	if (CheckCookie("ASP.NET_SessionId")) {
+		console.log("%cSession is valid!","color:rgb(0,2550);font-weight:bolder;");
+	} else {
+		console.error("%cSession is invalid!","color:rgb(255,0,0);font-weight:bolder;");
+	}
+}
+
+function GetSessionInfo() {
+	let obj = [
+		"check-session"
+	];
+	let cmd = JSON.stringify(obj);
+	let a = {
+		"src": "Controllers/Access.aspx",
+		"args": {
+			"cmd":cmd
+		}
+	};
+	Server.Send(a,true,"ProcSession");
+}
+
+function ProcSession(q) {
+	try {
+		let obj = JSON.parse(q);
+	} catch {
+		console.error(q);
+	}
+}
+
+function CheckCookie(key) {
+	let tmp = GetCookie(key);
+	let t = (typeof tmp);
+	let res = false;
+	if (t === "string") {
+		if (tmp.length > 0) {
+			res = true;
+		}
+	}
+	return res;
+}
+
+
+
 function Logout() {
 	let host = window.location.host;
 	let proto = window.location.protocol;
 	RemoveCookie(".DotNetCasClientAuth");
 	RemoveCookie("ASP.NET_SessionId");
-	let url = "https://cas-test.its.hawaii.edu/cas/logout";
+	//let url = "https://cas-test.its.hawaii.edu/cas/logout";
+	//let url = "https://authn.hawaii.edu/cas/logout?service=https://vlab.accountservices.maui.hawaii.edu";
+	//let url = "https://vlab.accountservices.maui.hawaii.edu/ClientLogout.aspx";
+	let url = window.location.protocol + "//" + window.location.host + "/ClientLogout.aspx";
 	window.location.href = url;
 	//window.open(url,"blank");
 	//setTimeout(function () {
@@ -129,6 +176,13 @@ function GetCookie(name) {
 	return document.cookie.split(";").some(c => {
 		return c.trim().startsWith(name + "=");
 	});
+}
+
+function SetCookie(key,value,dur=30000) {
+	let d = new Date();
+	d.setTime(d.getTime() + dur);
+	let exp = "expires=" + d.toUTCString();
+	document.cookie = key + "=" + value + ";" + exp + ";path=/";
 }
 
 function PrepOutput() {

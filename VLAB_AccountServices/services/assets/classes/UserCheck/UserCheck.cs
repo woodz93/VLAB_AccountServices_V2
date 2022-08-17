@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using VLAB_AccountServices.services.assets.classes.Database;
 using VLAB_AccountServices.services.assets.sys;
 namespace VLAB_AccountServices
@@ -14,10 +15,16 @@ namespace VLAB_AccountServices
 		private bool _IsChecked = false;
 		public ICasPrincipal CAS_Principal = null;
 		public bool Ready = false;
+		private FormsAuthenticationTicket AT;
+		private string ServiceTicketName;
+		private static bool _Active=false;
+		public static bool Active { get { return _Active; } }
 		public UserCheck()
 		{
 			Ini();
 			Ready=true;
+			if(!UserCheck._Active)
+				UserCheck._Active=true;
 		}
 		/// <summary>
 		/// Performs a database cleanup.
@@ -41,6 +48,8 @@ namespace VLAB_AccountServices
 				if(CheckCas())
 				{
 					string un = GetUsername();
+					ServiceTicketName="AccountServices_Cas_Service_Ticket_"+GetUsername();
+					AT=CasAuthentication.CreateFormsAuthenticationTicket(un,"/Auth/"+un,ServiceTicketName,DateTime.Now,DateTime.Now.AddHours(1));
 					if(!String.IsNullOrEmpty(un))
 					{
 						var c = CheckUsername(un);
@@ -63,10 +72,44 @@ namespace VLAB_AccountServices
 			else
 				_IsChecked=true;
 		}
+
+
+
+
 		public void Logout()
 		{
-			Response.Redirect("https://cas-test.its.hawaii.edu/cas/logout");
+			UserCheck._Active=false;
+			Session.Clear();
+			//if(CasAuthentication.ServiceTicketManager.ContainsTicket(ServiceTicketName))
+			//{
+			//	CasAuthentication.ServiceTicketManager.RevokeTicket(ServiceTicketName);
+			//	AT=null;
+			//}
+			//Session.Abandon();
+			//CAS_Principal
+			//Response.Redirect("https://vlab.accountservices.maui.hawaii.edu");
+			CasAuthentication.SingleSignOut();
+			//CasAuthentication.ClearAuthCookie();
+			//Response.Redirect("https://cas-test.its.hawaii.edu/cas/logout");
+			//Response.Redirect("https://authn.hawaii.edu/cas/logout?https://vlab.accountservices.maui.hawaii.edu");
+			//Session.Abandon();
 		}
+		/// <summary>
+		/// Checks if the current CAS session is still valid.
+		/// </summary>
+		/// <returns>A <see cref="bool">boolean</see> value representing the validity of the current CAS session.</returns>
+		public bool IsSessionValid()
+		{
+			bool res=false;
+			if(AT!=null)
+				if(!AT.Expired)
+					if(CasAuthentication.ServiceTicketManager.ContainsTicket(ServiceTicketName))
+						if(CasAuthentication.ServiceTicketManager.GetTicket(ServiceTicketName)!=null)
+							res=true;
+			return res;
+		}
+
+
 		// Clears the session.
 		public void ClearSession()
 		{
