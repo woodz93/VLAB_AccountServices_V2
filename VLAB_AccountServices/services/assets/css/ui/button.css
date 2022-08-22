@@ -169,12 +169,14 @@ button.info:hover, button.info:active, button.info:focus {
 
 button.info:before {
 	clear:both;
-	content:'\2755';
+	content:'\00A1';
 	position:absolute;
 	top:50%;
 	left:50%;
 	transform:translateX(-50%) translateY(-50%);
 	background-color:rgba(0,0,0,0);
+	font-size:1.5em;
+	font-weight:bolder;
 }
 
 table.pwd-mgr button.info {

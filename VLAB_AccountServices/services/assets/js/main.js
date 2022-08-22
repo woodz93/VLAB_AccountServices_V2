@@ -75,8 +75,18 @@ function setup() {
 		document.getElementById("password").addEventListener("keyup", function (e) {
 			checkPassword();
 		});
+		document.getElementById("password").addEventListener("keypress",function (e) {
+			if (e.keyCode === 13) {
+				SetProcBtn("form-pwd-btn");
+			}
+		});
 		document.getElementById("password_confirm").addEventListener("keyup", function (e) {
 			checkPassword();
+		});
+		document.getElementById("password_confirm").addEventListener("keypress",function (e) {
+			if (e.keyCode === 13) {
+				SetProcBtn("form-pwd-btn");
+			}
 		});
 		/*
 		document.getElementById("status").addEventListener("click", function (e) {
@@ -104,6 +114,18 @@ function setup() {
 	} else {
 		setTimeout(function () { ini(); }, 100);
 	}
+}
+
+function SetProcBtn(q) {
+	let elm = document.getElementById(q);
+	elm.disabled = true;
+	if (elm.classList.contains("btn-outline-primary")) {
+		elm.classList.remove("btn-outline-primary");
+	}
+	if (!elm.classList.contains("btn-outline-secondary")) {
+		elm.classList.add("btn-outline-secondary");
+	}
+	elm.innerHTML = "<span class=\"spinner-grow spinner-grow-sm\"></span>" + elm.innerHTML;
 }
 
 function CheckSession() {
@@ -532,7 +554,10 @@ function prepSubmitBtn() {
 		//let tmp = "<button type=\"button\" class=\"btn btn - info info\" data-bs-toggle=\"modal\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-content=\""+info[i]+"\"></button>";
 		let elm = "";
 		let info = {
-			"Adobe":"Provides access to Adobe software tools such as Photoshop, Illustrator, Dreamweaver, and more."
+			"Adobe": "The Adobe CC Virtual Lab 20 Windows 10 Desktops featuring Adobe Creative Cloud and Office 2019 Professional Plus and other productivity software. Adobe Areo, After Effects, Animate, Audition, InCopy, InDesign, Lightroom, Media Encoder, Dimension, Photoshop, Premier Pro, Premier Rush, Substance 3D Designer, Substance 3D Modeler, Substance 3D Painter, Substance 3D Sampler, Substance 3D Stager, UXP Developer Tool, Dreamweaver, Illustrator, Word 2019, Excel 2019, Power Point 2019, Access 2019, Publisher 2019, Outlook 2019, Visual Studio Code, Google Chrome, Firefox,  VLC Player, Alice 3, Adobe Acrobat DC, Java JDK, and Zoom.",
+			"Business Virtual Lab": "The Business Lab office 60 Windows 10 Desktops featuring Office 2021 Professional Plus and other productivity software. Word 2021, Excel 2021, Power Point 2021, Access 2021, Publisher 2021, Outlook 20021, Visual Studio Code, Google Chrome, Firefox, Apache Netbeans, VLC Player, Alice 3, Adobe Acrobat DC, Java JDK, and Zoom.",
+			"Business Virtual Lab 2": "The Business Lab 2 office 60 Windows 10 Desktops featuring Office 2019 Professional Plus and other productivity software. Word 2019, Excel 2019, Power Point 2019, Access 2019, Publisher 2019, Outlook 2019, Visual Studio Code, Google Chrome, Firefox, Apache Netbeans, VLC Player, Alice 3, Adobe Acrobat DC, Java JDK, and Zoom.",
+			"Math Virtual Lab": "The Math Virtual Lab offers 50 Windows 10 Desktops Featuring Python and other development tools: Python, Visual Studio code, Wireshark, VLC Player, Firefox, Google Chrome, and Office 2019."
 		};
 		let tmp = "";
 		while (i < list.length) {
