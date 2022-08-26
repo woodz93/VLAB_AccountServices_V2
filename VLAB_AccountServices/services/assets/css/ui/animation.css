@@ -1,0 +1,47 @@
+﻿
+div.card.s-show {
+	opacity:1;
+	transition-duration:1s;
+}
+/*
+div.card.s-show button {
+	animation:flash_b_anim 0.5s linear 1s 3;
+}
+*/
+div.card.s-hide {
+	opacity:0;
+}
+
+@keyframes flash_anim {
+	0% {
+		background-color: rgba(255,255,255,0.7);
+	}
+
+	50% {
+		background-color: #0b5ed7;
+	}
+
+	100% {
+		background-color:rgba(255,255,255,0.7);
+	}
+}
+
+@keyframes flash_b_anim {
+	0% {
+		padding-top:0.5rem;
+		padding-bottom:0.5rem;
+		border:1px solid rgba(0,0,0,0);
+	}
+
+	50% {
+		padding-top:0.25rem;
+		padding-bottom:0.25rem;
+		border:0.25rem solid #0b5ed7;
+	}
+
+	100% {
+		padding-top:0.5rem;
+		padding-bottom:0.5rem;
+		border:1px solid rgba(0,0,0,0);
+	}
+}

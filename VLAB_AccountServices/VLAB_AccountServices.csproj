@@ -190,6 +190,7 @@
     <Content Include="services\assets\css\ui\status.css" />
     <Content Include="services\assets\css\ui\scrollbar.css" />
     <Content Include="services\assets\css\ui\Alignment.css" />
+    <Content Include="services\assets\css\ui\animation.css" />
     <Content Include="services\assets\css\ui\text.css" />
     <Content Include="services\assets\css\vars.css" />
     <Content Include="services\assets\eye.png" />
@@ -252,6 +253,7 @@
     <Compile Include="services\assets\classes\UserCheck\UserCheck.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="services\assets\classes\UserInfo\UserDataObject.cs" />
     <Compile Include="services\assets\classes\UserInfo\UserData.cs" />
     <Compile Include="services\assets\classes\UserInfo\UserInfo.cs" />
     <Compile Include="services\assets\svr\CookieCache.cs">

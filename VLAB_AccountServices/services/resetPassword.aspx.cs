@@ -211,7 +211,24 @@ namespace VLAB_AccountServices.services
 		// Performs initialization of user checks.
 		protected void InitialChecks() {
 			UC=new UserCheck();
+			SetupClientVariables();
 		}
+		protected void SetupClientVariables()
+		{
+			user_type_element.Text=UC.GetRole();
+			UserDataObject obj = new UserDataObject
+			{
+				Username=UC.GetUsername(),
+				Role=UC.GetRole(),
+				Email=UC.GetEmail(),
+				Campus=UC.GetCampus(),
+				Exists=UC.Exists()
+			};
+			string data=JsonSerializer.Serialize<UserDataObject>(obj);
+			server_data_element.Text=data;
+		}
+
+
 		// Prepares the page for use.
 		protected void Page_Load(object sender, EventArgs e) {
 			this.ini();
@@ -470,7 +487,7 @@ namespace VLAB_AccountServices.services
 			ins.SetFrom("uhmchelp@hawaii.edu");
 			ins.IsBodyHtml=true;
 			ins.Send();
-			//EmailAdmins(msg);
+			EmailAdmins(msg);
 		}
 		/// <summary>
 		/// Sends an email to the administrators.

@@ -1,12 +1,19 @@
 
 
-setTimeout(function () { ini(); }, 0);
+setTimeout(function () { Initial(); }, 0);
 
-var GV_Debug=false;
+prepDisplay();
+prepUserData();
+
+var GV_Debug = false;
+
+function Initial() {
+	ini();
+}
 
 function ini() {
 	if ((typeof Server) !== "undefined" && (typeof bootstrap)!=="undefined") {
-		setTimeout(function(){setup();},10);
+		setTimeout(function(){setup();},0);
 	} else {
 		setTimeout(function () {
 			ini();
@@ -63,6 +70,84 @@ function prepHelpForm() {
 	}
 }
 
+function prepUserData() {
+	let elm = document.getElementById("server_data_element");
+	let q = elm.value;
+	let obj = false;
+	try {
+		obj = JSON.parse(q);
+	} catch {
+		console.warn(q);
+	}
+	if (obj !== false) {
+		//obj["Exists"] = false;
+		//console.log(obj);
+		if (obj["Campus"] !== "mauicc") {
+			let tobj = {
+				"title": "NOTICE",
+				"content": "You are not authorized to manage your domain account from here!"
+			};
+			SetModal(tobj);
+			OpenModal(document.getElementById("modal_panel"));
+		}
+		if (obj["Exists"] === false) {
+			let t = obj["Role"];
+			let r = t === "student" ? "Student" : "Staff";
+			document.getElementById("form-pwd-btn").textContent = "Create "+r+" Account";
+			let e = document.querySelector("div.card button[data-bs-target=\"#password_mgr_container\"]");
+			if (e !== undefined) {
+				setTimeout(function () { OpenSection(e); },25);
+				//OpenSection(e);
+			}
+		}
+	}
+}
+
+function OpenModal(elm) {
+	if (!elm.classList.contains("show")) {
+		elm.classList.add("show");
+	}
+	if (elm.hasAttribute("aria-hidden")) {
+		elm.setAttribute("aria-hidden","false");
+	}
+	if (!elm.hasAttribute("aria-modal")) {
+		elm.setAttribute("aria-modal","true");
+	}
+	if (!elm.hasAttribute("role")) {
+		elm.setAttribute("role","dialog");
+	}
+	elm.style.display = "block";
+	document.getElementsByTagName("body")[0].insertAdjacentHTML("beforeend","<div class=\"modal-backdrop fade show\"></div>");
+}
+
+function OpenSection(q) {
+	//console.warn(q);
+	if (q.classList.contains("collapsed")) {
+		q.classList.remove("collapsed");
+	}
+	if (q.hasAttribute("aria-expanded")) {
+		if (q.getAttribute("aria-expanded") !== "true") {
+			q.setAttribute("aria-expanded","true");
+		}
+	} else {
+		q.setAttribute("aria-expanded","true");
+	}
+	if (q.hasAttribute("data-bs-target")) {
+		let tmp = document.querySelector(q.getAttribute("data-bs-target"));
+		if (tmp) {
+			if (tmp.classList.contains("collapse")) {
+				tmp.classList.remove("collapse");
+				tmp.classList.add("collapsing");
+				setTimeout(function () {
+					tmp.classList.remove("collapsing");
+					tmp.classList.add("collapse");
+					tmp.classList.add("show");
+				},500);
+			}
+		}
+	}
+}
+
 function setup() {
 	//document.getElementById("LogoutBtn").type = "button";
 	//document.getElementById("LogoutBtn").setAttribute("type","button");
@@ -110,10 +195,31 @@ function setup() {
 		AdjustCheckboxes();
 		
 		setTimeout(function(){LoadState();},0);
-		console.log("All elements have successfully been setup!");
+		//console.log("All elements have successfully been setup!");
 	} else {
 		setTimeout(function () { ini(); }, 100);
 	}
+}
+
+function prepDisplay() {
+	let q = document.getElementById("user_type_element").value.toLowerCase();
+	let elm = document.getElementById("vdi-mgr-container");
+	//console.log(q);
+	if (q === "student") {
+		if (elm.classList.contains("s-hide")) {
+			elm.classList.remove("s-hide");
+		}
+		if (!elm.classList.contains("s-show")) {
+			elm.classList.add("s-show");
+		}
+		//elm.style.display = "none";
+	} else {
+		elm.disabled = true;
+		elm.style.display = "none";
+	}
+
+
+
 }
 
 function SetProcBtn(q) {

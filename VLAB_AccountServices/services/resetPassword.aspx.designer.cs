@@ -78,6 +78,24 @@ namespace VLAB_AccountServices.services
 		protected global::System.Web.UI.WebControls.TextBox info_email;
 
 		/// <summary>
+		/// user_type_element control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.TextBox user_type_element;
+
+		/// <summary>
+		/// server_data_element control.
+		/// </summary>
+		/// <remarks>
+		/// Auto-generated field.
+		/// To modify move field declaration from designer file to code-behind file.
+		/// </remarks>
+		protected global::System.Web.UI.WebControls.TextBox server_data_element;
+
+		/// <summary>
 		/// username control.
 		/// </summary>
 		/// <remarks>

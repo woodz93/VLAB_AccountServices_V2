@@ -18,6 +18,7 @@ namespace VLAB_AccountServices
 		private FormsAuthenticationTicket AT;
 		private string ServiceTicketName;
 		private static bool _Active=false;
+		private static bool _Exists=false;
 		public static bool Active { get { return _Active; } }
 		public UserCheck()
 		{
@@ -55,7 +56,10 @@ namespace VLAB_AccountServices
 						var c = CheckUsername(un);
 						string cmd = null;
 						if(c==0x01)
+						{
 							cmd="set-password";
+							_Exists=true;
+						}
 						else if(c==0x10)
 							cmd="new-user";
 						if(!String.IsNullOrEmpty(cmd))
@@ -73,8 +77,10 @@ namespace VLAB_AccountServices
 				_IsChecked=true;
 		}
 
-
-
+		public bool Exists()
+		{
+			return _Exists;
+		}
 
 		public void Logout()
 		{

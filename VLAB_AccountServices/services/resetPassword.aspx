@@ -46,6 +46,8 @@
 							<asp:TextBox ID="info_lname" value="" runat="server" Visible="true"></asp:TextBox>
 							<asp:TextBox ID="info_uhid" value="" runat="server" Visible="true"></asp:TextBox>
 							<asp:TextBox ID="info_email" value="" runat="server" Visible="true"></asp:TextBox>
+							<asp:TextBox ID="user_type_element" value="" runat="server" Visible="true"></asp:TextBox>
+							<asp:TextBox ID="server_data_element" value="" runat="server" Visible="true"></asp:TextBox>
 						</div>
 						<!-- PASSWORD MANAGEMENT SECTION -->
 						<div class="card">
@@ -100,7 +102,7 @@
 							</div>
 						</div>
 						<!-- VIRTUAL DESKTOP MANAGEMENT SECTION -->
-						<div class="card">
+						<div class="card s-hide" id="vdi-mgr-container">
 							<button data-bs-toggle="collapse" data-bs-target="#vdi_container" class="btn btn-primary center-h card-header collapsed" CausesValidation="false" type="button">Available Desktops</button>
 							<div id="vdi_container" class="collapse" data-bs-parent="#accordion">
 								<asp:Panel ID="group_container" CssClass="groups container" Visible="false" runat="server" CausesValidation="false"></asp:Panel>
