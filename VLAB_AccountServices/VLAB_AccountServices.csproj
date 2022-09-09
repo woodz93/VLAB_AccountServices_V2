@@ -175,6 +175,9 @@
     <Content Include="ClientLogout.aspx" />
     <None Include="services\assets\css\Bootstrap\bootstrap.min.css.map" />
     <Content Include="services\assets\css\compatability\resolution.css" />
+    <Content Include="services\assets\css\ds\section\section.css" />
+    <Content Include="services\assets\css\ds\section\container.css" />
+    <Content Include="services\assets\css\extra\dev.css" />
     <Content Include="services\assets\css\extra\extra.css" />
     <Content Include="services\assets\css\extra\overrides.css" />
     <Content Include="services\assets\css\extra\disabled.css" />

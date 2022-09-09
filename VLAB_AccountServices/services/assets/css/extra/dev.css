@@ -1,0 +1,58 @@
+﻿
+
+:root {
+	--cpad-:4px;
+	--cbor-:2px;
+	--cpad-full-:calc(var(--cpad-) / 2);
+	--cbor-full-:calc(var(--cbor-) / 2);
+	--cdiff-:calc(var(--cpad-full-) - var(--cbor-full-));
+	--cwid-:calc(700px - var(--cdiff-));
+	--chei-:calc(500px - var(--cdiff-));
+}
+
+.dev.container {
+	position:relative;
+	top:0;
+	left:50%;
+	transform:translateX(-50%);
+	width:700px;
+	min-height:500px;
+	background-color:#333;
+	color:#FFF;
+	z-index:100000;
+}
+
+.citem {
+	position:relative;
+	top:0;
+	left:0;
+	width:var(--cwid-);
+	height:var(--chei-);
+	display:block;
+	background-color:#000;
+	color:#FFF;
+	border:var(--cbor-) solid red;
+	padding:var(--cpad-);
+}
+
+.c-control-container {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	display:block;
+}
+.c-control-container button {
+	position:absolute;
+	top:50%;
+	transform:translateY(-50%);
+	display:block;
+}
+.carousel-control-next {
+	left:unset;
+}
+.carousel-control-prev {
+	right:unset;
+}
+

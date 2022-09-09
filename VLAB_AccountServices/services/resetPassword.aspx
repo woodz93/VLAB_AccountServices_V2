@@ -152,6 +152,67 @@
 	</div>
 
 	
+	<!--
+	<div class="dev container">
+		<div id="ctest" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-indicators">
+				<button type="button" data-bs-target="#ctest" data-bs-slide-to="0" class="active"></button>
+				<button type="button" data-bs-target="#ctest" data-bs-slide-to="1"></button>
+				<button type="button" data-bs-target="#ctest" data-bs-slide-to="2"></button>
+			</div>
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<div class="d-block citem">
+						Hello World!
+					</div>
+				</div>
+				<div class="carousel-item">
+					<div class="d-block citem">
+						<b>Page 2</b>
+					</div>
+				</div>
+				<div class="carousel-item">
+					<div class="d-block citem">
+						<font color="#FF0000">Page 3</font>
+					</div>
+				</div>
+			</div>
+			<div class="c-control-container">
+				<button type="button" class="carousel-control-prev" data-bs-target="#ctest" data-bs-slide="prev">
+					<span class="carousel-control-prev-icon"></span>
+				</button>
+				<button type="button" class="carousel-control-next" data-bs-target="#ctest" data-bs-slide="next">
+					<span class="carousel-control-next-icon"></span>
+				</button>
+			</div>
+		</div>
+	</div>
+	-->
+
+	<div id="fsc" class="ds-section">
+		<div class="ds-indicators">
+			<button type="button" data-ds-target="#fsc" data-ds-slide-to="0" class="active"></button>
+			<button type="button" data-ds-target="#fsc" data-ds-slide-to="1"></button>
+			<button type="button" data-ds-target="#fsc" data-ds-slide-to="2"></button>
+		</div>
+		<div class="contents">
+			<div class="item active">
+				Hello World!
+			</div>
+			<div class="item">
+				<b>Page 2</b>
+			</div>
+			<div class="item">
+				<font style="color:orange;">Page 3</font>
+			</div>
+		</div>
+		<button type="button" class="prev" data-ds-target="#fsc"></button>
+		<button type="button" class="next" data-ds-target="#fsc"></button>
+	</div>
+
+
+
+
 
 	<div id="modal_panel" class="modal fade">
 		<div class="modal-dialog">
