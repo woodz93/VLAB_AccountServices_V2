@@ -102,7 +102,7 @@
 							</div>
 						</div>
 						<!-- VIRTUAL DESKTOP MANAGEMENT SECTION -->
-						<div class="card s-hide" id="vdi-mgr-container">
+						<div class="card" id="vdi-mgr-container">
 							<button data-bs-toggle="collapse" data-bs-target="#vdi_container" class="btn btn-primary center-h card-header collapsed" CausesValidation="false" type="button">Available Desktops</button>
 							<div id="vdi_container" class="collapse" data-bs-parent="#accordion">
 								<asp:Panel ID="group_container" CssClass="groups container" Visible="false" runat="server" CausesValidation="false"></asp:Panel>
@@ -189,7 +189,7 @@
 	</div>
 	-->
 
-	<div id="fsc" class="ds-section">
+	<div id="fsc" class="ds-section" hidden>
 		<div class="ds-indicators">
 			<button type="button" data-ds-target="#fsc" data-ds-slide-to="0" class="active"></button>
 			<button type="button" data-ds-target="#fsc" data-ds-slide-to="1"></button>
@@ -206,8 +206,10 @@
 				<font style="color:orange;">Page 3</font>
 			</div>
 		</div>
-		<button type="button" class="prev" data-ds-target="#fsc"></button>
-		<button type="button" class="next" data-ds-target="#fsc"></button>
+		<div class="ds-controls">
+			<button type="button" class="btn btn-outline-primary prev" data-ds-target="#fsc"></button>
+			<button type="button" class="btn btn-outline-primary next" data-ds-target="#fsc"></button>
+		</div>
 	</div>
 
 

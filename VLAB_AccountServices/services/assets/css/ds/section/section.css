@@ -1,2 +1,17 @@
 ﻿
 
+div.ds-section button.prev, div.ds-section button.next {
+	position:relative;
+	top:0;
+	left:50%;
+	transform:translateX(-50%);
+	display:inline-block;
+}
+div.ds-section button.prev:after {
+	clear:both;
+	content:"Back";
+}
+div.ds-section button.next:after {
+	clear:both;
+	content:"Next";
+}

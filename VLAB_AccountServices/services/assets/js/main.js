@@ -2,7 +2,7 @@
 
 setTimeout(function () { Initial(); }, 0);
 
-prepDisplay();
+//prepDisplay();
 prepUserData();
 
 var GV_Debug = false;
@@ -204,6 +204,10 @@ function setup() {
 function prepDisplay() {
 	let q = document.getElementById("user_type_element").value.toLowerCase();
 	let elm = document.getElementById("vdi-mgr-container");
+	elm.classList.remove("s-hide");
+	elm.classList.add("s-show");
+	elm.disabled = false;
+	/*
 	//console.log(q);
 	if (q === "student") {
 		if (elm.classList.contains("s-hide")) {
@@ -217,9 +221,7 @@ function prepDisplay() {
 		elm.disabled = true;
 		elm.style.display = "none";
 	}
-
-
-
+	*/
 }
 
 function SetProcBtn(q) {
@@ -667,6 +669,9 @@ function prepSubmitBtn() {
 		};
 		let tmp = "";
 		while (i < list.length) {
+			let attr = "";
+			if (list[i].textContent.toLowerCase() === "business virtual lab")
+				attr = "checked";
 			tmp = "[" + list[i].textContent + "]";
 			if (info[list[i].textContent]) {
 				tmp = info[list[i].textContent];
@@ -683,6 +688,9 @@ function prepSubmitBtn() {
 				}
 				elm = " <button type=\"button\" class=\"btn btn-info info t-500\" data-bs-toggle=\"popover\" data-bs-target=\"#modal_panel\" onclick=\"SetInfo(this)\" data-bs-content=\"" + tmp + "\"></button>";
 				list0[i].insertAdjacentHTML("beforeend", elm);
+			}
+			if (attr !== "") {
+				list[i].querySelector("input[type=\"checkbox\"]").setAttribute("checked","true");
 			}
 			i++;
 		}

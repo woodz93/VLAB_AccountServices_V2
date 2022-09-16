@@ -175,6 +175,7 @@
     <Content Include="ClientLogout.aspx" />
     <None Include="services\assets\css\Bootstrap\bootstrap.min.css.map" />
     <Content Include="services\assets\css\compatability\resolution.css" />
+    <Content Include="services\assets\css\ds\section\main.css" />
     <Content Include="services\assets\css\ds\section\section.css" />
     <Content Include="services\assets\css\ds\section\container.css" />
     <Content Include="services\assets\css\extra\dev.css" />
