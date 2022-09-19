@@ -353,7 +353,7 @@ namespace VLAB_AccountServices.services
 					}
 					this.PasswordString=Request.Form.GetValues("password")[0];
 					if (this.PasswordString.Length>0) {
-						if (this.validate(this.PasswordString)) {
+						if (this.ValidateInput(this.PasswordString)) {
 							string ot="";
 							if(ModeString=="new-user")
 							{
@@ -620,7 +620,7 @@ namespace VLAB_AccountServices.services
 			bool res=false;
 			if (!String.IsNullOrEmpty(pstr)) {
 				if (pstr.Trim().Length>0) {
-					if (this.validate(pstr)) {
+					if (this.ValidateInput(pstr)) {
 						string r="([\\~\\`\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\-\\+\\=\\{\\[\\}\\]\\|\\:\\;\"\\?\\.\\,\\<\\>\\'\\/\\\\]+|[\\u200B \n\t]+|[\\u00A1\\uFFEE]+)";
 						if (Regex.IsMatch(pstr,"[A-z]+")) {
 							if (Regex.IsMatch(pstr,"[0-9]+")) {
@@ -750,7 +750,7 @@ namespace VLAB_AccountServices.services
 			
 		}
 		// Validates the string based on regular expressions.
-		protected bool validate(string q="") {
+		protected bool ValidateInput(string input) {
 			bool res=true;
 			string rs="[^\\u0020-\\u007e]+";
 			if (Regex.IsMatch(q,rs)) {
