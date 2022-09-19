@@ -74,9 +74,8 @@ namespace VLAB_AccountServices.services
 			password_confirm.Enabled=false;
 		}
 		// Performs a redirect action.
-		protected void redirect() {
+		protected void WarnAndRedirect() {
 			if (this.mode==0x00) {
-				Thread.Sleep(1000);
 				Response.Redirect("../Default.aspx");
 			} else if (this.mode==0x01) {
 				//sys.flush();
@@ -216,12 +215,12 @@ namespace VLAB_AccountServices.services
 				} else {
 					ConsoleOutput.Error("Session failed checks...");
 					ConsoleOutput.Info("Attempting to perform a redirect...");
-					this.redirect();
+					this.WarnAndRedirect();
 				}
 			} else {
 				ConsoleOutput.Error("Could not discover parameter data... POST or CAS not initialized.");
 				//Response.Redirect("../Default.aspx");
-				this.redirect();
+				this.WarnAndRedirect();
 			}
 			if (Database.ExistingRecords.Count>0) {
 				ConsoleOutput.Log("Attempting to remove unused records...");
@@ -503,7 +502,7 @@ namespace VLAB_AccountServices.services
 									this.UsernameString=this.obj.username;
 								} else {
 									sys.error("Username property does not exist or is not set.");
-									this.redirect();
+									this.WarnAndRedirect();
 								}
 							} else if (CasAuthentication.CurrentPrincipal!=null) {
 								username.Text=this.UsernameString;
@@ -516,15 +515,15 @@ namespace VLAB_AccountServices.services
 							}
 						} else {
 							sys.error("Command was not specified.");
-							this.redirect();
+							this.WarnAndRedirect();
 						}
 					} else {
 						ConsoleOutput.Error("Command property does not exist within the object.");
-						this.redirect();
+						this.WarnAndRedirect();
 					}
 				} else {
 					ConsoleOutput.Error("POST argument does not contain data.");
-					this.redirect();
+					this.WarnAndRedirect();
 				}
 				if (AD.isset(this.obj,"cmd")) {
 					if (!String.IsNullOrEmpty(this.obj.cmd)) {
@@ -537,20 +536,20 @@ namespace VLAB_AccountServices.services
 						} else {
 							this.DisableSubmitButton();
 							ConsoleOutput.Error("Command does not exist.");
-							this.redirect();
+							this.WarnAndRedirect();
 						}
 					} else {
 						ConsoleOutput.Error("Command property does not exist or is not set.");
-						this.redirect();
+						this.WarnAndRedirect();
 					}
 				} else {
 					this.DisableSubmitButton();
 					ConsoleOutput.Error("Failed to get data.");
-					this.redirect();
+					this.WarnAndRedirect();
 				}
 			} else {
 				ConsoleOutput.Error("Failed to pass checks.");
-				this.redirect();
+				this.WarnAndRedirect();
 			}
 		}
 		// Disables the submit button.
@@ -567,7 +566,7 @@ namespace VLAB_AccountServices.services
 					ConsoleOutput.Error("Username is missing.");
 					this.pass=false;
 					res=false;
-					this.redirect();
+					this.WarnAndRedirect();
 				}
 			} else {
 				Response.Redirect("resetpassword.aspx");
@@ -607,7 +606,7 @@ namespace VLAB_AccountServices.services
 						sys.error("User object is missing the username specification.");
 						ConsoleOutput.Error("User object is missing the username specification.");
 					}
-					this.redirect();
+					this.WarnAndRedirect();
 				}
 			}
 		}
