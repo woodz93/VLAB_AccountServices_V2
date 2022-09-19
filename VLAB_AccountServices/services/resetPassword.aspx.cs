@@ -86,10 +86,7 @@ namespace VLAB_AccountServices.services
 			}
 		}
 		// Performs a first-time initialization of all variables and data.
-		protected void ini() {
-			//Event evt=new Event("resetPasswordWWW");
-			//evt.Error("This is a testing message from the resetPassword.aspx.cs file.");
-			//this.SetConnectionTimeout();
+		protected void Initialize() {
 			this.InitialChecks();
 			resetPassword.StatusElm=status;
 			this.StatElm=status;
@@ -108,28 +105,7 @@ namespace VLAB_AccountServices.services
 				this.SetElements();
 				console.Info("HTML element processing completed.");
 			}
-			this.ProcInfoElements();
-			/*
-			try{
-				console.Warn(this.UC.GetFirstName());
-				console.Warn(this.UC.GetLastName());
-				console.Warn(this.UC.GetEmail());
-				console.Warn(this.UC.GetFullName());
-				console.Warn(this.UC.GetCampus());
-				console.Warn(this.UC.GetUHID());
-				var data="";
-				var list=this.UC.GetOrganizations();
-				int i=0;
-				while(i<list.Count){
-					data+="\n"+list[i];
-					i++;
-				}
-				console.Warn(data);
-			}catch(Exception e){
-				console.Error(e.Message);
-			}
-			*/
-			//this.DispPOST();
+			this.ProcInfoElements();			
 		}
 		// Processes the info data and sets the value of the info elements.
 		private void ProcInfoElements() {
@@ -156,7 +132,6 @@ namespace VLAB_AccountServices.services
 			if (this.HelpRequestForm.Count>0) {
 				if (this.HelpRequestForm.ContainsKey("email")) {
 					string data="";
-					int i=0;
 					string item;
 					string value;
 					foreach(string key in this.HelpRequestForm.Keys){
@@ -215,7 +190,7 @@ namespace VLAB_AccountServices.services
 
 		// Prepares the page for use.
 		protected void Page_Load(object sender, EventArgs e) {
-			this.ini();
+			this.Initialize();
 			this.obj=new User();
 			if (this.UC.IsChecked()) {
 				bool pcheck=true;
@@ -621,7 +596,7 @@ namespace VLAB_AccountServices.services
 			try{
 				try{
 					d=Session["data"].ToString();
-				}catch(Exception exc){
+				}catch{
 					console.Error("Failed to collect data property value... Only ("+Session.Count.ToString()+") properties exist in the session variable.");
 				}
 				try{
