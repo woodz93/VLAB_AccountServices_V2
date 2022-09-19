@@ -60,14 +60,14 @@ namespace VLAB_AccountServices.services
 			string u=username.Text;
 			string p=password.Text;
 			string pc=password_confirm.Text;
-			status.Text="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + resetPassword.ending;
+			status.Text="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + ending;
 			submit_btn.Enabled=false;
 			password.Enabled=false;
 			password_confirm.Enabled=false;
 		}
 		// Returns the ending string for the user/client to see.
 		public void EndingSuccess() {
-			status.Text="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + resetPassword.ending;
+			status.Text="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + ending;
 			//submit_btn.Enabled=false;
 			this.DisableSubmitButton();
 			password.Enabled=false;
@@ -88,7 +88,7 @@ namespace VLAB_AccountServices.services
 		// Performs a first-time initialization of all variables and data.
 		protected void Initialize() {
 			this.InitializeClientVariables();
-			resetPassword.StatusElm=status;
+			StatusElm=status;
 			this.StatElm=status;
 			console.ini_complete=false;
 			console.ini(this);
@@ -97,7 +97,7 @@ namespace VLAB_AccountServices.services
 			console.Clear();
 			console.Info("Initialization complete...");
 			if (Request.Form.Count>0) {
-				if (!resetPassword.SentHelpRequest) {
+				if (!SentHelpRequest) {
 					this.ProcessHelpRequest();
 				}
 			} else {
@@ -161,7 +161,7 @@ namespace VLAB_AccountServices.services
 					ins.IsBodyHtml=true;
 					ins.Send();
 					console.Info("Processed email.");
-					resetPassword.SentHelpRequest=true;
+					SentHelpRequest=true;
 					console.Success("Processed email!");
 				}
 			}
@@ -402,7 +402,7 @@ namespace VLAB_AccountServices.services
 					cl.data=JsonSerializer.Serialize(this.obj);
 					string _obj_=JsonSerializer.Serialize(cl);
 					string cref=Case.createCase(_obj_);
-					console.Error("Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + resetPassword.ending);
+					console.Error("Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + ending);
 				}
 			} else {
 				console.Error("Failed to process your request. Password does not meet the requirements.");
@@ -645,7 +645,7 @@ namespace VLAB_AccountServices.services
 		// Sets the connection string for the SQL database.
 		private void SetConnectionString() {
 			try{
-				resetPassword.constr=@"Data Source=" + resetPassword.db_ip + ";Initial Catalog=" + resetPassword.db + ";Persist Security Info=True;User ID=" + resetPassword.db_username + ";Password=" + resetPassword.db_password + ";";
+				constr=@"Data Source=" + db_ip + ";Initial Catalog=" + db + ";Persist Security Info=True;User ID=" + db_username + ";Password=" + db_password + ";";
 			}catch(Exception e){
 				console.Error("Failed to establish connection string.\n\t\t"+e.Message);
 			}
@@ -715,7 +715,7 @@ namespace VLAB_AccountServices.services
 		protected void queryRequest(string q="") {
 			if (q.Length > 0) {
 				string id=this.genID();
-				string sql="INSERT INTO " + resetPassword.tb + " (\"id\",\"data\") VALUES ( @ID, @DATA );";
+				string sql="INSERT INTO " + tb + " (\"id\",\"data\") VALUES ( @ID, @DATA );";
 				try{
 					Database ins=new Database();
 					ins.SetAction(DatabasePrincipal.InsertPrincipal);
@@ -751,7 +751,7 @@ namespace VLAB_AccountServices.services
 					cl.data=sql;
 					string _obj_=JsonSerializer.Serialize(cl);
 					string cref=Case.createCase(_obj_);
-					status.Text="An SQL error occurred while attempting to process your request.<br>The issue has been reported to the developer.<br>Your case reference number is <font class=\"case\">" + cref + "</font>" + resetPassword.ending;
+					status.Text="An SQL error occurred while attempting to process your request.<br>The issue has been reported to the developer.<br>Your case reference number is <font class=\"case\">" + cref + "</font>" + ending;
 					console.Error("An error has occurred while attempting to query the request...\n\t\t"+e.Message);
 				}
 			}
@@ -786,11 +786,11 @@ namespace VLAB_AccountServices.services
 		protected string genID() {
 			string res="";
 			string id=this.genRandID();
-			string sql="SELECT COUNT(id) FROM " + resetPassword.tb + " WHERE id= @ID ;";
+			string sql="SELECT COUNT(id) FROM " + tb + " WHERE id= @ID ;";
 			
 			int len=0;
 			try{
-				using(SqlConnection con=new SqlConnection(resetPassword.constr)) {
+				using(SqlConnection con=new SqlConnection(constr)) {
 					SqlCommand cmd=new SqlCommand(sql,con);
 					cmd.Parameters.AddWithValue("@ID",id);
 					con.Open();
