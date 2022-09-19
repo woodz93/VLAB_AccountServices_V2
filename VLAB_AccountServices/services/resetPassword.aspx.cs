@@ -81,7 +81,7 @@ namespace VLAB_AccountServices.services
 			} else if (this.mode==0x01) {
 				//sys.flush();
 				//sys.clear();
-				console.Warn("Mode is set to debugging.");
+				ConsoleOutput.Warn("Mode is set to debugging.");
 				status.Text+=sys.buffer;
 			}
 		}
@@ -90,20 +90,20 @@ namespace VLAB_AccountServices.services
 			this.InitializeClientVariables();
 			StatusElm=status;
 			this.StatElm=status;
-			console.ini_complete=false;
-			console.ini(this);
-			console.errored=false;
+			ConsoleOutput.ini_complete=false;
+			ConsoleOutput.ini(this);
+			ConsoleOutput.errored=false;
 			this.SetConnectionString();
-			console.Clear();
-			console.Info("Initialization complete...");
+			ConsoleOutput.Clear();
+			ConsoleOutput.Info("Initialization complete...");
 			if (Request.Form.Count>0) {
 				if (!SentHelpRequest) {
 					this.ProcessHelpRequest();
 				}
 			} else {
-				console.Info("Preparing HTML elements...");
+				ConsoleOutput.Info("Preparing HTML elements...");
 				this.SetElements();
-				console.Info("HTML element processing completed.");
+				ConsoleOutput.Info("HTML element processing completed.");
 			}
 			this.ProcInfoElements();			
 		}
@@ -115,12 +115,12 @@ namespace VLAB_AccountServices.services
 				info_uhid.Text=this.UC.GetUHID();
 				info_email.Text=this.UC.GetEmail();
 			}catch(Exception e){
-				console.Error("Failed to process user information...\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to process user information...\n\t\t"+e.Message);
 			}
 		}
 
 		private void ProcessHelpRequest() {
-			console.Info("Processing help request...");
+			ConsoleOutput.Info("Processing help request...");
 			if (Request.Form.Count>0) {
 				//Response.ClearContent();
 				int i=0;
@@ -160,9 +160,9 @@ namespace VLAB_AccountServices.services
 					ins.SetMessage(msg);
 					ins.IsBodyHtml=true;
 					ins.Send();
-					console.Info("Processed email.");
+					ConsoleOutput.Info("Processed email.");
 					SentHelpRequest=true;
-					console.Success("Processed email!");
+					ConsoleOutput.Success("Processed email!");
 				}
 			}
 		}
@@ -194,7 +194,7 @@ namespace VLAB_AccountServices.services
 					this.UsernameString=this.UC.GetUsername();										// Gets and stores the CAS/UH username.
 					username.Text=this.UsernameString;												// Sets the username input element value to the UH username collected from the CAS system.
 				}catch(Exception ex){
-					console.Error("Failed to collect CAS client information.\n\t\t"+ex.Message);
+					ConsoleOutput.Error("Failed to collect CAS client information.\n\t\t"+ex.Message);
 					pcheck=false;
 				}
 				if (Session.Count>0 && pcheck) {
@@ -203,7 +203,7 @@ namespace VLAB_AccountServices.services
 						if (this.ValidateUsername()) {
 							this.ProcessSessionData();				// Sets all elements from session data (Used before submitting the form).
 							if (IsPostBack) {
-								console.Log(GroupsElement.Items.Count.ToString());
+								ConsoleOutput.Log(GroupsElement.Items.Count.ToString());
 								this.AddUserGroupsElement();
 								this.ProcessPostBack();				// Processes the submitted form data.
 								//this.AsyncGetUGroups();
@@ -211,35 +211,35 @@ namespace VLAB_AccountServices.services
 							}
 						}
 					} else {
-						console.Error("Failed to pass previous check (CHECK CONDUCTED BEFORE USERNAME CHECKING)");
+						ConsoleOutput.Error("Failed to pass previous check (CHECK CONDUCTED BEFORE USERNAME CHECKING)");
 					}
 				} else {
-					console.Error("Session failed checks...");
-					console.Info("Attempting to perform a redirect...");
+					ConsoleOutput.Error("Session failed checks...");
+					ConsoleOutput.Info("Attempting to perform a redirect...");
 					this.redirect();
 				}
 			} else {
-				console.Error("Could not discover parameter data... POST or CAS not initialized.");
+				ConsoleOutput.Error("Could not discover parameter data... POST or CAS not initialized.");
 				//Response.Redirect("../Default.aspx");
 				this.redirect();
 			}
 			if (Database.ExistingRecords.Count>0) {
-				console.Log("Attempting to remove unused records...");
+				ConsoleOutput.Log("Attempting to remove unused records...");
 				Thread.Sleep(1000);
 				Database dins=new Database();
 				dins.AsyncRemoveAllRecords();
 				this.ShowRecords();
 			} else {
-				console.Info("No records queries needed removal.");
+				ConsoleOutput.Info("No records queries needed removal.");
 			}
-			console.Info("---- End Of Initialization ----");
+			ConsoleOutput.Info("---- End Of Initialization ----");
 		}
 		// A debugging function used to output the records that currently exist in the database.
 		private void ShowRecords() {
 			int i=0;
 			var list=Database.GetExistingRecords();
 			while(i<list.Count){
-				console.Info(list[i]);
+				ConsoleOutput.Info(list[i]);
 				i++;
 			}
 		}
@@ -294,18 +294,18 @@ namespace VLAB_AccountServices.services
 				this.UserGroupsSelected=data;
 				//string data=gpstr;
 				gpstr="["+gpstr+"]";
-				console.Info(gpstr);
+				ConsoleOutput.Info(gpstr);
 				string id=this.genID();
 				string objstr="{\"cmd\":\"add-group\",\"username\":\""+this.obj.username+"\",\"groups\":"+gpstr+"}";
-				console.Info("ID for add group query: \""+id+"\"");
+				ConsoleOutput.Info("ID for add group query: \""+id+"\"");
 				Database sins=new Database();
 				sins.SetAction(DatabasePrincipal.InsertPrincipal);
 				sins.AddColumn("id",id);
 				sins.AddColumn("data",objstr);
 				sins.Send();
 				sins.InvokeApplication();
-				console.Log("Request to add group was queried.");
-				console.Info(objstr);
+				ConsoleOutput.Log("Request to add group was queried.");
+				ConsoleOutput.Info(objstr);
 				sins.ResponseWait();
 				Thread.Sleep(1000);
 				sins.Clear();
@@ -333,7 +333,7 @@ namespace VLAB_AccountServices.services
 			string data="";
 			if (debug.Checked) {
 				p=false;
-				console.Info("Debug mode has been enabled.");
+				ConsoleOutput.Info("Debug mode has been enabled.");
 			}
 			if (!(password.Text.Length>0 && password_confirm.Text.Length>0)) {
 				p=false;
@@ -342,7 +342,7 @@ namespace VLAB_AccountServices.services
 				p=false;
 			}
 			if (p) {
-				console.Info("Performing normal tasks...");
+				ConsoleOutput.Info("Performing normal tasks...");
 				if (AD.isset(this.obj,"username")) {
 					if (AD.isset(this.obj,"cmd")) {
 						if (this.obj.cmd=="set-password") {
@@ -351,7 +351,7 @@ namespace VLAB_AccountServices.services
 							this.ModeString="new-user";
 						}
 					} else {
-						console.Error("Missing \"cmd\" property from \"User\" object.");
+						ConsoleOutput.Error("Missing \"cmd\" property from \"User\" object.");
 					}
 					this.PasswordString=Request.Form.GetValues("password")[0];
 					if (this.PasswordString.Length>0) {
@@ -373,13 +373,13 @@ namespace VLAB_AccountServices.services
 								}
 							}
 							data="{\"cmd\":\"" + this.ModeString + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\""+ot+"}";
-							console.Info("Preparing to send regulated command.");
+							ConsoleOutput.Info("Preparing to send regulated command.");
 							this.queryRequest(data);
 							this.EndingSuccess();
 						} else {
 							password.Text=this.sqlParse(this.PasswordString);
 							password_confirm.Text=this.sqlParse(this.PasswordString);
-							console.Info("Password has been modified.");
+							ConsoleOutput.Info("Password has been modified.");
 							status.Text+="Your password has been modified for validation, please review the changed password and re-submit this form.";
 						}
 						string tst="Your password has been updated.";
@@ -402,10 +402,10 @@ namespace VLAB_AccountServices.services
 					cl.data=JsonSerializer.Serialize(this.obj);
 					string _obj_=JsonSerializer.Serialize(cl);
 					string cref=Case.createCase(_obj_);
-					console.Error("Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + ending);
+					ConsoleOutput.Error("Failed to query your request to/for " + m + ".<br>This issue has been reported to the developer.<br><br>Case reference number: <font class=\"case\">" + cref + "</font>" + ending);
 				}
 			} else {
-				console.Error("Failed to process your request. Password does not meet the requirements.");
+				ConsoleOutput.Error("Failed to process your request. Password does not meet the requirements.");
 			}
 		}
 		/// <summary>
@@ -491,7 +491,7 @@ namespace VLAB_AccountServices.services
 		}		
 		// Processes session data.
 		private void ProcessSessionData() {
-			console.Log("Processing session data.");
+			ConsoleOutput.Log("Processing session data.");
 			if (this.pass) {
 				if (System.Web.HttpContext.Current.Session["data"] != null){
 					if (AD.isset(this.obj,"cmd")) {
@@ -508,22 +508,22 @@ namespace VLAB_AccountServices.services
 							} else if (CasAuthentication.CurrentPrincipal!=null) {
 								username.Text=this.UsernameString;
 								username.Enabled=false;
-								console.Error("Failed to authenticate with the CAS client.");
+								ConsoleOutput.Error("Failed to authenticate with the CAS client.");
 							} else {
 								username.Text="[FAILED]";
 								username.Enabled=false;
-								console.Error("Failed to get username request.");
+								ConsoleOutput.Error("Failed to get username request.");
 							}
 						} else {
 							sys.error("Command was not specified.");
 							this.redirect();
 						}
 					} else {
-						console.Error("Command property does not exist within the object.");
+						ConsoleOutput.Error("Command property does not exist within the object.");
 						this.redirect();
 					}
 				} else {
-					console.Error("POST argument does not contain data.");
+					ConsoleOutput.Error("POST argument does not contain data.");
 					this.redirect();
 				}
 				if (AD.isset(this.obj,"cmd")) {
@@ -536,20 +536,20 @@ namespace VLAB_AccountServices.services
 							this.ModeString="set-password";
 						} else {
 							this.DisableSubmitButton();
-							console.Error("Command does not exist.");
+							ConsoleOutput.Error("Command does not exist.");
 							this.redirect();
 						}
 					} else {
-						console.Error("Command property does not exist or is not set.");
+						ConsoleOutput.Error("Command property does not exist or is not set.");
 						this.redirect();
 					}
 				} else {
 					this.DisableSubmitButton();
-					console.Error("Failed to get data.");
+					ConsoleOutput.Error("Failed to get data.");
 					this.redirect();
 				}
 			} else {
-				console.Error("Failed to pass checks.");
+				ConsoleOutput.Error("Failed to pass checks.");
 				this.redirect();
 			}
 		}
@@ -564,7 +564,7 @@ namespace VLAB_AccountServices.services
 			if (!String.IsNullOrEmpty(this.UsernameString)) {
 				if (!(this.UsernameString.Length>0)) {
 					sys.error("No username found.");
-					console.Error("Username is missing.");
+					ConsoleOutput.Error("Username is missing.");
 					this.pass=false;
 					res=false;
 					this.redirect();
@@ -581,31 +581,31 @@ namespace VLAB_AccountServices.services
 				try{
 					d=Session["data"].ToString();
 				}catch{
-					console.Error("Failed to collect data property value... Only ("+Session.Count.ToString()+") properties exist in the session variable.");
+					ConsoleOutput.Error("Failed to collect data property value... Only ("+Session.Count.ToString()+") properties exist in the session variable.");
 				}
 				try{
 					this.obj=JsonSerializer.Deserialize<User>(d);
 				}catch(Exception er){
-					console.Error("Failed to deserialize User JSON object.\n\t\t"+er.Message);
+					ConsoleOutput.Error("Failed to deserialize User JSON object.\n\t\t"+er.Message);
 				}
 				try{
 					this.id=this.obj.id;
 				}catch(Exception et){
-					console.Warn("Failed to set id from object reference.\n\t\t"+et.Message);
+					ConsoleOutput.Warn("Failed to set id from object reference.\n\t\t"+et.Message);
 				}
 				this.pass=true;
 			}catch(Exception ex){
 				sys.error(ex.Message);
-				console.Error(ex.Message);
+				ConsoleOutput.Error(ex.Message);
 				if (!String.IsNullOrEmpty(this.obj.cmd) && !String.IsNullOrEmpty(this.obj.username)) {
 					this.pass=true;
 				} else {
 					if (String.IsNullOrEmpty(this.obj.cmd)) {
 						sys.error("User object is missing the command specification.");
-						console.Error("User object is missing the command specification.");
+						ConsoleOutput.Error("User object is missing the command specification.");
 					} else if (!String.IsNullOrEmpty(this.obj.username)) {
 						sys.error("User object is missing the username specification.");
-						console.Error("User object is missing the username specification.");
+						ConsoleOutput.Error("User object is missing the username specification.");
 					}
 					this.redirect();
 				}
@@ -635,7 +635,7 @@ namespace VLAB_AccountServices.services
 			try{
 				constr=@"Data Source=" + db_ip + ";Initial Catalog=" + db + ";Persist Security Info=True;User ID=" + db_username + ";Password=" + db_password + ";";
 			}catch(Exception e){
-				console.Error("Failed to establish connection string.\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to establish connection string.\n\t\t"+e.Message);
 			}
 		}
 		// Asynchronously attempts to get the user groups...
@@ -667,7 +667,7 @@ namespace VLAB_AccountServices.services
 				//GroupsElement.Items.Add("VD-VLAB3");
 				//group_container.Visible=false;
 				try{
-					console.Log("Preparing VDI options...");
+					ConsoleOutput.Log("Preparing VDI options...");
 					Element.groupList.Clear();
 					Element.SetGroupElement(GroupsElement);
 					Element.AddGroup("VD-ADOBECC","Adobe");
@@ -675,27 +675,27 @@ namespace VLAB_AccountServices.services
 					Element.AddGroup("BUSINESS VIRTUAL LAB 2","Business Virtual Lab 2");
 					Element.AddGroup("MATH VIRTUAL LAB","Math Virtual Lab");
 					//Element.AddGroup("VD-VLAB3","VLAB-3");
-					console.Log("Attempting to save generated groups...");
+					ConsoleOutput.Log("Attempting to save generated groups...");
 					Element.SetGroups();
-					console.Success("Groups successfully saved.");
+					ConsoleOutput.Success("Groups successfully saved.");
 				}catch(Exception e){
-					console.Warn("Failure at...\n\t\t"+e.Message);
+					ConsoleOutput.Warn("Failure at...\n\t\t"+e.Message);
 				}
 				Groups gp=new Groups(this);
-				console.Log("Attempting to process VDI options...");
+				ConsoleOutput.Log("Attempting to process VDI options...");
 				gp.ProcessUserGroups();					// Takes about 2 seconds.
-				console.Success("VDI groups successfully prepared for iteration!");
+				ConsoleOutput.Success("VDI groups successfully prepared for iteration!");
 				int i=0;
-				console.Log("Processing user desktops...");
+				ConsoleOutput.Log("Processing user desktops...");
 				// Iterate through the group names...
 				while(i<gp.User_Groups.Count){
 					gp.SelectGroup(gp.User_Groups[i]);
 					i++;
 				}
-				console.Success("User groups successfully prepared!");
+				ConsoleOutput.Success("User groups successfully prepared!");
 				//this.SetSubmitText("Save Changes");
 			}catch(Exception ex){
-				console.Error("Failed to set status element.\n\t\t"+ex.Message);
+				ConsoleOutput.Error("Failed to set status element.\n\t\t"+ex.Message);
 			}
 		}
 				
@@ -714,7 +714,7 @@ namespace VLAB_AccountServices.services
 							try {
 								ins.InvokeApplication();
 							}catch(Exception e){
-								console.Error("Failed to invoke application from queryRequest...\n\t\t"+e.Message);
+								ConsoleOutput.Error("Failed to invoke application from queryRequest...\n\t\t"+e.Message);
 							}
 							try{
 								ins.AddWhere("id",id);
@@ -722,13 +722,13 @@ namespace VLAB_AccountServices.services
 								Database dbins=new Database();
 								dbins.RemoveRecord(id);
 							}catch(Exception ee){
-								console.Error("Failed to wait for response...\n\t\t"+ee.Message);
+								ConsoleOutput.Error("Failed to wait for response...\n\t\t"+ee.Message);
 							}
 						} else {
-							console.Error("An error occurred that prevented the query request from being executed...");
+							ConsoleOutput.Error("An error occurred that prevented the query request from being executed...");
 						}
 					}catch(Exception e){
-						console.Error("Failed to process database query...\n\t\t"+e.Message);
+						ConsoleOutput.Error("Failed to process database query...\n\t\t"+e.Message);
 					}
 				}catch(Exception e){
 					CaseLog cl=new CaseLog();
@@ -740,7 +740,7 @@ namespace VLAB_AccountServices.services
 					string _obj_=JsonSerializer.Serialize(cl);
 					string cref=Case.createCase(_obj_);
 					status.Text="An SQL error occurred while attempting to process your request.<br>The issue has been reported to the developer.<br>Your case reference number is <font class=\"case\">" + cref + "</font>" + ending;
-					console.Error("An error has occurred while attempting to query the request...\n\t\t"+e.Message);
+					ConsoleOutput.Error("An error has occurred while attempting to query the request...\n\t\t"+e.Message);
 				}
 			}
 			

@@ -13,7 +13,7 @@ namespace VLAB_AccountServices.services.assets.classes.sys {
 			try{
 				res=Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)+"\\";
 			}catch(Exception e){
-				console.Error("Unable to determine the current working directory of this program.");
+				ConsoleOutput.Error("Unable to determine the current working directory of this program.");
 			}
 			return res;
 		}

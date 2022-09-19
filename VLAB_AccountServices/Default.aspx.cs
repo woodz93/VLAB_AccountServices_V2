@@ -49,9 +49,9 @@ namespace VLAB_AccountServices
 			UD=new UserCheck();
 			obj=new User();
 			sys.errored=false;
-			console.ini(this);
-			console.Clear();
-			console.errored=false;
+			ConsoleOutput.ini(this);
+			ConsoleOutput.Clear();
+			ConsoleOutput.errored=false;
 			Thread.Sleep(100);
 			Response.Redirect("services/resetPassword.aspx");
 			/*
@@ -74,19 +74,19 @@ namespace VLAB_AccountServices
 		}
 		// Invokes first-time processes.
 		private void ini() {
-			console.Log("Checking CAS principal...");
+			ConsoleOutput.Log("Checking CAS principal...");
 			UD=new UserCheck();
 			if (UD.Ready) {
 				obj.username=UD.GetUsername();
 				StatElm.Text+="<br><br>- Username: &quot;"+UD.GetUsername()+"&quot;";
-				console.Log("Checking username...");
+				ConsoleOutput.Log("Checking username...");
 				if(CheckUsername(obj.username))
 					Redirect();
 				else
 					StatElm.Text+="<br><br>- Username check failed...";
 			} else {
 				sys.error("Unauthorized access detected.");
-				console.Error("Unauthorized access detected.");
+				ConsoleOutput.Error("Unauthorized access detected.");
 				StatElm.Text+="<br><br>- Unauthorized access detected.";
 			}
 		}
@@ -97,12 +97,12 @@ namespace VLAB_AccountServices
 			{
 				Default.id=this.genID();
 				string data = "{\"cmd\":\"check-user\",\"username\":\""+u+"\"}";
-				console.Log("Creating a new database class instance...");
+				ConsoleOutput.Log("Creating a new database class instance...");
 				Database ins = new Database();
 				ins.SetAction(DatabasePrincipal.InsertPrincipal);
 				ins.AddColumn("id",Default.id);
 				ins.AddColumn("data",data);
-				console.Log("Attempting to submit database query...");
+				ConsoleOutput.Log("Attempting to submit database query...");
 				bool tmp = ins.Send();
 				if(tmp)
 				{
@@ -114,7 +114,7 @@ namespace VLAB_AccountServices
 				else
 				{
 					StatElm.Text+="<br><br>- Insertion failed!";
-					console.Error("An error occurred while attempting to insert a new record into the database...");
+					ConsoleOutput.Error("An error occurred while attempting to insert a new record into the database...");
 					sys.error("Failed to query request.");
 					StatElm.Text+="<br><br>- Failed to query request.";
 				}
@@ -127,16 +127,16 @@ namespace VLAB_AccountServices
 		}
 		// Asynchronously sets the session data after the database has returned with the proper data.
 		public void dbCheck() {
-			console.Log("Attempting to check the resulting records...");
+			ConsoleOutput.Log("Attempting to check the resulting records...");
 			this.db_check(Default.id);														// Repeats 50 times or until the record has a response.
 			//this.removeRecord(Default.id);													// Asynchronously removes the record from the database (This works, and does not need to be synchronous) (Removes the record to free up space in the db).
 			if (sys.errored) {																// Checks if there are any errors that were thrown.
-				console.Error("System errored out.");
+				ConsoleOutput.Error("System errored out.");
 				sys.error("An error has occurred...");
 				StatElm.Text+="<br><br>- ERROR DETECTED";
 			} else {
 				sys.clear();																// Clears the output buffer.
-				console.Log("Value of pt is \""+pt+"\"");
+				ConsoleOutput.Log("Value of pt is \""+pt+"\"");
 				
 				if(this.pt==1) {															// Determines what the command/process should be on the form.
 					this.obj.cmd="set-password";											// Indicates a password reset operation (Occurs if the user does exist on the AD).
@@ -149,13 +149,13 @@ namespace VLAB_AccountServices
 		}
 		// Performs a redirect.
 		protected void Redirect() {
-			if (!(console.errored) && Default.mode==0x00) {
+			if (!(ConsoleOutput.errored) && Default.mode==0x00) {
 				Response.Redirect("services/resetPassword.aspx");
 				//sys.error("PASSED");
 				//StatElm.Text+="<br><br>- SUCCESS!";
 				//StatElm.Text+="<br><br>- "+Session["data"];
 			} else {
-				console.Info("Unable to redirect... either a debugging or error was thrown...");
+				ConsoleOutput.Info("Unable to redirect... either a debugging or error was thrown...");
 				sys.error("Unable to redirect.");
 				StatElm.Text+="<br><br>- Unable to redirect.";
 			}
@@ -194,7 +194,7 @@ namespace VLAB_AccountServices
 							this.pt=1;
 						} else if (tmp["data"].Contains("status\":false")) {
 							this.pt=2;
-							console.Error("An error has occurred.");
+							ConsoleOutput.Error("An error has occurred.");
 							sys.error("An error has occurred while attempting to check if the user exists...");
 							StatElm.Text+="<br><br>- Unable to check if user exists on the system.";
 						}
@@ -206,7 +206,7 @@ namespace VLAB_AccountServices
 				}
 			}catch(Exception e){
 				sys.error("An error occurred while asynchronously checking the database...<br><br>"+e.Message);
-				console.Error("An error has occurred while attempting to check the database...\n"+e.Message);
+				ConsoleOutput.Error("An error has occurred while attempting to check the database...\n"+e.Message);
 				StatElm.Text+="<br><br>- "+e.Message;
 			}
 			return res;

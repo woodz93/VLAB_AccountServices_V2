@@ -46,7 +46,7 @@ namespace VLAB_AccountServices.services {
 				}
 				res=id;
 			}catch(Exception e){
-				console.Error("Failed to create case file.\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to create case file.\n\t\t"+e.Message);
 			}
 			return res;
 		}
@@ -82,7 +82,7 @@ namespace VLAB_AccountServices.services {
 				}
 				res=file_name;
 			} else {
-				console.Error("Directory does not exist.");
+				ConsoleOutput.Error("Directory does not exist.");
 			}
 			return res;
 		}

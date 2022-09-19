@@ -127,12 +127,12 @@ namespace VLAB_AccountServices {
 							client.UseDefaultCredentials=false;
 							//client.Credentials=new System.Net.NetworkCredential(Mail.USERNAME,Mail.PASSWORD);
 							client.Send(mm);
-							console.Success("Successfully sent an email to the user/client.");
+							ConsoleOutput.Success("Successfully sent an email to the user/client.");
 						}catch(Exception e){
-							console.Error("Failed to connect to SMTP client...\n\t\t"+e.Message);
+							ConsoleOutput.Error("Failed to connect to SMTP client...\n\t\t"+e.Message);
 						}
 					}catch(Exception e){
-						console.Error(e.Message);
+						ConsoleOutput.Error(e.Message);
 					}
 				}
 			}

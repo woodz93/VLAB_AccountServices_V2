@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using VLAB_AccountServices.services.assets.classes.Network;
 namespace VLAB_AccountServices.services.assets.sys {
-	public class console {
+	public class ConsoleOutput {
 		private static bool enable_output=true;
 		private static uint mode=0x00;
 		// Instances:
@@ -21,113 +21,113 @@ namespace VLAB_AccountServices.services.assets.sys {
 
 		// Initializes the console class for use with the Default class.
 		public static void ini(Default instance) {
-			if (!console.ini_complete) {
-				console.Default_Instance = instance;
-				console.mode=0x00;
-				console.ini_complete=true;
-				console.errored=false;
-				console.PlacedStyle=false;
+			if (!ConsoleOutput.ini_complete) {
+				ConsoleOutput.Default_Instance = instance;
+				ConsoleOutput.mode=0x00;
+				ConsoleOutput.ini_complete=true;
+				ConsoleOutput.errored=false;
+				ConsoleOutput.PlacedStyle=false;
 				//instance.StatElm.Text+="Begun on Default<br>";
 			}
 		}
 		// Initializes the console class for use with the resetPassword class.
 		public static void ini(resetPassword instance) {
-			if (!console.ini_complete) {
-				console.resetPassword_Instance = instance;
-				console.mode=0x01;
-				console.ini_complete=true;
-				console.errored=false;
-				console.PlacedStyle=false;
+			if (!ConsoleOutput.ini_complete) {
+				ConsoleOutput.resetPassword_Instance = instance;
+				ConsoleOutput.mode=0x01;
+				ConsoleOutput.ini_complete=true;
+				ConsoleOutput.errored=false;
+				ConsoleOutput.PlacedStyle=false;
 			}
 		}
 		// Initializes the console class for use with the Network class.
 		public static void ini(Network instance) {
-			if (!console.ini_complete) {
-				console.Network_Instance = instance;
-				console.mode=0x0F;
-				console.ini_complete=true;
-				console.errored=false;
-				console.PlacedStyle=false;
+			if (!ConsoleOutput.ini_complete) {
+				ConsoleOutput.Network_Instance = instance;
+				ConsoleOutput.mode=0x0F;
+				ConsoleOutput.ini_complete=true;
+				ConsoleOutput.errored=false;
+				ConsoleOutput.PlacedStyle=false;
 			}
 		}
 		// Initializes the console class for use with the sys class.
 		public static void ini(sys instance) {
-			if (!console.ini_complete) {
-				console.sys_Instance = instance;
-				console.mode=0x0F;
-				console.ini_complete=true;
-				console.errored=false;
-				console.PlacedStyle=false;
+			if (!ConsoleOutput.ini_complete) {
+				ConsoleOutput.sys_Instance = instance;
+				ConsoleOutput.mode=0x0F;
+				ConsoleOutput.ini_complete=true;
+				ConsoleOutput.errored=false;
+				ConsoleOutput.PlacedStyle=false;
 			}
 		}
 		// Writes output to the client.
 		public static void Log(string message) {
-			if (console.debugging_mode>=0x111) {
-				console.Output("<font style='color:rgb(255,255,255);' class='debug-title'>[LOG]</font>:<font style='color:rgb(255,255,255);' class='debug-text'>\t\t"+message+"</font>");
+			if (ConsoleOutput.debugging_mode>=0x111) {
+				ConsoleOutput.Output("<font style='color:rgb(255,255,255);' class='debug-title'>[LOG]</font>:<font style='color:rgb(255,255,255);' class='debug-text'>\t\t"+message+"</font>");
 			}
 		}
 		// Writes output to the client.
 		public static void Warn(string message) {
-			if (console.debugging_mode>=0x100) {
-				console.Output("<font style='color:rgb(255,200,50);' class='debug-title'>[WARN]</font>:<font style='color:rgb(255,200,50);' class='debug-text'>\t\t"+message+"</font>");
+			if (ConsoleOutput.debugging_mode>=0x100) {
+				ConsoleOutput.Output("<font style='color:rgb(255,200,50);' class='debug-title'>[WARN]</font>:<font style='color:rgb(255,200,50);' class='debug-text'>\t\t"+message+"</font>");
 			}
 		}
 		// Writes output to the client.
 		public static void Error(string message) {
-			if (console.debugging_mode>=0x011) {
-				console.Output("<font style='color:red;' class='debug-title'>[ERROR]</font>:<font style='color:red;' class='debug-text'>\t\t"+message+"</font>");
-				if (!console.errored) {
-					console.errored=true;
+			if (ConsoleOutput.debugging_mode>=0x011) {
+				ConsoleOutput.Output("<font style='color:red;' class='debug-title'>[ERROR]</font>:<font style='color:red;' class='debug-text'>\t\t"+message+"</font>");
+				if (!ConsoleOutput.errored) {
+					ConsoleOutput.errored=true;
 				}
 			}
 		}
 		// Writes output to the client.
 		public static void Info(string message) {
-			if (console.debugging_mode>=0x110) {
-				console.Output("<font style='color:cyan;' class='debug-title'>[INFO]</font>:<font style='color:cyan;' class='debug-text'>\t"+message+"</font>");
+			if (ConsoleOutput.debugging_mode>=0x110) {
+				ConsoleOutput.Output("<font style='color:cyan;' class='debug-title'>[INFO]</font>:<font style='color:cyan;' class='debug-text'>\t"+message+"</font>");
 			}
 		}
 		// Writes output to the client.
 		public static void Success(string message) {
-			if (console.debugging_mode>=0x101) {
-				console.Output("<font style='color:rgb(100,255,100);' class='debug-title'>[SUCCESS]</font>:<font style='color:rgb(100,255,100);' class='debug-text'>\t"+message+"</font>");
+			if (ConsoleOutput.debugging_mode>=0x101) {
+				ConsoleOutput.Output("<font style='color:rgb(100,255,100);' class='debug-title'>[SUCCESS]</font>:<font style='color:rgb(100,255,100);' class='debug-text'>\t"+message+"</font>");
 			}
 		}
 		private static void Output(string q=null) {
-			if (console.enable_output) {
-				if (console.CheckValue(q)) {
-					string str="["+console.getTime()+"] "+q+"\n\t\t[<font style='color:rgb(255,50,150);'>"+console.GetCallingFunctionPath()+"</font>|"+console.GetCallingFunction()+" (line: <font style='color:rgb(200,150,0);'>"+console.GetCallingFunctionLineNumber()+"</font>)]\n";
-					str=console.HTMLEncode(str);
+			if (ConsoleOutput.enable_output) {
+				if (ConsoleOutput.CheckValue(q)) {
+					string str="["+ConsoleOutput.getTime()+"] "+q+"\n\t\t[<font style='color:rgb(255,50,150);'>"+ConsoleOutput.GetCallingFunctionPath()+"</font>|"+ConsoleOutput.GetCallingFunction()+" (line: <font style='color:rgb(200,150,0);'>"+ConsoleOutput.GetCallingFunctionLineNumber()+"</font>)]\n";
+					str=ConsoleOutput.HTMLEncode(str);
 					str="<div class=\"debug\">"+str+"</div>";
-					if (!console.PlacedStyle) {
+					if (!ConsoleOutput.PlacedStyle) {
 						str="<style>.debug{font-family:monospace !important;font-size:0.85em !important;background-color:rgba(0,0,0,0.85);color:#FFF;}.debug-title{font-weight:bolder;}.debug-text{font-weight:normal;}</style>"+str;
-						console.PlacedStyle=true;
+						ConsoleOutput.PlacedStyle=true;
 					}
-					if (console.mode==0x00) {
+					if (ConsoleOutput.mode==0x00) {
 						try{
 							//Default.StatusElm.Text+=str;
 							//console.Default_Instance.StatElm.Text+=str;
 						}catch{
 							try{
-								console.Default_Instance.StatElm.Text+=str;
+								ConsoleOutput.Default_Instance.StatElm.Text+=str;
 							}catch{
-								console.mode=0x01;
-								console.Output(q);
+								ConsoleOutput.mode=0x01;
+								ConsoleOutput.Output(q);
 							}
 						}
-					} else if (console.mode==0x01) {
+					} else if (ConsoleOutput.mode==0x01) {
 						try{
 							//resetPassword.StatusElm.Text+=str;
-							console.resetPassword_Instance.StatElm.Text+=str;
+							ConsoleOutput.resetPassword_Instance.StatElm.Text+=str;
 						}catch{
 							try{
-								console.resetPassword_Instance.StatElm.Text+=str;
+								ConsoleOutput.resetPassword_Instance.StatElm.Text+=str;
 							}catch{
-								console.mode=0x10;
-								console.Output(q);
+								ConsoleOutput.mode=0x10;
+								ConsoleOutput.Output(q);
 							}
 						}
-					} else if (console.mode==0x10) {
+					} else if (ConsoleOutput.mode==0x10) {
 						//console.resetPassword_Instance.StatElm.Text+="FAILED";
 						Event evt=new Event("AccountServicesWWW");
 						evt.Log("Testing log message");
@@ -166,29 +166,29 @@ namespace VLAB_AccountServices.services.assets.sys {
 		}
 		// Clears the console output.
 		public static void Clear() {
-			console.PlacedStyle=false;
-			if (console.mode==0x00) {
+			ConsoleOutput.PlacedStyle=false;
+			if (ConsoleOutput.mode==0x00) {
 				try{
 					Default.StatusElm.Text="";
 				}catch(Exception e){
 					try{
-						console.Default_Instance.StatElm.Text="";
+						ConsoleOutput.Default_Instance.StatElm.Text="";
 					}catch{
-						console.mode=0x01;
+						ConsoleOutput.mode=0x01;
 					}
 				}
-			} else if (console.mode==0x01) {
+			} else if (ConsoleOutput.mode==0x01) {
 				try{
 					resetPassword.StatusElm.Text="";
 				}catch(Exception e){
 					try{
-						console.resetPassword_Instance.StatElm.Text="";
+						ConsoleOutput.resetPassword_Instance.StatElm.Text="";
 					}catch{
-						console.mode=0x10;
+						ConsoleOutput.mode=0x10;
 					}
 				}
-			} else if (console.mode==0x10) {
-				console.resetPassword_Instance.StatElm.Text="";
+			} else if (ConsoleOutput.mode==0x10) {
+				ConsoleOutput.resetPassword_Instance.StatElm.Text="";
 				try{
 					// Write to IIS event logs.
 				}catch(Exception e){

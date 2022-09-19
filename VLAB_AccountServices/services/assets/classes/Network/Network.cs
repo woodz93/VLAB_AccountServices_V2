@@ -29,14 +29,14 @@ namespace VLAB_AccountServices.services.assets.classes.Network {
 							res=true;
 						}
 					}catch(Exception e){
-						console.Error("Failed to get the status of the ping test...\n\t\t"+e.Message);
+						ConsoleOutput.Error("Failed to get the status of the ping test...\n\t\t"+e.Message);
 					}
 				}catch(Exception e){
-					console.Error("Failed to send a ping request to the target IP/host...\n\t\t"+e.Message);
+					ConsoleOutput.Error("Failed to send a ping request to the target IP/host...\n\t\t"+e.Message);
 				}
 			}catch(Exception e){
 				//sys.error("Failed to reach \""+ip+"\"...\n"+e.Message);
-				console.Error("Failed to create a new instance of the Ping class...\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to create a new instance of the Ping class...\n\t\t"+e.Message);
 				res=false;
 			}
 			return res;
@@ -50,7 +50,7 @@ namespace VLAB_AccountServices.services.assets.classes.Network {
 			}catch(Exception e){
 				//sys.error("Failed to reach \""+ip+"\"...\n"+e.Message);
 				//res=false;
-				console.Error("Failed to determine if the target IP/host is reachable (Async)...\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to determine if the target IP/host is reachable (Async)...\n\t\t"+e.Message);
 			}
 		}
 		// Asynchronously pings a target IP/host to check if it can be reached.

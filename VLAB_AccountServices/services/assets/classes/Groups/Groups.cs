@@ -89,7 +89,7 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 						ins0.Send();
 						res=ins0.Results;
 					}catch(Exception ex){
-						console.Warn("Failed to query selection of group collection...\n\t\t"+ex.Message);
+						ConsoleOutput.Warn("Failed to query selection of group collection...\n\t\t"+ex.Message);
 					}
 					try{
 						// Removes the record from the database...
@@ -98,10 +98,10 @@ namespace VLAB_AccountServices.services.assets.classes.Groups {
 						ins1.AddWhere("id",id);
 						ins1.RemoveRecord(id);
 					}catch(Exception exc){
-						console.Warn("Failed to remove record with id of \""+id+"\"\n\t\t"+exc.Message);
+						ConsoleOutput.Warn("Failed to remove record with id of \""+id+"\"\n\t\t"+exc.Message);
 					}
 				}catch(Exception e){
-					console.Warn("Failed to query request for group collection...\n\t\t"+e.Message);
+					ConsoleOutput.Warn("Failed to query request for group collection...\n\t\t"+e.Message);
 				}
 			}
 			return res;

@@ -33,14 +33,14 @@ namespace VLAB_AccountServices.services.assets.sys {
 		public void ToObject() {
 			if (!String.IsNullOrEmpty(this.data)) {
 				if (this.obj == null) {
-					console.Info(this.data);
+					ConsoleOutput.Info(this.data);
 					try{
 						this.obj=JsonSerializer.Deserialize<Status>(this.data);
 						if (this.data.IndexOf("status\":true")!=-1) {
 							this.obj.status=true;
 						}
 					}catch(Exception e){
-						console.Error("Failed to deserialize JSON string.");
+						ConsoleOutput.Error("Failed to deserialize JSON string.");
 					}
 				}
 			}
@@ -52,7 +52,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 			if (this.obj!=null) {
 				if (this.CheckValue(this.obj.status)) {
 					//res=this.obj.status;
-					console.Info(this.obj.status.ToString());
+					ConsoleOutput.Info(this.obj.status.ToString());
 					if (this.obj.status==false) {
 						res=0x01;
 					} else if (this.obj.status==true) {

@@ -26,7 +26,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 					if (Element.CheckString(display_name)) {
 						Element.groupList.Add(display_name,name);
 					} else {
-						console.Error("Display name was not specified.");
+						ConsoleOutput.Error("Display name was not specified.");
 					}
 				}
 			}
@@ -42,7 +42,7 @@ namespace VLAB_AccountServices.services.assets.sys {
 					Element.group_element.Items.Add(item.Key);
 				}
 			} else {
-				console.Error("HTML group list element was not specified in the ini call to this class.");
+				ConsoleOutput.Error("HTML group list element was not specified in the ini call to this class.");
 			}
 		}
 		// Returns true if the string value is valid, false otherwise.

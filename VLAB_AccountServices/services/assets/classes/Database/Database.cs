@@ -106,7 +106,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				if (!Database.CheckValue(id)) {
 					if (!this.CheckColumnID()) {
 						p=false;
-						console.Error("Column ID is missing...");
+						ConsoleOutput.Error("Column ID is missing...");
 					} else {
 						id=this.pairs["id"];
 					}
@@ -115,7 +115,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					this.LastTime=Database.GetCurrentTimestamp();
 					res=await this.AsyncRecordRemoval(duration,id);
 				} else {
-					console.Error("Cannot remove record... Checks failed...");
+					ConsoleOutput.Error("Cannot remove record... Checks failed...");
 				}
 			}
 			return res;
@@ -192,7 +192,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				}
 				*/
 			} else {
-				console.Error("ID cannot be null for record deletion...\n\t\tID:\t\t\""+id+"\"");
+				ConsoleOutput.Error("ID cannot be null for record deletion...\n\t\tID:\t\t\""+id+"\"");
 			}
 			return res;
 		}
@@ -217,18 +217,18 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 									}
 								}
 							}catch(Exception e){
-								console.Error("Failed to execute SQL query...\n\t\t"+e.Message);
+								ConsoleOutput.Error("Failed to execute SQL query...\n\t\t"+e.Message);
 							}
 							con.Close();
 						}catch(Exception e){
-							console.Error("Failed to open a connection to the database...\n\t\t"+e.Message);
+							ConsoleOutput.Error("Failed to open a connection to the database...\n\t\t"+e.Message);
 						}
 					}catch(Exception ex){
-						console.Error("Failed to complete variable sanitation...\n\t\t"+ex.Message);
+						ConsoleOutput.Error("Failed to complete variable sanitation...\n\t\t"+ex.Message);
 					}
 				}
 			}catch(Exception e){
-				console.Error("Failed to initialize a database connection...\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to initialize a database connection...\n\t\t"+e.Message);
 			}
 			return res;
 		}
@@ -438,21 +438,21 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 											res=true;
 										}
 									}catch(Exception e){
-										console.Error("Failed to process SQL query... The database connection will be closed...\n"+e.Message+"\n\n"+sql);
+										ConsoleOutput.Error("Failed to process SQL query... The database connection will be closed...\n"+e.Message+"\n\n"+sql);
 									}
 									con.Close();
 								}catch(Exception e){
-									console.Error("Failed to open database connection...\n\t\t"+e.Message);
+									ConsoleOutput.Error("Failed to open database connection...\n\t\t"+e.Message);
 								}
 							}catch(Exception e){
-								console.Error("Failed to sanitize the id for SQL processing...\n"+e.Message);
+								ConsoleOutput.Error("Failed to sanitize the id for SQL processing...\n"+e.Message);
 							}
 						}catch(Exception e){
-							console.Error("Failed to process sql query...\n"+e.Message);
+							ConsoleOutput.Error("Failed to process sql query...\n"+e.Message);
 						}
 					}
 				}catch(Exception e){
-					console.Error("Failed to establish a connection to the database...\n"+e.Message);
+					ConsoleOutput.Error("Failed to establish a connection to the database...\n"+e.Message);
 				}
 			}
 			return res;
@@ -479,13 +479,13 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						res=this.RemoveRecord(this.pairs["id"]);
 					// Add more query conditions here...
 					} else {
-						console.Error("The provided database action to conduct is invalid, does not exist, or is missing required columns to be specified.");
+						ConsoleOutput.Error("The provided database action to conduct is invalid, does not exist, or is missing required columns to be specified.");
 					}
 				} else {
-					console.Error("An error is currently present that would prevent further database execution.");
+					ConsoleOutput.Error("An error is currently present that would prevent further database execution.");
 				}
 			} else {
-				console.Error("Provided query is invalid.");
+				ConsoleOutput.Error("Provided query is invalid.");
 			}
 			return res;
 		}
@@ -507,21 +507,21 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 										try{
 											len=cmd.ExecuteNonQuery();
 										}catch(Exception ex){
-											console.Error("Failed to process SQL query...\n\t\t"+ex.Message);
+											ConsoleOutput.Error("Failed to process SQL query...\n\t\t"+ex.Message);
 										}
 										con.Close();
 									}catch(Exception ex){
-										console.Error("Failed to open a connection to the database.\n\t\t"+ex.Message);
+										ConsoleOutput.Error("Failed to open a connection to the database.\n\t\t"+ex.Message);
 									}
 								}catch(Exception ex){
-									console.Error("Failed to prepare and sanitize input values.\n\t\t"+ex.Message);
+									ConsoleOutput.Error("Failed to prepare and sanitize input values.\n\t\t"+ex.Message);
 								}
 							}catch(Exception e){
-								console.Error("Failed to prepare SQL command.\n\t\t"+e.Message);
+								ConsoleOutput.Error("Failed to prepare SQL command.\n\t\t"+e.Message);
 							}
 						}
 					}catch(Exception e){
-						console.Error("Failed to establish a connection to the database.\n\t\t"+e.Message);
+						ConsoleOutput.Error("Failed to establish a connection to the database.\n\t\t"+e.Message);
 					}
 					if (len>0) {
 						res=true;
@@ -539,10 +539,10 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						}
 					}
 				} else {
-					console.Warn("Record does not exist.");
+					ConsoleOutput.Warn("Record does not exist.");
 				}
 			} else {
-				console.Error("The ID provided is invalid and cannot be used!");
+				ConsoleOutput.Error("The ID provided is invalid and cannot be used!");
 			}
 			return res;
 		}
@@ -617,7 +617,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					res=true;
 				}
 			}catch(Exception e){
-				console.Error("Failed to update record...\n"+e.Message);
+				ConsoleOutput.Error("Failed to update record...\n"+e.Message);
 			}
 			return res;
 		}
@@ -631,13 +631,13 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					try{
 						cmd.ExecuteNonQuery();
 					}catch(Exception ex){
-						console.Error("Failed to invoke AD application...\n\t\t"+ex.Message);
+						ConsoleOutput.Error("Failed to invoke AD application...\n\t\t"+ex.Message);
 					}
 					con.Close();																// Closes the database connection.
 				}
-				console.Success("Application successfully invoked.");
+				ConsoleOutput.Success("Application successfully invoked.");
 			}catch(Exception e){
-				console.Error("Failed to invoke application...\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to invoke application...\n\t\t"+e.Message);
 			}
 		}
 		// Clears the application debug output buffer.
@@ -746,18 +746,18 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 								this.Results=new Records(this.output);
 								res=true;
 							}catch(Exception e){
-								console.Error("Failed to process SQL query...\n\t\t"+e.Message);
+								ConsoleOutput.Error("Failed to process SQL query...\n\t\t"+e.Message);
 								con.Close();
 							}
 						}catch(Exception e){
-							console.Error("Failed to open database connection.\n\t\t"+e.Message);
+							ConsoleOutput.Error("Failed to open database connection.\n\t\t"+e.Message);
 						}
 					}catch(Exception ex){
-						console.Error("Failed to prepare sql command.\n\t\t"+ex.Message);
+						ConsoleOutput.Error("Failed to prepare sql command.\n\t\t"+ex.Message);
 					}
 				}
 			}catch(Exception e){
-				console.Error("Failed to establish database connection...\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to establish database connection...\n\t\t"+e.Message);
 			}
 			return res;
 		}
@@ -797,7 +797,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 						//console.Warn(sql);
 					}
 				}catch(Exception e){
-					console.Error("Failed to insert record into database...\n\t\t"+e.Message);
+					ConsoleOutput.Error("Failed to insert record into database...\n\t\t"+e.Message);
 				}
 				if (len>0) {
 					res=true;
@@ -841,7 +841,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					}
 				}
 			}catch(Exception e){
-				console.Error("Failed to check if ID exists in database.\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to check if ID exists in database.\n\t\t"+e.Message);
 			}
 			return res;
 		}
@@ -871,18 +871,18 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 		public void ShowColumns() {
 			int i=0;
 			int lim=this.cols.Count;
-			console.Success("START OF COLUMNS");
+			ConsoleOutput.Success("START OF COLUMNS");
 			while(i<lim){
-				console.Warn(this.cols[i]);
+				ConsoleOutput.Warn(this.cols[i]);
 				i++;
 			}
-			console.Success("END OF COLUMNS");
-			console.Success("START OF COLUMN VALUES");
+			ConsoleOutput.Success("END OF COLUMNS");
+			ConsoleOutput.Success("START OF COLUMN VALUES");
 			i=0;
 			foreach(var item in this.pairs) {
-				console.Warn("\""+item.Key+"\": \""+item.Value+"\"");
+				ConsoleOutput.Warn("\""+item.Key+"\": \""+item.Value+"\"");
 			}
-			console.Success("END OF COLUMN VALUES");
+			ConsoleOutput.Success("END OF COLUMN VALUES");
 		}
 		// Returns true if everything is needed in order to process the query, false otherwise.
 		private bool CheckQuery() {
@@ -905,16 +905,16 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 							res=true;
 						}
 					} else {
-						console.Error("No columns specified while attempting to insert new record.");
-						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
+						ConsoleOutput.Error("No columns specified while attempting to insert new record.");
+						ConsoleOutput.Warn("Number of columns present: \""+this.cols.Count+"\"");
 						this.ShowColumns();
 					}
 				} else if (this.action==DatabasePrincipal.ExistsPrincipal) {
 					if (this.cols.Count>0) {
 						res=true;
 					} else {
-						console.Error("No columns specified while attempting to check record existence.");
-						console.Warn("Number of columns present: \""+this.cols.Count+"\"");
+						ConsoleOutput.Error("No columns specified while attempting to check record existence.");
+						ConsoleOutput.Warn("Number of columns present: \""+this.cols.Count+"\"");
 						this.ShowColumns();
 					}
 				} else if (this.action==DatabasePrincipal.GenerateUniqueIDPrincipal) {
@@ -936,7 +936,7 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 					}
 				} // END OF ACTION CHECKS.
 			} else {
-				console.Error("No action was specified.");
+				ConsoleOutput.Error("No action was specified.");
 			}
 			return res;
 		}
@@ -957,22 +957,22 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 								if (!String.IsNullOrWhiteSpace(this.pairs[this.cols[sel]])) {
 									res=true;
 								} else {
-									console.Error("The column \""+this.cols[sel]+"\" value is null or consists of only whitespace.");
+									ConsoleOutput.Error("The column \""+this.cols[sel]+"\" value is null or consists of only whitespace.");
 								}
 							} else {
-								console.Error("The column \""+this.cols[sel]+"\" value is null or empty.");
+								ConsoleOutput.Error("The column \""+this.cols[sel]+"\" value is null or empty.");
 							}
 						} else {
-							console.Error("The column \""+this.cols[sel]+"\" was not prepared properly.");
+							ConsoleOutput.Error("The column \""+this.cols[sel]+"\" was not prepared properly.");
 						}
 					} else {
-						console.Error("No column was found...");
+						ConsoleOutput.Error("No column was found...");
 					}
 				} else {
-					console.Error("Specified column(s) are invalid or do not specify the record identification.");
+					ConsoleOutput.Error("Specified column(s) are invalid or do not specify the record identification.");
 				}
 			} else {
-				console.Error("No columns specified.");
+				ConsoleOutput.Error("No columns specified.");
 			}
 			return res;
 		}
@@ -1066,17 +1066,17 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 								this.pairs[column_name]=null;
 							}
 						}catch(Exception ex){
-							console.Warn("Failed to add column...\n\t\t"+ex.Message);
+							ConsoleOutput.Warn("Failed to add column...\n\t\t"+ex.Message);
 						}
 						res=true;
 					} else {
 						//console.Error("Column name already exists.\n\t\tColumn Name:\t\t\""+column_name+"\"");
 					}
 				} else {
-					console.Error("Column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
+					ConsoleOutput.Error("Column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
 				}
 			} else {
-				console.Error("Column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
+				ConsoleOutput.Error("Column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
 			}
 			return res;
 		}
@@ -1087,20 +1087,20 @@ namespace VLAB_AccountServices.services.assets.classes.Database {
 				try{
 					res=this.AddColumn(column_name);
 				}catch(Exception e){
-					console.Warn("Failed to add column from double param...\n\t\t"+e.Message);
+					ConsoleOutput.Warn("Failed to add column from double param...\n\t\t"+e.Message);
 				}
 				if (Database.CheckValue(value)&&res) {
 					try{
 						res=this.SetValue(column_name, value);
 					}catch(Exception e){
-						console.Warn("Failed to set column value...\n\t\t"+e.Message);
+						ConsoleOutput.Warn("Failed to set column value...\n\t\t"+e.Message);
 					}
 					//console.Success("Column added...");
 				} else {
 					//console.Error("Failed to create column... Column name failed to pass validation...\n\t\tColumn Name:\t\t\""+column_name+"\"");
 				}
 			} else {
-				console.Error("Specified column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
+				ConsoleOutput.Error("Specified column name is invalid.\n\t\tColumn Name:\t\t\""+column_name+"\"");
 			}
 			return res;
 		}

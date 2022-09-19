@@ -36,7 +36,7 @@ namespace VLAB_AccountServices.services.assets.classes.UserInfo
 				}
 				catch(Exception e)
 				{
-					console.Error("Failed to deserialize the data object.\n\t\t"+e.Message);
+					ConsoleOutput.Error("Failed to deserialize the data object.\n\t\t"+e.Message);
 				}
 		}
 		// Initializes all required items.
@@ -76,7 +76,7 @@ namespace VLAB_AccountServices.services.assets.classes.UserInfo
 				}
 				catch(Exception e)
 				{
-					console.Error("Unable to parse data object string...\n\t\t"+e.Message);
+					ConsoleOutput.Error("Unable to parse data object string...\n\t\t"+e.Message);
 				}
 			}
 		}

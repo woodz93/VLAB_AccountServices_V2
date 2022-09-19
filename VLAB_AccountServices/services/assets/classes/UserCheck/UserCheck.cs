@@ -437,21 +437,21 @@ namespace VLAB_AccountServices
 								if(array.Count()>0)
 									value=array;
 								else
-									console.Warn("Array does not contain anything...");
+									ConsoleOutput.Warn("Array does not contain anything...");
 							}
 							else
-								console.Warn("Session does not contain the key\n\t\t"+key);
+								ConsoleOutput.Warn("Session does not contain the key\n\t\t"+key);
 						else
-							console.Warn("Session assertion is null");
+							ConsoleOutput.Warn("Session assertion is null");
 					}
 					else
 						value=GetAttribute(key);
 				else
-					console.Warn("Key failed validation");
+					ConsoleOutput.Warn("Key failed validation");
 			}
 			catch(Exception e)
 			{
-				console.Error("Failed to get user information from CAS principal...\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to get user information from CAS principal...\n\t\t"+e.Message);
 			}
 			return value;
 		}
@@ -480,7 +480,7 @@ namespace VLAB_AccountServices
 			}
 			catch(Exception e)
 			{
-				console.Error("Failed to get user information from CAS principal...\n\t\t"+e.Message);
+				ConsoleOutput.Error("Failed to get user information from CAS principal...\n\t\t"+e.Message);
 			}
 			return res;
 		}
@@ -528,7 +528,7 @@ namespace VLAB_AccountServices
 			if(!String.IsNullOrEmpty(username))
 			{
 				string data = "{\"cmd\":\"check-user\",\"username\":\""+username+"\"}";
-				console.Log("Creating a new database class instance...");
+				ConsoleOutput.Log("Creating a new database class instance...");
 				Database ins = new Database();
 				string id = ins.GetUniqueID();
 				ID=id;
@@ -548,10 +548,10 @@ namespace VLAB_AccountServices
 				else if(tmp.Contains("status\":false"))
 					res=0x10;
 				else
-					console.Error("An error has occurred while attempting to check if the username exists on the system...");
+					ConsoleOutput.Error("An error has occurred while attempting to check if the username exists on the system...");
 			}
 			else
-				console.Error("The username provided is invalid.");
+				ConsoleOutput.Error("The username provided is invalid.");
 			return res;
 		}
 		/// <summary>
