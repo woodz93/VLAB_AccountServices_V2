@@ -137,27 +137,23 @@ namespace VLAB_AccountServices.services
 				}
 			}
 		}
-
-		// Performs initialization of user checks.
-		protected void InitializeClientVariables() {
-			UC=new UserCheck();			
-			user_type_element.Text=UC.GetRole();
-			UserDataObject obj = new UserDataObject
-			{
-				Username=UC.GetUsername(),
-				Role=UC.GetRole(),
-				Email=UC.GetEmail(),
-				Campus=UC.GetCampus(),
-				Exists=UC.Exists()
-			};
-			string data=JsonSerializer.Serialize<UserDataObject>(obj);
-			server_data_element.Text=data;
-		}
-
-
+		
 		// Prepares the page for use.
 		protected void Page_Load(object sender, EventArgs e) {
-			this.InitializeClientVariables();
+
+			UC = new UserCheck();
+			user_type_element.Text = UC.GetRole();
+			UserDataObject obj = new UserDataObject
+			{
+				Username = UC.GetUsername(),
+				Role = UC.GetRole(),
+				Email = UC.GetEmail(),
+				Campus = UC.GetCampus(),
+				Exists = UC.Exists()
+			};
+			string data = JsonSerializer.Serialize<UserDataObject>(obj);
+			server_data_element.Text = data;
+
 			StatusElm = status;
 			this.StatElm = status;
 			ConsoleOutput.ini_complete = false;
