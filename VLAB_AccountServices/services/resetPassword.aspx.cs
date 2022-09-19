@@ -65,14 +65,7 @@ namespace VLAB_AccountServices.services
 			password.Enabled=false;
 			password_confirm.Enabled=false;
 		}
-		// Returns the ending string for the user/client to see.
-		public void EndingSuccess() {
-			status.Text="Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + ending;
-			//submit_btn.Enabled=false;
-			this.DisableSubmitButton();
-			password.Enabled=false;
-			password_confirm.Enabled=false;
-		}
+		
 		// Performs a redirect action.
 		protected void WarnAndRedirect() {
 			if (this.mode==0x00) {
@@ -374,7 +367,11 @@ namespace VLAB_AccountServices.services
 							data="{\"cmd\":\"" + this.ModeString + "\",\"username\":\"" + this.UsernameString + "\",\"password\":\"" + this.PasswordString + "\""+ot+"}";
 							ConsoleOutput.Info("Preparing to send regulated command.");
 							this.queryRequest(data);
-							this.EndingSuccess();
+							status.Text = "Your request has been submitted and is currently being processed.<br>If you are unable to access your VDI account, please contact us via the options provided below...<br><br>" + ending;
+							//submit_btn.Enabled=false;
+							this.DisableSubmitButton();
+							password.Enabled = false;
+							password_confirm.Enabled = false;
 						} else {
 							password.Text=this.sqlParse(this.PasswordString);
 							password_confirm.Text=this.sqlParse(this.PasswordString);
