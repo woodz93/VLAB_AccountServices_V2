@@ -507,7 +507,7 @@ namespace VLAB_AccountServices.services
 			if (this.pass) {
 				if (System.Web.HttpContext.Current.Session["data"] != null){
 					if (AD.isset(this.obj,"cmd")) {
-						if (this.CheckString(this.obj.cmd)) {
+						if(!String.IsNullOrEmpty(obj.cmd)) {
 							if (AD.isset(this.obj,"username")) {
 								if (this.CheckString(this.obj.username)) {
 									username.Text=this.obj.username;
