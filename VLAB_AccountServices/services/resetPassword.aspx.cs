@@ -1,6 +1,5 @@
 ﻿using DotNetCasClient;
 using DotNetCasClient.Security;
-using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -15,7 +14,7 @@ using VLAB_AccountServices.services.assets.classes.Str;
 using VLAB_AccountServices.services.assets.sys;
 namespace VLAB_AccountServices.services
 {
-	public partial class resetPassword : System.Web.UI.Page {
+    public partial class resetPassword : System.Web.UI.Page {
 		protected byte mode=0x00;
 		protected static string db="UHMC_VLab";
 		protected static string tb="vlab_pendingusers";
@@ -193,21 +192,6 @@ namespace VLAB_AccountServices.services
 			}
 		}
 
-		private void DispPOST() {
-			int i=0;
-			while(i<Request.Form.Count){
-				console.Log("Key: "+Request.Form.GetKey(i));
-				console.Log("Item: "+Request.Form[i].ToString());
-				i++;
-			}
-		}
-
-		// Sets the connection timeout settings...
-		protected void SetConnectionTimeout() {
-			GlobalHost.Configuration.ConnectionTimeout=TimeSpan.FromSeconds(110);
-			GlobalHost.Configuration.DisconnectTimeout=TimeSpan.FromSeconds(30);
-			GlobalHost.Configuration.KeepAlive=TimeSpan.FromSeconds(10);
-		}
 		// Performs initialization of user checks.
 		protected void InitialChecks() {
 			UC=new UserCheck();
@@ -370,20 +354,6 @@ namespace VLAB_AccountServices.services
 				}
 				//Response.Redirect("resetPassword.aspx");
 			}
-		}
-		/// <summary>
-		/// Outputs any messages to the client upon form processing completion.
-		/// </summary>
-		private void FinalFormOutput()
-		{
-			SMCElement.Visible=true;
-			SMCAlert.Visible=true;
-			SMCElement.Attributes.Add("show","true");
-		}
-
-		public void Logout(object sender = null,EventArgs args = null)
-		{
-			UC.Logout();
 		}
 
 		// Performs poast-back action.
@@ -769,27 +739,7 @@ namespace VLAB_AccountServices.services
 				console.Error("Failed to set status element.\n\t\t"+ex.Message);
 			}
 		}
-		// Enables the form element.
-		public void EnableForm() {
-			submit_btn.Enabled=true;
-		}
-		// Collects grouping information.
-		private void GetGroupings() {
-			Element.SetGroupElement(GroupsElement);
-		}
-		// Performs a debugging operation.
-		private void Debug(User obj) {
-			//string str="{\"cmd\":\"add-group\",\"username\":\""+obj.username+"\",\"GroupsElement\":[\"VD-VLAB4\"]}";
-			//this.queryRequest(str);
-			/*
-			Database ins=new Database();
-			ins.SetAction(DatabasePrincipal.InsertPrincipal);
-			ins.AddColumn("id",this.id);
-			ins.AddColumn("data",str);
-			ins.Send();
-			*/
-			console.Warn("Sending debug request...");
-		}
+
 		// Returns true if the session variable exists.
 		protected bool post_isset(string key) {
 			bool res=false;
