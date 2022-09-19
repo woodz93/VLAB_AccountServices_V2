@@ -180,6 +180,15 @@ namespace VLAB_AccountServices.services
 			if (this.UC.IsChecked()) {
 				bool pcheck=true;
 				try{
+
+					if (UC.GetUsername().Trim().Length == 0)
+					{
+						sys.error("No username found.");
+						ConsoleOutput.Error("Username is missing.");
+						this.pass = false;
+						this.WarnAndRedirect();
+					}
+
 					this.UsernameString=this.UC.GetUsername();										// Gets and stores the CAS/UH username.
 					username.Text=this.UsernameString;												// Sets the username input element value to the UH username collected from the CAS system.
 				}catch(Exception ex){
@@ -189,7 +198,7 @@ namespace VLAB_AccountServices.services
 				if (Session.Count>0 && pcheck) {
 					this.GetSessionData();
 					if (this.pass) {
-						if (this.ValidateUsername()) {
+						//if (this.ValidateUsername()) {
 							this.ProcessSessionData();				// Sets all elements from session data (Used before submitting the form).
 							if (IsPostBack) {
 								ConsoleOutput.Log(GroupsElement.Items.Count.ToString());
@@ -197,7 +206,7 @@ namespace VLAB_AccountServices.services
 								this.ProcessPostBack();				// Processes the submitted form data.
 								//this.AsyncGetUGroups();
 								Response.Redirect("resetPassword.aspx");
-							}
+						//	}
 						}
 					} else {
 						ConsoleOutput.Error("Failed to pass previous check (CHECK CONDUCTED BEFORE USERNAME CHECKING)");
@@ -551,22 +560,24 @@ namespace VLAB_AccountServices.services
 			submit_btn.Text="[DISABLED]";
 			submit_btn.Enabled=false;
 		}
-		// Prepares and validates the username.
-		private bool ValidateUsername() {
-			bool res=true;
-			if (!String.IsNullOrEmpty(this.UsernameString)) {
-				if (!(this.UsernameString.Length>0)) {
-					sys.error("No username found.");
-					ConsoleOutput.Error("Username is missing.");
-					this.pass=false;
-					res=false;
-					this.WarnAndRedirect();
-				}
-			} else {
-				Response.Redirect("resetpassword.aspx");
-			}
-			return res;
-		}
+		
+		// Prepares and validates the username. returns true to proceed
+		//private bool ValidateUsername() {
+		//	bool res=true;
+		//	if (!String.IsNullOrEmpty(this.UsernameString)) {
+		//		if (!(this.UsernameString.Length>0)) {
+		//			sys.error("No username found.");
+		//			ConsoleOutput.Error("Username is missing.");
+		//			this.pass=false;
+		//			res=false;
+		//			this.WarnAndRedirect();
+		//		}
+		//	} else {
+		//		Response.Redirect("resetpassword.aspx");
+		//	}
+		//	return res;
+		//}
+
 		// Gets the session data.
 		private void GetSessionData() {
 			string d="{}";
