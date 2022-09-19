@@ -77,28 +77,7 @@ namespace VLAB_AccountServices.services
 				status.Text+=sys.buffer;
 			}
 		}
-		// Performs a first-time initialization of all variables and data.
-		protected void Initialize() {
-			this.InitializeClientVariables();
-			StatusElm=status;
-			this.StatElm=status;
-			ConsoleOutput.ini_complete=false;
-			ConsoleOutput.ini(this);
-			ConsoleOutput.errored=false;
-			this.SetConnectionString();
-			ConsoleOutput.Clear();
-			ConsoleOutput.Info("Initialization complete...");
-			if (Request.Form.Count>0) {
-				if (!SentHelpRequest) {
-					this.ProcessHelpRequest();
-				}
-			} else {
-				ConsoleOutput.Info("Preparing HTML elements...");
-				this.SetElements();
-				ConsoleOutput.Info("HTML element processing completed.");
-			}
-			this.ProcInfoElements();			
-		}
+		
 		// Processes the info data and sets the value of the info elements.
 		private void ProcInfoElements() {
 			try{
@@ -178,7 +157,29 @@ namespace VLAB_AccountServices.services
 
 		// Prepares the page for use.
 		protected void Page_Load(object sender, EventArgs e) {
-			this.Initialize();
+			this.InitializeClientVariables();
+			StatusElm = status;
+			this.StatElm = status;
+			ConsoleOutput.ini_complete = false;
+			ConsoleOutput.ini(this);
+			ConsoleOutput.errored = false;
+			this.SetConnectionString();
+			ConsoleOutput.Clear();
+			ConsoleOutput.Info("Initialization complete...");
+			if (Request.Form.Count > 0)
+			{
+				if (!SentHelpRequest)
+				{
+					this.ProcessHelpRequest();
+				}
+			}
+			else
+			{
+				ConsoleOutput.Info("Preparing HTML elements...");
+				this.SetElements();
+				ConsoleOutput.Info("HTML element processing completed.");
+			}
+			this.ProcInfoElements();
 			this.obj=new User();
 			if (this.UC.IsChecked()) {
 				bool pcheck=true;
