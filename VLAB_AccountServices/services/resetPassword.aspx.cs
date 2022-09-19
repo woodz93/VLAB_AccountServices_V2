@@ -76,19 +76,7 @@ namespace VLAB_AccountServices.services
 				ConsoleOutput.Warn("Mode is set to debugging.");
 				status.Text+=sys.buffer;
 			}
-		}
-		
-		// Processes the info data and sets the value of the info elements.
-		private void ProcInfoElements() {
-			try{
-				info_fname.Text=this.UC.GetFirstName();
-				info_lname.Text=this.UC.GetLastName();
-				info_uhid.Text=this.UC.GetUHID();
-				info_email.Text=this.UC.GetEmail();
-			}catch(Exception e){
-				ConsoleOutput.Error("Failed to process user information...\n\t\t"+e.Message);
-			}
-		}
+		}			
 
 		private void ProcessHelpRequest() {
 			ConsoleOutput.Info("Processing help request...");
@@ -175,7 +163,19 @@ namespace VLAB_AccountServices.services
 				this.SetElements();
 				ConsoleOutput.Info("HTML element processing completed.");
 			}
-			this.ProcInfoElements();
+
+			try
+			{
+				info_fname.Text = this.UC.GetFirstName();
+				info_lname.Text = this.UC.GetLastName();
+				info_uhid.Text = this.UC.GetUHID();
+				info_email.Text = this.UC.GetEmail();
+			}
+			catch (Exception err)
+			{
+				ConsoleOutput.Error("Failed to process user information...\n\t\t" + err.Message);
+			}
+
 			this.obj=new User();
 			if (this.UC.IsChecked()) {
 				bool pcheck=true;
