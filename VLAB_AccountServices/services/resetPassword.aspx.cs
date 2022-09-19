@@ -488,19 +488,7 @@ namespace VLAB_AccountServices.services
 			string sty="table,table tr{border:2px solid #000;}";
 			res="<style>"+sty+"</style><br><center><h1>Client Information:</h1><br><table style=\"border:2px solid #000;background-color:rgb(50,50,50);color:#FFF;text-align:left;\"><tr><th style=\"background-color:rgb(50,50,50) !important;\">Field</th><th style=\"background-color:rgb(50,50,50) !important;\">Value</th></tr>"+res+"</table><br><font style=\"color:red;text-align:left;\">FOR IT PERSONNEL ONLY!</font></center><br><br>";
 			return res;
-		}
-		// Checks object for valid username.
-		private bool CheckString(string q=null) {
-			bool res=false;
-			if (!String.IsNullOrEmpty(q)) {
-				if (!String.IsNullOrWhiteSpace(q)) {
-					if (q.Length>2) {
-						res=true;
-					}
-				}
-			}
-			return res;
-		}
+		}		
 		// Processes session data.
 		private void ProcessSessionData() {
 			console.Log("Processing session data.");
@@ -509,7 +497,7 @@ namespace VLAB_AccountServices.services
 					if (AD.isset(this.obj,"cmd")) {
 						if(!String.IsNullOrEmpty(obj.cmd)) {
 							if (AD.isset(this.obj,"username")) {
-								if (this.CheckString(this.obj.username)) {
+								if (obj.username.Trim().Length != 0){
 									username.Text=this.obj.username;
 									username.Enabled=false;
 									this.UsernameString=this.obj.username;
