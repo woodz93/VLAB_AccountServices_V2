@@ -509,7 +509,7 @@ namespace VLAB_AccountServices.services
 		private void ProcessSessionData() {
 			console.Log("Processing session data.");
 			if (this.pass) {
-				if (this.post_isset("data")) {
+				if (System.Web.HttpContext.Current.Session["data"] != null){
 					if (AD.isset(this.obj,"cmd")) {
 						if (this.CheckString(this.obj.cmd)) {
 							if (AD.isset(this.obj,"username")) {
@@ -714,15 +714,7 @@ namespace VLAB_AccountServices.services
 				console.Error("Failed to set status element.\n\t\t"+ex.Message);
 			}
 		}
-
-		// Returns true if the session variable exists.
-		protected bool post_isset(string key) {
-			bool res=false;
-			if (System.Web.HttpContext.Current.Session[key]!=null) {
-				res=true;
-			}
-			return res;
-		}
+				
 		// Sends a request query to the database and waits for a response.
 		protected void queryRequest(string q="") {
 			if (q.Length > 0) {
