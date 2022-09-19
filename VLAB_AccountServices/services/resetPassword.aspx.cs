@@ -87,7 +87,7 @@ namespace VLAB_AccountServices.services
 		}
 		// Performs a first-time initialization of all variables and data.
 		protected void Initialize() {
-			this.InitialChecks();
+			this.InitializeClientVariables();
 			resetPassword.StatusElm=status;
 			this.StatElm=status;
 			console.ini_complete=false;
@@ -168,12 +168,8 @@ namespace VLAB_AccountServices.services
 		}
 
 		// Performs initialization of user checks.
-		protected void InitialChecks() {
-			UC=new UserCheck();
-			SetupClientVariables();
-		}
-		protected void SetupClientVariables()
-		{
+		protected void InitializeClientVariables() {
+			UC=new UserCheck();			
 			user_type_element.Text=UC.GetRole();
 			UserDataObject obj = new UserDataObject
 			{
