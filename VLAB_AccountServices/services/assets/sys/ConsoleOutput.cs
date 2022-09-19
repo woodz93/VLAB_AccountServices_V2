@@ -138,28 +138,15 @@ namespace VLAB_AccountServices.services.assets.sys {
 		// Returns an encoded HTML string.
 		private static string HTMLEncode(string q=null) {
 			if (!String.IsNullOrEmpty(q)) {
-				if (!String.IsNullOrWhiteSpace(q)) {
-					if (q.Length>0) {
+				if (q.Trim().Length > 0) {					
 						Dictionary<string,string>list=new Dictionary<string,string>();
 						list.Add("[\t]+","&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-						//list.Add("[\t]+","&#9;");
 						list.Add("(\n\r\f|\r\n\f|\f\r\n|\f\n\r|\n\r|\r\n)","<br>");
-						list.Add("[\n]+","<br>");
-						//list.Add("[\"]+","&quot;");
-						//list.Add("[<]+","&lt;");
-						//list.Add("[>]+","&gt;");
 						foreach(var item in list){
-							//Regex reg=new Regex(item.Key);
 							if (Regex.IsMatch(q,item.Key)) {
 								q=Regex.Replace(q,item.Key,item.Value);
 							}
-							/*
-							if (q.IndexOf(item.Key)!=-1) {
-								q.Replace(item.Key,item.Value);
-							}
-							*/
-						}
-					}
+						}					
 				}
 			}
 			return q;
