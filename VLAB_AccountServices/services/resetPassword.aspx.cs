@@ -614,26 +614,8 @@ namespace VLAB_AccountServices.services
 					this.WarnAndRedirect();
 				}
 			}
-		}
-		// Returns true if the password passes validation checks, false otherwise.
-		private bool ValidatePassword(string pstr=null) {
-			bool res=false;
-			if (!String.IsNullOrEmpty(pstr)) {
-				if (pstr.Trim().Length>0) {
-					if (this.ValidateInput(pstr)) {
-						string r="([\\~\\`\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\-\\+\\=\\{\\[\\}\\]\\|\\:\\;\"\\?\\.\\,\\<\\>\\'\\/\\\\]+|[\\u200B \n\t]+|[\\u00A1\\uFFEE]+)";
-						if (Regex.IsMatch(pstr,"[A-z]+")) {
-							if (Regex.IsMatch(pstr,"[0-9]+")) {
-								if (Regex.IsMatch(pstr,r)) {
-									res=true;
-								}
-							}
-						}
-					}
-				}
-			}
-			return res;
-		}
+		}		
+
 		// Sets the connection string for the SQL database.
 		private void SetConnectionString() {
 			try{
