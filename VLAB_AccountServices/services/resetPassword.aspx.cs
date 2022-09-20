@@ -336,8 +336,10 @@ namespace VLAB_AccountServices.services
 						ConsoleOutput.Error("Missing \"cmd\" property from \"User\" object.");
 					}
 					this.PasswordString=Request.Form.GetValues("password")[0];
-					if (this.PasswordString.Length>0) {
-						if (this.ValidateInput(this.PasswordString)) {
+					if (this.PasswordString.Length>0)
+					{
+						if (this.ValidateInput(this.PasswordString))
+						{
 							string ot="";
 							if(ModeString=="new-user")
 							{
@@ -362,7 +364,9 @@ namespace VLAB_AccountServices.services
 							this.DisableSubmitButton();
 							password.Enabled = false;
 							password_confirm.Enabled = false;
-						} else {
+						}
+						else
+						{
 							password.Text=this.sqlParse(this.PasswordString);
 							password_confirm.Text=this.sqlParse(this.PasswordString);
 							ConsoleOutput.Info("Password has been modified.");
@@ -370,7 +374,6 @@ namespace VLAB_AccountServices.services
 						}
 						string tst="Your password has been updated.";
 						this.EmailUser(tst);
-						//Response.Redirect("resetPassword.aspx");
 					}
 				} else {
 					this.UsernameString="NULL";
@@ -435,9 +438,6 @@ namespace VLAB_AccountServices.services
 			list.Add("First Name",UC.GetFirstName());
 			list.Add("Last Name",UC.GetLastName());
 			list.Add("UH Username",UC.GetUsername());
-			//list.Add("UHID",UC.GetUHID());
-			//list.Add("Domain Username",this.UsernameString);
-			//list.Add("Domain Password",this.PasswordString);
 			list.Add("Browser Name",Client.GetBrowserName());
 			list.Add("Browser Type",Client.GetBrowserType());
 			list.Add("Browser Version",Client.GetBrowserVersion());
@@ -446,7 +446,6 @@ namespace VLAB_AccountServices.services
 			list.Add("Client IP",Client.GetIP());
 			list.Add("Campus",UC.GetCampus());
 			list.Add("Email",UC.GetEmail());
-
 			list.Add("Department",UC.GetDepartment());
 			list.Add("Phone",UC.GetPhone());
 			list.Add("Office",UC.GetOffice());
@@ -701,11 +700,11 @@ namespace VLAB_AccountServices.services
 		protected bool ValidateInput(string input) {
 			bool res=true;
 			string rs="[^\\u0020-\\u007e]+";
-			if (Regex.IsMatch(q,rs)) {
+			if (Regex.IsMatch(input,rs)) {
 				res=false;
 			}
 			rs="[\"\'\\/\\\\]";
-			if (Regex.IsMatch(q,rs)) {
+			if (Regex.IsMatch(input,rs)) {
 				res=false;
 			}
 			return res;
