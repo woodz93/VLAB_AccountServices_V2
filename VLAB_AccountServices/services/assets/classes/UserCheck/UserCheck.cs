@@ -86,20 +86,9 @@ namespace VLAB_AccountServices
 		{
 			UserCheck._Active=false;
 			Session.Clear();
-			//if(CasAuthentication.ServiceTicketManager.ContainsTicket(ServiceTicketName))
-			//{
-			//	CasAuthentication.ServiceTicketManager.RevokeTicket(ServiceTicketName);
-			//	AT=null;
-			//}
-			//Session.Abandon();
-			//CAS_Principal
-			//Response.Redirect("https://vlab.accountservices.maui.hawaii.edu");
 			CasAuthentication.SingleSignOut();
-			//CasAuthentication.ClearAuthCookie();
-			//Response.Redirect("https://cas-test.its.hawaii.edu/cas/logout");
-			//Response.Redirect("https://authn.hawaii.edu/cas/logout?https://vlab.accountservices.maui.hawaii.edu");
-			//Session.Abandon();
 		}
+
 		/// <summary>
 		/// Checks if the current CAS session is still valid.
 		/// </summary>
