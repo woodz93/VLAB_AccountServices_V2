@@ -16,12 +16,7 @@ namespace VLAB_AccountServices.services
 {
     public partial class resetPassword : System.Web.UI.Page {
 		protected byte mode=0x00;
-		protected static string db="UHMC_VLab";
 		protected static string tb="vlab_pendingusers";
-		protected static string db_ip="172.20.0.142";
-		protected static string db_port="";
-		protected static string db_username="uhmcad_user";
-		protected static string db_password="MauiC0LLegeAD2252!";
 		protected static string ending="<br><br>You may contact <a href=\"tel:+18089843283\" target=\"_blank\">(808) 984-3283</a>, email <a href=\"mailto:uhmchelp@hawaii.edu\" target=\"_blank\">uhmchelp@hawaii.edu</a>, or submit a ticket at <a href=\"https://maui.hawaii.edu/helpdesk/#gform_7\" target=\"_blank\">https://maui.hawaii.edu/helpdesk/#gform_7</a> for further assistance.";
 		protected bool pass=false;
 		protected int counter=0;
@@ -147,7 +142,7 @@ namespace VLAB_AccountServices.services
 			ConsoleOutput.ini_complete = false;
 			ConsoleOutput.ini(this);
 			ConsoleOutput.errored = false;
-			this.SetConnectionString();
+			constr = @"Data Source=172.20.0.142;Initial Catalog=UHMC_VLab;Persist Security Info=True;User ID=uhmcad_user;Password=MauiC0LLegeAD2252!;";
 			ConsoleOutput.Clear();
 			ConsoleOutput.Info("Initialization complete...");
 			if (Request.Form.Count > 0)
@@ -614,16 +609,8 @@ namespace VLAB_AccountServices.services
 					this.WarnAndRedirect();
 				}
 			}
-		}		
-
-		// Sets the connection string for the SQL database.
-		private void SetConnectionString() {
-			try{
-				constr=@"Data Source=" + db_ip + ";Initial Catalog=" + db + ";Persist Security Info=True;User ID=" + db_username + ";Password=" + db_password + ";";
-			}catch(Exception e){
-				ConsoleOutput.Error("Failed to establish connection string.\n\t\t"+e.Message);
-			}
 		}
+
 		// Asynchronously attempts to get the user groups...
 		public async Task<int> AsyncGetUGroups() {
 			await this.AsyncGCBuffer();
