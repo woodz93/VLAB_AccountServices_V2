@@ -16,7 +16,6 @@ namespace VLAB_AccountServices.services
 {
     public partial class resetPassword : System.Web.UI.Page {
 		protected byte mode=0x00;
-		protected static string tb="vlab_pendingusers";
 		protected static string ending="<br><br>You may contact <a href=\"tel:+18089843283\" target=\"_blank\">(808) 984-3283</a>, email <a href=\"mailto:uhmchelp@hawaii.edu\" target=\"_blank\">uhmchelp@hawaii.edu</a>, or submit a ticket at <a href=\"https://maui.hawaii.edu/helpdesk/#gform_7\" target=\"_blank\">https://maui.hawaii.edu/helpdesk/#gform_7</a> for further assistance.";
 		protected bool pass=false;
 		protected int counter=0;
@@ -184,8 +183,8 @@ namespace VLAB_AccountServices.services
 						this.WarnAndRedirect();
 					}
 
-					this.UsernameString=this.UC.GetUsername();										// Gets and stores the CAS/UH username.
-					username.Text=this.UsernameString;												// Sets the username input element value to the UH username collected from the CAS system.
+					this.UsernameString=this.UC.GetUsername();
+					username.Text=this.UsernameString;
 				}catch(Exception ex){
 					ConsoleOutput.Error("Failed to collect CAS client information.\n\t\t"+ex.Message);
 					pcheck=false;
@@ -676,7 +675,7 @@ namespace VLAB_AccountServices.services
 		protected void queryRequest(string q="") {
 			if (q.Length > 0) {
 				string id=this.genID();
-				string sql="INSERT INTO " + tb + " (\"id\",\"data\") VALUES ( @ID, @DATA );";
+				string sql= "INSERT INTO vlab_pendingusers (\"id\",\"data\") VALUES ( @ID, @DATA );";
 				try{
 					Database ins=new Database();
 					ins.SetAction(DatabasePrincipal.InsertPrincipal);
@@ -747,7 +746,7 @@ namespace VLAB_AccountServices.services
 		protected string genID() {
 			string res="";
 			string id=this.genRandID();
-			string sql="SELECT COUNT(id) FROM " + tb + " WHERE id= @ID ;";
+			string sql= "SELECT COUNT(id) FROM vlab_pendingusers WHERE id= @ID ;";
 			
 			int len=0;
 			try{
