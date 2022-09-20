@@ -139,7 +139,7 @@
 				</div>
 				<br>
 				<!-- Form submission button -->
-				<asp:button id="submit_btn" CssClass="submit_btn btn btn-outline-primary btn-lg center-h submit_button hidden" name="submit_btn" Text="[ERROR]" Onclick="processPassword" runat="server" type="submit" CausesValidation="true"></asp:button>
+				<asp:button id="submit_btn" CssClass="submit_btn btn btn-outline-primary btn-lg center-h submit_button hidden" name="submit_btn" Text="[ERROR]" Onclick="Submit_btn_Click" runat="server" type="submit" CausesValidation="true"></asp:button>
 				<br>
 				<!-- Below contains the element used for the post-submission response message (The message that informs the user where to go afterwards to access their virtual desktop) -->
 				<asp:Panel ID="SMCElement" CssClass="container footer" runat="server" Visible="true">
