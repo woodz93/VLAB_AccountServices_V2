@@ -66,7 +66,7 @@ namespace VLAB_AccountServices
 						{
 							//console.Log(c.ToString());
 							string json = "{\"id\":\""+ID+"\",\"cmd\":\""+cmd+"\",\"username\":\""+un+"\"}";
-							ClearSession();
+							Session.Clear();
 							SetSession("data",json);
 							_IsChecked=true;
 						}
@@ -114,13 +114,7 @@ namespace VLAB_AccountServices
 							res=true;
 			return res;
 		}
-
-
-		// Clears the session.
-		public void ClearSession()
-		{
-			Session.Clear();
-		}
+						
 		// Sets the session variable.
 		public void SetSession(string key = null,string value = null)
 		{
@@ -135,6 +129,48 @@ namespace VLAB_AccountServices
 						Session[key]=value;
 					}
 		}
+
+
+		private static string GetAttribute1(ICasPrincipal sessionPrincipal, string key)
+        {
+            string value = "";
+            if (sessionPrincipal != null)
+            {
+                IAssertion sessionAssertion = sessionPrincipal.Assertion;
+                if (sessionAssertion != null)
+                {
+                    if (sessionAssertion.Attributes.ContainsKey(key))
+                    {
+                        string[] array = sessionAssertion.Attributes[key].ToArray();
+                        if (array.Count() > 0)
+                        {
+                            value = array[0];
+                        }
+                    }
+                }
+            }
+            return value;
+        }
+
+        private static List<string> GetAttributeList1(ICasPrincipal sessionPrincipal, string key)
+        {
+			List<string> list = null;
+			if (sessionPrincipal != null)
+		    {
+				IAssertion sessionAssertion = sessionPrincipal.Assertion;
+		        if (sessionAssertion != null)
+				{
+					if (sessionAssertion.Attributes.ContainsKey(key))
+				    {
+						list = sessionAssertion.Attributes[key].ToList();
+					}
+			    }
+		    }
+			return list;
+	    }
+
+
+
 		/// <summary>
 		/// Gets the current user's first name.
 		/// </summary>
