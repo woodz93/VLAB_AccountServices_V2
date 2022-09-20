@@ -398,41 +398,31 @@ namespace VLAB_AccountServices.services
 		/// Sends an email to the user.
 		/// </summary>
 		/// <param name="msg"></param>
-		private void EmailUser(string msg="") {
-			Mail ins=new Mail();
-			//ins.AddTo(this.UC.GetUsername()+"@hawaii.edu");
-			ins.AddTo(UC.GetEmail());
-			//ins.AddTo("bhieda@hawaii.edu");
-			//ins.AddTo("dvalente@hawaii.edu");
+		private void EmailUser(string msg) {
+			Mail mailMsg1=new Mail();
+			Mail mailMsg2 = new Mail();
+
+			mailMsg1.AddTo(UC.GetEmail());
 			string tmsg="<div style=\"position:relative;top:0;left:50%;transform:translateX(-50%);width:fit-content;height:fit-content;background-color:#777;padding:10px;padding-top:0px;padding-bottom:0px;\"><div style=\"position:relative;left:50%;transform:translateX(-50%);background-color:#FFF;color:#000;height:fit-content;font-family:arial;padding:10px;padding-left:5px;padding-right:5px;\"><center><h1><b>UHMC Account Services</b></h1><hr></center><p><h3>Dear [NAME],</h3><br>[MSG]<br><br>If you have not made this change, please contact us via the following options below.</p><p>To access your virtual desktops, go to <a href=\"https://vlab.maui.hawaii.edu\" target=\"_blank\">https://vlab.maui.hawaii.edu</a><br>To make changes to your account, go to <a href=\"https://vlab.accountservices.maui.hawaii.edu\" target=\"_blank\">https://vlab.accountservices.maui.hawaii.edu</a></p><fieldset><legend><h4>Contact Us</h4></legend><table><td><div style=\"background:#333;border-radius:100%;padding:4px;padding-bottom:0px;\"><img style=\"position:relative;top:0;left:50%;transform:translateX(-50%);display:inline-block;width:100px;height:100px;\" src=\"https://vlab.accountservices.maui.hawaii.edu/favicon.ico\"></div></td><td><table><tr><td><b>Email:</b></td><td><a href=\"mailto:uhmchelp@hawaii.edu\">uhmchelp@hawaii.edu</a></td></tr><tr><td><b>Phone:</b></td><td><a href=\"tel:+18089843283\">(808) 984-3283</a></td></tr><tr> <td><b>Website:</b></td><td><a href=\"https://maui.hawaii.edu/helpdesk/ticket/#gform_fields_6\" target=\"_blank\">IT Help</a></td></tr></table></td></table></fieldset><br><br>Timestamp: <font style=\"font-family:monospace;font-weight:bolder;\">"+sys.getTime()+"</font></div></div>";
 			tmsg=tmsg.Replace("[NAME]",UC.GetFullName());
 			msg=tmsg.Replace("[MSG]",msg);
-			//msg+="<br><br>The change was conducted for the user \""+UC.GetUsername()+"\"";
-			//msg+="<br>To access your virtual desktops, go to <a href=\"https://vlab.maui.hawaii.edu\" target=\"_blank\">https://vlab.maui.hawaii.edu</a><br>To reset your password or add a desktop, go to <a href=\"https://vlab.accountservices.maui.hawaii.edu\" target=\"_blank\">https://vlab.accountservices.maui.hawaii.edu</a>";
-			ins.SetMessage(msg);
-			ins.SetSubject("UHMC Account Services");
-			ins.SetFrom("uhmchelp@hawaii.edu");
-			ins.IsBodyHtml=true;
-			ins.Send();
-			EmailAdmins(msg);
+			mailMsg1.SetMessage(msg);
+			mailMsg1.SetSubject("UHMC Account Services");
+			mailMsg1.SetFrom("uhmchelp@hawaii.edu");
+			mailMsg1.IsBodyHtml=true;
+			mailMsg1.Send();
+
+			msg += "<br><br>The change was conducted for the user \"" + UC.GetUsername() + "\"<br><br>" + GetUserDetails();			
+			mailMsg2.AddTo("bhieda@hawaii.edu");
+			mailMsg2.AddTo("dvalente@hawaii.edu");
+			mailMsg2.AddTo("lescobar@hawaii.edu");
+			mailMsg2.SetMessage(msg);
+			mailMsg2.SetSubject("UHMC Account Services | " + sys.getTime());
+			mailMsg2.SetFrom("uhmchelp@hawaii.edu");
+			mailMsg2.IsBodyHtml = true;
+			mailMsg2.Send();			
 		}
-		/// <summary>
-		/// Sends an email to the administrators.
-		/// </summary>
-		/// <param name="msg"></param>
-		private void EmailAdmins(string msg)
-		{
-			msg+="<br><br>The change was conducted for the user \""+UC.GetUsername()+"\"<br><br>"+GetUserDetails();
-			Mail ins=new Mail();
-			ins.AddTo("bhieda@hawaii.edu");
-			ins.AddTo("dvalente@hawaii.edu");
-			ins.AddTo("lescobar@hawaii.edu");
-			ins.SetMessage(msg);
-			ins.SetSubject("UHMC Account Services | "+sys.getTime());
-			ins.SetFrom("uhmchelp@hawaii.edu");
-			ins.IsBodyHtml=true;
-			ins.Send();
-		}
+		
 		/// <summary>
 		/// Generates an HTML table consisting of all the user's information for debugging purposes.
 		/// </summary>
